@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Icon } from './Icons'
 
 function WalkSetup() {
@@ -169,27 +169,71 @@ export function Walkthrough() {
     { n: '03', title: 'Train your team in 7 minutes.', desc: 'Built for staff turnover. Most captains take their first order within a single shift.' },
     { n: '04', title: 'Watch the dashboard.', desc: 'Live sales, smart alerts, weekly insights — delivered to your phone every morning.' },
   ]
-  return (
-    <section className="section" id="walkthrough" style={{ background: 'var(--bg-2)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
-      <div className="container">
-        <div className="sec-head">
-          <div className="eyebrow"><span className="dot" />From shutter-up to first sale</div>
-          <h2 className="h-section" style={{ marginTop: 16 }}>
-            Live in <span className="h-italic">an afternoon.</span>
-          </h2>
-        </div>
+  const pinRef = useRef<HTMLDivElement>(null)
 
-        <div className="walk">
-          <div className="walk-steps">
-            {steps.map((s, i) => (
-              <div key={i} className={`walk-step ${active === i ? 'active' : ''}`} onClick={() => setActive(i)}>
-                <div className="num">Step {s.n}</div>
-                <h4>{s.title}</h4>
-                <p>{s.desc}</p>
-              </div>
-            ))}
+  useEffect(() => {
+    const el = pinRef.current
+    if (!el) return
+    if (window.matchMedia('(max-width: 900px)').matches) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let raf = 0
+    function update() {
+      raf = 0
+      const el = pinRef.current
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const range = el.offsetHeight - window.innerHeight
+      if (range <= 0) return
+      const passed = Math.min(Math.max(-rect.top, 0), range)
+      const progress = passed / range
+      const idx = Math.min(steps.length - 1, Math.floor(progress * steps.length))
+      setActive(prev => prev === idx ? prev : idx)
+    }
+    function onScroll() { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  function jumpToStep(i: number) {
+    setActive(i)
+    const el = pinRef.current
+    if (!el) return
+    if (window.matchMedia('(max-width: 900px)').matches) return
+    const range = el.offsetHeight - window.innerHeight
+    const target = el.getBoundingClientRect().top + window.scrollY + (i / steps.length) * range + 1
+    window.scrollTo({ top: target, behavior: 'smooth' })
+  }
+
+  return (
+    <section className="scroll-pin walk-pin" id="walkthrough" ref={pinRef} style={{ background: 'var(--bg-2)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
+      <div className="scroll-pin-inner">
+        <div className="container">
+          <div className="sec-head">
+            <div className="eyebrow"><span className="dot" />From shutter-up to first sale</div>
+            <h2 className="h-section" style={{ marginTop: 16 }}>
+              Live in <span className="h-italic">an afternoon.</span>
+            </h2>
           </div>
-          <WalkVisual step={active} />
+
+          <div className="walk">
+            <div className="walk-steps">
+              {steps.map((s, i) => (
+                <div key={i} className={`walk-step ${active === i ? 'active' : ''}`} onClick={() => jumpToStep(i)}>
+                  <div className="num">Step {s.n}</div>
+                  <h4>{s.title}</h4>
+                  <p>{s.desc}</p>
+                </div>
+              ))}
+            </div>
+            <div className="pin-fade" key={active}>
+              <WalkVisual step={active} />
+            </div>
+          </div>
         </div>
       </div>
     </section>

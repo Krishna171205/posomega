@@ -64,15 +64,20 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="footer-wordmark">Omega</div>
+        <div className="footer-outro">
+          <div className="footer-wordmark-huge">omega</div>
 
-        <div className="footer-bottom">
-          <div>© 2026 Omega Systems Pvt. Ltd. · Made in Bangalore.</div>
-          <div style={{ display: 'flex', gap: 20 }}>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Cookies</a>
-            <a href="#">DPDP</a>
+          <div className="footer-bottom">
+            <span>© 2026 Omega Systems Pvt. Ltd. · Bengaluru</span>
+            <div className="footer-legal">
+              <a href="#">Privacy</a>
+              <a href="#">Terms</a>
+              <a href="#">Cookies</a>
+              <a href="#">DPDP</a>
+            </div>
+            <span className="footer-status">
+              <span className="pulse" /> v 0.1.0 · all systems normal
+            </span>
           </div>
         </div>
       </div>

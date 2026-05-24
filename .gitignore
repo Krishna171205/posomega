@@ -5,3 +5,7 @@ out
 .DS_Store
 *.log
 next-env.d.ts
+.dev.pid
+dev.log
+dev.err.log
+.vercel

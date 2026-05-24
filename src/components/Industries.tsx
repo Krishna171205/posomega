@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Icon } from './Icons'
 
 function MockFrame({ children, label }: any) {
@@ -300,45 +300,90 @@ export function Industries() {
     },
   }
   const c = content[active]
+  const pinRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = pinRef.current
+    if (!el) return
+    if (window.matchMedia('(max-width: 900px)').matches) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let raf = 0
+    function update() {
+      raf = 0
+      const el = pinRef.current
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const range = el.offsetHeight - window.innerHeight
+      if (range <= 0) return
+      const passed = Math.min(Math.max(-rect.top, 0), range)
+      const progress = passed / range
+      const idx = Math.min(tabs.length - 1, Math.floor(progress * tabs.length))
+      setActive(prev => prev === tabs[idx].id ? prev : tabs[idx].id)
+    }
+    function onScroll() {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  function jumpToTab(id: string) {
+    setActive(id)
+    const el = pinRef.current
+    if (!el) return
+    if (window.matchMedia('(max-width: 900px)').matches) return
+    const idx = tabs.findIndex(t => t.id === id)
+    if (idx < 0) return
+    const range = el.offsetHeight - window.innerHeight
+    const target = el.getBoundingClientRect().top + window.scrollY + (idx / tabs.length) * range + 1
+    window.scrollTo({ top: target, behavior: 'smooth' })
+  }
 
   return (
-    <section className="section" id="industries">
-      <div className="container">
-        <div className="sec-head center">
-          <div className="eyebrow" style={{ justifyContent: 'center' }}><span className="dot" />Tuned for your trade</div>
-          <h2 className="h-section" style={{ marginTop: 16, textAlign: 'center' }}>
-            One platform, <span className="h-italic">five disciplines.</span>
-          </h2>
-        </div>
-
-        <div className="industries-tabs">
-          {tabs.map(t => (
-            <div key={t.id} className={`tab ${active === t.id ? 'active' : ''}`} onClick={() => setActive(t.id)}>
-              {t.label}
-            </div>
-          ))}
-        </div>
-
-        <div className="industry-panel">
-          <div>
-            <div className="eyebrow">{c.eyebrow}</div>
-            <h3 className="h-display" style={{ fontSize: 'clamp(32px, 4vw, 48px)', margin: '14px 0 16px' }}>
-              {c.title}
-            </h3>
-            <p className="lede" style={{ fontSize: 17 }}>{c.desc}</p>
-            <div className="industry-features">
-              {c.features.map((f: any, i: number) => (
-                <div key={i} className="industry-feature">
-                  <div className="ic">{f.ic}</div>
-                  <div>
-                    <h4>{f.t}</h4>
-                    <p>{f.d}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+    <section className="scroll-pin industries-pin" id="industries" ref={pinRef}>
+      <div className="scroll-pin-inner">
+        <div className="container">
+          <div className="sec-head center">
+            <div className="eyebrow" style={{ justifyContent: 'center' }}><span className="dot" />Tuned for your trade</div>
+            <h2 className="h-section" style={{ marginTop: 16, textAlign: 'center' }}>
+              One platform, <span className="h-italic">five disciplines.</span>
+            </h2>
           </div>
-          <div>{c.mock}</div>
+
+          <div className="industries-tabs">
+            {tabs.map(t => (
+              <div key={t.id} className={`tab ${active === t.id ? 'active' : ''}`} onClick={() => jumpToTab(t.id)}>
+                {t.label}
+              </div>
+            ))}
+          </div>
+
+          <div className="industry-panel pin-fade" key={active}>
+            <div>
+              <div className="eyebrow">{c.eyebrow}</div>
+              <h3 className="h-display" style={{ fontSize: 'clamp(32px, 4vw, 48px)', margin: '14px 0 16px' }}>
+                {c.title}
+              </h3>
+              <p className="lede" style={{ fontSize: 17 }}>{c.desc}</p>
+              <div className="industry-features">
+                {c.features.map((f: any, i: number) => (
+                  <div key={i} className="industry-feature">
+                    <div className="ic">{f.ic}</div>
+                    <div>
+                      <h4>{f.t}</h4>
+                      <p>{f.d}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div>{c.mock}</div>
+          </div>
         </div>
       </div>
     </section>
