@@ -20,8 +20,8 @@ export function CTA() {
               load your menu, and show you exactly how a typical service runs.
             </p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 32, flexWrap: 'wrap' }}>
-              <a href="#" className="btn btn-primary btn-lg">Book a demo <Icon.Arrow size={14} /></a>
-              <a href="#" className="btn btn-secondary btn-lg">Start free trial</a>
+              <a href="/get-started" className="btn btn-primary btn-lg">Book a demo <Icon.Arrow size={14} /></a>
+              <a href="/get-started" className="btn btn-secondary btn-lg">Start free trial</a>
             </div>
             <div style={{ marginTop: 24, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'color-mix(in oklab, var(--bg) 55%, transparent)', letterSpacing: '0.06em' }}>
               NO CREDIT CARD · 14-DAY FREE TRIAL · CANCEL ANYTIME
