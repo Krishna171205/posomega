@@ -123,7 +123,7 @@ export default function OpsSignupPage() {
             <span className="glyph">Ω</span>
             <span>Omega</span>
           </Link>
-          <span className="ops-badge">Internal — Ops use only</span>
+          <span className="ops-badge">Internal: Ops use only</span>
         </div>
       </div>
 
@@ -145,7 +145,7 @@ export default function OpsSignupPage() {
           <Icon.Shield size={16} />
           <span>
             The admin secret is never stored here. Get it from SSM Parameter Store
-            (<code>/omega/*</code>) — do not paste it anywhere else.
+            (<code>/omega/*</code>): do not paste it anywhere else.
           </span>
         </div>
 
@@ -306,7 +306,7 @@ function ResultRow({ label, value }: { label: string; value: string }) {
       await navigator.clipboard.writeText(value)
       setCopied(true)
       setTimeout(() => setCopied(false), 1500)
-    } catch { /* clipboard unavailable — nothing to fall back to */ }
+    } catch { /* clipboard unavailable: nothing to fall back to */ }
   }
 
   return (

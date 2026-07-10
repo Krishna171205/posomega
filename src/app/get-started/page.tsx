@@ -49,10 +49,10 @@ export default function GetStartedPage() {
     try {
       await api.post('/api/v1/leads', form)
     } catch (err) {
-      // No leads store is live yet (or the request failed) — never drop the lead on
+      // No leads store is live yet (or the request failed): never drop the lead on
       // the floor, just widen the net with a direct email fallback.
       console.warn('[get-started] lead API unavailable, offering direct fallback', err)
-      const subject = encodeURIComponent(`Demo request — ${form.cafeName}`)
+      const subject = encodeURIComponent(`Demo request: ${form.cafeName}`)
       const body = encodeURIComponent(
         `Name: ${form.name}\nCafe/restaurant: ${form.cafeName}\nPhone: ${form.phone}\nCity: ${form.city}`
       )

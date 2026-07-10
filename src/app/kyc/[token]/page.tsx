@@ -110,7 +110,7 @@ export default function KycLandingPage() {
           <>
             <div className="status-banner success" role="status" aria-live="polite">
               <Icon.Check size={16} />
-              <span>Invite accepted. Your onboarding session is ready — complete the steps below.</span>
+              <span>Invite accepted. Your onboarding session is ready: complete the steps below.</span>
             </div>
             <OnboardingEntry />
           </>
@@ -176,7 +176,7 @@ function OnboardingEntry() {
         <h3>Submitted for review</h3>
         <p>
           We&apos;re verifying {view.legalName ?? 'your business'}&apos;s details. This usually takes 1–2 business
-          days — we&apos;ll notify you once it&apos;s approved.
+          days: we&apos;ll notify you once it&apos;s approved.
         </p>
       </div>
     )
@@ -325,7 +325,7 @@ function FssaiStep({ view, onSaved }: { view: OnboardingView; onSaved: (v: Onboa
         </div>
         {view.fssaiStatus && view.fssaiStatus !== 'unverified' && (
           <p style={{ fontSize: 12.5, color: view.fssaiStatus === 'verified' ? 'var(--sage)' : '#D43A2F', margin: '-8px 0 16px' }}>
-            {view.fssaiStatus === 'verified' ? 'Verified' : 'Verification failed — recheck the number and resubmit.'}
+            {view.fssaiStatus === 'verified' ? 'Verified' : 'Verification failed: recheck the number and resubmit.'}
           </p>
         )}
         <button type="submit" disabled={busy} className="btn btn-secondary btn-sm">{busy ? 'Saving…' : 'Save FSSAI'}</button>
