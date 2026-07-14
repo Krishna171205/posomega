@@ -118,7 +118,7 @@ export function Hero() {
         </p>
 
         <div className="hero-cta">
-          <a href="#cta" className="btn btn-primary btn-lg">
+          <a href="/get-started" className="btn btn-primary btn-lg">
             Book a demo <Icon.Arrow size={14} />
           </a>
           <a href="#product" className="btn btn-secondary btn-lg">

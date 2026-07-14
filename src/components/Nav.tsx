@@ -11,7 +11,7 @@ export function Nav() {
   }, [])
   return (
     <nav className={`nav ${scrolled ? 'nav-scrolled' : ''}`}>
-      <a href="#" className="nav-logo">
+      <a href="/" className="nav-logo">
         <span className="glyph">Ω</span>
         <span>Omega</span>
       </a>
@@ -24,8 +24,8 @@ export function Nav() {
         <a href="#" className="nav-link">Docs</a>
       </div>
       <div className="nav-cta">
-        <a href="#" className="btn btn-ghost btn-sm">Sign in</a>
-        <a href="#cta" className="btn btn-primary btn-sm">
+        <a href="https://cafe.posomega.com/login" className="btn btn-ghost btn-sm">Sign in</a>
+        <a href="/get-started" className="btn btn-primary btn-sm">
           Book a demo <Icon.Arrow size={12} />
         </a>
       </div>

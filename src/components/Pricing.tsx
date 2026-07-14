@@ -99,7 +99,7 @@ export function Pricing() {
                   </li>
                 ))}
               </ul>
-              <a href="#cta" className={p.featured ? 'btn btn-primary' : 'btn btn-secondary'}
+              <a href="/get-started" className={p.featured ? 'btn btn-primary' : 'btn btn-secondary'}
                  style={p.featured ? { background: 'var(--bg)', color: 'var(--ink)' } : {}}>
                 {p.cta} <Icon.Arrow size={12} />
               </a>
@@ -115,7 +115,7 @@ export function Pricing() {
               <div style={{ fontSize: 13, color: 'var(--muted)' }}>One Omega Terminal + one Omega Print, per outlet. Worth ₹31,300.</div>
             </div>
           </div>
-          <a href="#cta" className="btn btn-primary btn-sm">Claim offer <Icon.Arrow size={12} /></a>
+          <a href="/get-started" className="btn btn-primary btn-sm">Claim offer <Icon.Arrow size={12} /></a>
         </div>
       </div>
     </section>
