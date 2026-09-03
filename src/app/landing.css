@@ -34,8 +34,45 @@
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 
   --container: 1240px;
-  --section-y: 120px;
+
+  /* Spacing scale — 0.25rem (4px) base. Use these instead of magic px values. */
+  --space-1: 0.25rem;   /*  4px */
+  --space-2: 0.5rem;    /*  8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.25rem;   /* 20px */
+  --space-6: 1.5rem;    /* 24px */
+  --space-7: 1.75rem;   /* 28px */
+  --space-8: 2rem;      /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-14: 3.5rem;   /* 56px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* Fluid section rhythm — scales with viewport, capped both sides */
+  --section-y: clamp(3rem, 6vw, 5rem);
+  --section-y-tight: clamp(2rem, 4vw, 3rem);
+
+  /* Fluid type scale */
+  --fs-display:  clamp(2.5rem, 6vw, 5.25rem);   /* hero h1 */
+  --fs-section:  clamp(2rem,   4vw, 3.25rem);   /* section h2 */
+  --fs-lede:     clamp(1rem,   1.4vw, 1.1875rem);
+  --fs-card-h:   clamp(1.125rem, 1.6vw, 1.5rem);
+  --fs-body:     1rem;
+  --fs-meta:     0.6875rem; /* 11px — small mono labels */
+
+  /* Component heights — fluid with viewport, capped */
+  --pos-body-h:  clamp(340px, 38svh, 440px);
+  --hero-pad-y:  clamp(4rem, 8vh, 5.5rem);
+
+  /* Nav clearance — fixed nav sits at top: 1rem, ~3.5rem tall + breathing */
+  --nav-clear: 5.5rem;
 }
+
+/* Section anchor jumps land below the fixed nav */
+section[id], footer[id] { scroll-margin-top: var(--nav-clear); }
 
 [data-theme="dark"] {
   --bg: #000000;
@@ -72,13 +109,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .container {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 var(--space-8);
 }
 .section {
   padding: var(--section-y) 0;
   position: relative;
 }
-.section-tight { padding: 80px 0; }
+.section-tight { padding: var(--section-y-tight) 0; }
 
 .eyebrow {
   font-family: var(--font-mono);
@@ -103,6 +140,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   line-height: 0.98;
   color: var(--ink);
   margin: 0;
+  font-size: var(--fs-display);
 }
 .h-italic {
   font-family: var(--font-serif);
@@ -116,7 +154,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 1.02;
-  font-size: clamp(40px, 5vw, 64px);
+  font-size: var(--fs-section);
   margin: 0 0 20px;
 }
 .lede {
@@ -228,8 +266,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ---------- Hero ---------- */
 .hero {
-  padding-top: 140px;
-  padding-bottom: 80px;
+  padding-top: var(--hero-pad-y);
+  padding-bottom: var(--section-y-tight);
   position: relative;
   overflow: hidden;
 }
@@ -280,9 +318,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-weight: 500;
 }
 .hero-title {
-  font-size: clamp(48px, 8vw, 104px);
-  margin: 28px auto 24px;
-  max-width: 1000px;
+  font-size: var(--fs-display);
+  margin: var(--space-5) auto var(--space-4);
+  max-width: 58.75rem;
 }
 .hero-title .italic-accent {
   font-family: var(--font-serif);
@@ -295,16 +333,16 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   letter-spacing: -0.01em;
 }
 .hero-sub {
-  font-size: 19px;
+  font-size: var(--fs-lede);
   line-height: 1.55;
   color: var(--muted);
-  max-width: 620px;
-  margin: 0 auto 36px;
+  max-width: 38.75rem;
+  margin: 0 auto var(--space-7);
 }
 .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
 .hero-meta {
-  margin-top: 24px;
+  margin-top: var(--space-5);
   display: flex;
   justify-content: center;
   gap: 24px;
@@ -318,7 +356,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* hero product preview */
 .hero-stage {
-  margin: 80px auto 0;
+  margin: clamp(2rem, 4vh, 3rem) auto 0;
   position: relative;
   z-index: 1;
   max-width: 1120px;
@@ -327,7 +365,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ---------- Logo cloud ---------- */
 .logos {
-  padding: 64px 0 32px;
+  padding: var(--space-10) 0 var(--space-6);
   text-align: center;
 }
 .logos-label {
@@ -393,7 +431,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ---------- Stats ---------- */
 .stats {
-  padding: 60px 0;
+  padding: var(--space-12) 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
@@ -403,10 +441,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   gap: 0;
 }
 .stat {
-  padding: 24px 32px;
+  padding: var(--space-5) var(--space-7);
   border-right: 1px solid var(--line);
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(1.75rem);
 }
 .stat.in-view {
   animation: statRise 0.75s cubic-bezier(0.22, 0.61, 0.36, 1) both;
@@ -441,21 +479,21 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 
 /* ---------- Section heading ---------- */
-.sec-head { margin-bottom: 64px; max-width: 720px; }
+.sec-head { margin-bottom: var(--space-10); max-width: 45rem; }
 .sec-head.center { margin-left: auto; margin-right: auto; text-align: center; }
 
 /* ---------- Bento ---------- */
 .bento {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  grid-auto-rows: 220px;
-  gap: 16px;
+  grid-auto-rows: clamp(7rem, 11vh, 9rem);
+  gap: var(--space-3);
 }
 .bento-card {
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  padding: 28px;
+  padding: var(--space-6);
   position: relative;
   overflow: hidden;
   transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
@@ -495,6 +533,83 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   pointer-events: none;
 }
 
+/* ---------- Legal pages (privacy / terms / cookies / dpdp) ---------- */
+.legal {
+  padding: 140px 0 80px;
+  min-height: 100vh;
+}
+.legal-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 32px;
+  transition: color 0.2s;
+}
+.legal-back:hover { color: var(--ink); }
+.legal-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.legal-meta .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.legal-title {
+  font-size: clamp(48px, 6vw, 80px);
+  line-height: 1;
+  margin-bottom: 28px;
+}
+.legal-intro {
+  max-width: 600px;
+  font-size: 18px;
+  margin-bottom: 48px;
+}
+.legal-content section { margin-bottom: 40px; }
+.legal-content h2 {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+.legal-content p {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  margin-bottom: 12px;
+}
+.legal-footer-cta {
+  margin-top: 64px;
+  padding: 24px 28px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.legal-footer-cta a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--accent);
+}
+
 /* ---------- Scroll-pin layout (shared by industries + walkthrough) ---------- */
 .scroll-pin {
   position: relative;
@@ -505,18 +620,34 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 60px 0;
+  justify-content: flex-start;
+  padding: 96px 0 40px;
   overflow: hidden;
 }
+.scroll-pin-inner .sec-head .h-section { font-size: clamp(28px, 4.2vw, 52px); }
+.scroll-pin-inner .industries-tabs { margin: 16px auto 0; }
+.scroll-pin-inner .industry-panel {
+  margin-top: 24px;
+  gap: 40px;
+  align-items: start;
+}
+.scroll-pin-inner .industry-panel > div:last-child {
+  max-height: 58vh;
+  overflow: hidden;
+}
+.scroll-pin-inner .industry-panel h3.h-display { font-size: clamp(24px, 3vw, 38px) !important; margin: 10px 0 12px !important; }
+.scroll-pin-inner .industry-panel .lede { font-size: 15px !important; }
+.scroll-pin-inner .industry-features { gap: 12px; margin-top: 18px; }
+.scroll-pin-inner .walk { margin-top: 24px; }
+.scroll-pin-inner .walk-visual { max-height: 60vh; }
 .industries-pin { height: calc(5 * 100vh); }
 .walk-pin { height: calc(4 * 100vh); }
 
 @keyframes pinFade {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
-.pin-fade { animation: pinFade 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+.pin-fade { animation: pinFade 0.18s ease-out both; }
 .scroll-pin-inner .industry-panel,
 .scroll-pin-inner .walk-visual { margin-top: 32px; }
 .industries-tabs {
@@ -580,7 +711,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--ink);
   color: var(--bg);
   border-radius: var(--radius-xl);
-  padding: 80px;
+  padding: clamp(2rem, 5vw, 4rem);
   position: relative;
   overflow: hidden;
 }
@@ -588,9 +719,9 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .hardware p { color: color-mix(in oklab, var(--bg) 70%, transparent); }
 .hardware-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 24px;
-  margin-top: 56px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+  margin-top: var(--space-10);
 }
 .hardware-card {
   background: color-mix(in oklab, var(--bg) 6%, transparent);
@@ -673,7 +804,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  padding: 32px;
+  padding: var(--space-7);
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -701,7 +832,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   margin: 8px 0 0;
 }
 .price-card .amount {
-  font-size: 48px;
+  font-size: clamp(1.75rem, 2.6vw, 2.5rem);
   font-weight: 500;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -758,14 +889,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  padding: 32px;
+  padding: var(--space-6);
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 .testimonial .quote {
   font-family: var(--font-serif);
-  font-size: 22px;
+  font-size: clamp(1.0625rem, 1.4vw, 1.375rem);
   line-height: 1.3;
   letter-spacing: -0.015em;
   color: var(--ink);
@@ -842,7 +973,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   background: var(--ink);
   color: var(--bg);
   border-radius: var(--radius-xl);
-  padding: 100px 64px;
+  padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 4vw, 4rem);
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -868,14 +999,14 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 /* ---------- Footer ---------- */
 .footer {
-  padding: 80px 0 40px;
+  padding: var(--space-14) 0 var(--space-8);
   border-top: 1px solid var(--line);
 }
 .footer-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 24px;
+  gap: var(--space-12);
+  margin-bottom: var(--space-6);
 }
 .footer-brand .desc {
   color: var(--muted);
@@ -1284,8 +1415,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .pos-body {
   display: grid;
-  grid-template-columns: 220px 1fr 360px;
-  height: 620px;
+  grid-template-columns: 13.75rem 1fr 22.5rem;
+  height: var(--pos-body-h);
 }
 .pos-sidebar {
   background: var(--bg-2);

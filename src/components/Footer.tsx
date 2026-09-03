@@ -24,42 +24,42 @@ export function Footer() {
           <div className="footer-col">
             <h5>Product</h5>
             <ul>
-              <li><a href="#">Orders & POS</a></li>
-              <li><a href="#">Inventory & AI</a></li>
-              <li><a href="#">Payments</a></li>
-              <li><a href="#">Hardware</a></li>
-              <li><a href="#">Integrations</a></li>
-              <li><a href="#">What's new</a></li>
+              <li><a href="#product">Orders & POS</a></li>
+              <li><a href="#product">Inventory & AI</a></li>
+              <li><a href="#features">Payments</a></li>
+              <li><a href="#hardware">Hardware</a></li>
+              <li><a href="#integrations">Integrations</a></li>
+              <li><a href="#features">What's new</a></li>
             </ul>
           </div>
           <div className="footer-col">
             <h5>Industries</h5>
             <ul>
-              <li><a href="#">Cafés</a></li>
-              <li><a href="#">QSR</a></li>
-              <li><a href="#">Fine dining</a></li>
-              <li><a href="#">Cloud kitchens</a></li>
-              <li><a href="#">Bars & lounges</a></li>
+              <li><a href="#industries">Cafés</a></li>
+              <li><a href="#industries">QSR</a></li>
+              <li><a href="#industries">Fine dining</a></li>
+              <li><a href="#industries">Cloud kitchens</a></li>
+              <li><a href="#industries">Bars & lounges</a></li>
             </ul>
           </div>
           <div className="footer-col">
             <h5>Company</h5>
             <ul>
-              <li><a href="#">About</a></li>
-              <li><a href="#">Customers</a></li>
-              <li><a href="#">Careers <span style={{ fontSize: 10, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '2px 6px', borderRadius: 4, marginLeft: 6 }}>14 OPEN</span></a></li>
-              <li><a href="#">Press</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a href="#features">About</a></li>
+              <li><a href="#customers">Customers</a></li>
+              <li><a href="mailto:careers@unifiednexgrade.com">Careers <span style={{ fontSize: 10, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '2px 6px', borderRadius: 4, marginLeft: 6 }}>14 OPEN</span></a></li>
+              <li><a href="mailto:hello@unifiednexgrade.com">Press</a></li>
+              <li><a href="#cta">Contact</a></li>
             </ul>
           </div>
           <div className="footer-col">
             <h5>Resources</h5>
             <ul>
-              <li><a href="#">Docs</a></li>
-              <li><a href="#">API</a></li>
-              <li><a href="#">Help centre</a></li>
-              <li><a href="#">Status</a></li>
-              <li><a href="#">Security</a></li>
+              <li><a href="#faq">Docs</a></li>
+              <li><a href="#faq">API</a></li>
+              <li><a href="#faq">Help centre</a></li>
+              <li><a href="#cta">Status</a></li>
+              <li><a href="mailto:security@unifiednexgrade.com">Security</a></li>
             </ul>
           </div>
         </div>
@@ -68,12 +68,12 @@ export function Footer() {
           <div className="footer-wordmark-huge">omega</div>
 
           <div className="footer-bottom">
-            <span>© 2026 Omega Systems Pvt. Ltd. · Bengaluru</span>
+            <span>© 2026 Unified Nexgrade Pvt. Ltd. · Delhi NCR</span>
             <div className="footer-legal">
-              <a href="#">Privacy</a>
-              <a href="#">Terms</a>
-              <a href="#">Cookies</a>
-              <a href="#">DPDP</a>
+              <a href="/privacy">Privacy</a>
+              <a href="/terms">Terms</a>
+              <a href="/cookies">Cookies</a>
+              <a href="/dpdp">DPDP</a>
             </div>
             <span className="footer-status">
               <span className="pulse" /> v 0.1.0 · all systems normal

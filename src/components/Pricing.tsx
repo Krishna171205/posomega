@@ -107,7 +107,7 @@ export function Pricing() {
           ))}
         </div>
 
-        <div style={{ marginTop: 32, padding: 24, background: 'var(--bg-2)', border: '1px solid var(--line)', borderRadius: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+        <div style={{ marginTop: 20, padding: '14px 22px', background: 'var(--bg-2)', border: '1px solid var(--line)', borderRadius: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <Icon.Sparkle size={20} />
             <div>
