@@ -88,7 +88,10 @@ export default function RootLayout({
       <body>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          // JSON.stringify never escapes "<", so a value containing "</script>" would
+          // close this tag early and inject arbitrary markup. jsonLd is hardcoded today,
+          // but this closes the footgun before it's ever fed dynamic data.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
         />
         <div id="root">{children}</div>
       </body>
