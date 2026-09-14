@@ -46,7 +46,6 @@ export function Footer() {
             <h5>Company</h5>
             <ul>
               <li><a href="#features">About</a></li>
-              <li><a href="#customers">Customers</a></li>
               <li><a href="mailto:careers@unifiednexgrade.com">Careers <span style={{ fontSize: 10, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '2px 6px', borderRadius: 4, marginLeft: 6 }}>14 OPEN</span></a></li>
               <li><a href="mailto:hello@unifiednexgrade.com">Press</a></li>
               <li><a href="#cta">Contact</a></li>

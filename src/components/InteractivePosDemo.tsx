@@ -258,9 +258,8 @@ function OrdersDemo({ setMode }: any) {
           ● LIVE PROTOTYPE · CLICK ANY ITEM
         </div>
         <div style={{ display: 'flex', gap: 12, fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)' }}>
-          <span><Icon.Lock size={11} /> PCI-DSS</span>
-          <span>SOC 2 Type II</span>
-          <span>ISO 27001</span>
+          <span><Icon.Lock size={11} /> ENCRYPTED IN TRANSIT &amp; AT REST</span>
+          <span>DATA STORED IN INDIA</span>
         </div>
       </div>
     </div>

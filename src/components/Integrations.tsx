@@ -2,11 +2,14 @@
 import { useState } from 'react'
 import { Icon } from './Icons'
 
-function LogoSlot({ slug, color, fallback }: any) {
+function LogoSlot({ name, slug, color, fallback }: any) {
   const [err, setErr] = useState(!slug)
   const url = slug ? `https://cdn.simpleicons.org/${slug}/${color.slice(1)}` : null
   if (err || !slug) return <span className="wordmark-fb" style={{ color }}>{fallback}</span>
-  return <img src={url!} alt="" loading="lazy" onError={() => setErr(true)} />
+  // Named alt, not alt="": these logos are the entities we want Omega associated
+  // with in search, and alt="" makes Swiggy/Zomato/Razorpay invisible to crawlers.
+  // ponytail: no width/height — .logo-slot is a fixed 40x40 box, so there is no CLS to fix.
+  return <img src={url!} alt={`${name} integration`} loading="lazy" onError={() => setErr(true)} />
 }
 
 export function Integrations() {
@@ -58,7 +61,7 @@ export function Integrations() {
           {allItems.map((it: any, i: number) => (
             <div key={i} className="int-tile">
               <div className="logo-slot">
-                <LogoSlot slug={it.slug} color={it.c} fallback={it.n.charAt(0)} />
+                <LogoSlot name={it.n} slug={it.slug} color={it.c} fallback={it.n.charAt(0)} />
               </div>
               <div className="name">{it.n}</div>
             </div>

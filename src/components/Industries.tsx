@@ -37,7 +37,7 @@ function CafeMock() {
     { n: 'Banana Bread', p: 160, e: '🍞', bg: 'linear-gradient(135deg, #D4A574, #A07442)' },
   ]
   return (
-    <MockFrame label="omega.in / cafe-mode · Blue Tokai HSR">
+    <MockFrame label="omega.in / cafe-mode · Demo Cafe, HSR">
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
         {['All', 'Coffee', 'Brunch', 'Bakery', 'Cold drinks'].map((c, i) => (
           <span key={c} style={{

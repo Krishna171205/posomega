@@ -127,9 +127,9 @@ export function Hero() {
         </div>
 
         <div className="hero-meta">
-          <span><span className="check"><Icon.Check size={12} /></span> 7-min setup</span>
+          <span><span className="check"><Icon.Check size={12} /></span> Same-day setup</span>
           <span><span className="check"><Icon.Check size={12} /></span> No contracts</span>
-          <span><span className="check"><Icon.Check size={12} /></span> 99.99% uptime</span>
+          <span><span className="check"><Icon.Check size={12} /></span> Works offline</span>
         </div>
       </div>
 

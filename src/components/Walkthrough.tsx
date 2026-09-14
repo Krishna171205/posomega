@@ -166,7 +166,7 @@ export function Walkthrough() {
   const steps = [
     { n: '01', title: 'Plug it in.', desc: 'Open the box, scan one QR. Menu, taxes, tables, printer — all configured.' },
     { n: '02', title: 'Connect your aggregators.', desc: 'One-click sync with Swiggy, Zomato and Magicpin. Items and prices stay in lockstep.' },
-    { n: '03', title: 'Train your team in 7 minutes.', desc: 'Built for staff turnover. Most captains take their first order within a single shift.' },
+    { n: '03', title: 'Train your team in one shift.', desc: 'Built for staff turnover. Most captains take their first order within a single shift.' },
     { n: '04', title: 'Watch the dashboard.', desc: 'Live sales, smart alerts, weekly insights — delivered to your phone every morning.' },
   ]
   const pinRef = useRef<HTMLDivElement>(null)

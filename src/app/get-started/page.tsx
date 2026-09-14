@@ -95,7 +95,7 @@ export default function GetStartedPage() {
                   />
                   <Field
                     label="Cafe / restaurant name"
-                    placeholder="Blue Tokai, Indiranagar"
+                    placeholder="Your cafe name, Indiranagar"
                     value={form.cafeName}
                     error={errors.cafeName}
                     onChange={(v) => update('cafeName', v)}

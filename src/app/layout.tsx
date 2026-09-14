@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import './globals.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://posomega.com'),
   title: {
-    default: 'Omega | The point of sale, perfected for restaurants',
+    default: 'Omega POS | Restaurant Billing & POS Software in India',
     template: '%s | Omega POS',
   },
   description:
@@ -29,7 +31,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'Omega POS',
-    title: 'Omega | The point of sale, perfected for restaurants',
+    title: 'Omega POS | Restaurant Billing & POS Software in India',
     description:
       'A modern point-of-sale platform for restaurants, cafes, bars, and cloud kitchens. Take orders, manage tables, run the kitchen, and bill faster.',
     url: 'https://posomega.com',
@@ -38,7 +40,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Omega | The point of sale, perfected for restaurants',
+    title: 'Omega POS | Restaurant Billing & POS Software in India',
     description:
       'A modern point-of-sale platform for restaurants, cafes, bars, and cloud kitchens.',
     images: ['/og-image.png'],
@@ -57,14 +59,27 @@ const jsonLd = {
       url: 'https://posomega.com/',
       description:
         'A modern point-of-sale platform built for restaurants, cafes, bars, and cloud kitchens.',
-      offers: { '@type': 'Offer', priceCurrency: 'INR' },
+      offers: {
+        '@type': 'Offer',
+        price: '1499',
+        priceCurrency: 'INR',
+        // Matches the Starter tier in src/components/Pricing.tsx.
+        description: 'Starter plan, per outlet per month. Unlimited seats.',
+        url: 'https://posomega.com/#pricing',
+      },
     },
     {
       '@type': 'Organization',
       '@id': 'https://posomega.com/#organization',
       name: 'Omega POS',
+      legalName: 'Unified Nexgrade Pvt. Ltd.',
+      alternateName: ['Omega', 'posomega', 'Omega Point of Sale'],
+      disambiguatingDescription:
+        'Restaurant point-of-sale software company based in India. Not affiliated with Omega SA (watches) or Omega Engineering.',
       url: 'https://posomega.com/',
       logo: 'https://posomega.com/og-image.png',
+      address: { '@type': 'PostalAddress', addressCountry: 'IN' },
+      parentOrganization: { '@id': 'https://www.unifiednexgrade.com/#organization' },
       sameAs: ['https://www.unifiednexgrade.com'],
     },
     {
@@ -84,7 +99,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en-IN">
       <body>
         <script
           type="application/ld+json"
@@ -94,6 +109,8 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
         />
         <div id="root">{children}</div>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

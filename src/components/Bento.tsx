@@ -24,12 +24,12 @@ export function Bento() {
               <h3 style={{ fontSize: 32, marginTop: 14 }}>Never miss a sale —<br /><span className="h-italic">even when the internet won't.</span></h3>
               <p style={{ maxWidth: 360, marginTop: 12 }}>
                 Every order, payment and KOT is queued locally and reconciled the second you're back.
-                We've shipped 41 million offline transactions without a single lost rupee.
+                Billing, KOTs and cash never depend on the connection.
               </p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 'auto' }}>
               <div className="vis-wifi"><span /><span /><span /><span /></div>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)' }}>SYNC: 41,208,932 TXN · 0 LOST</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)' }}>SYNC: QUEUED LOCALLY · 0 LOST</span>
             </div>
             <svg className="bento-vis" viewBox="0 0 600 400" style={{ opacity: 0.08 }}>
               <circle cx="500" cy="300" r="120" fill="none" stroke="currentColor" strokeWidth="1" />
@@ -44,8 +44,8 @@ export function Bento() {
               <span className="label">Unified commerce</span>
               <h3 style={{ fontSize: 28, marginTop: 14 }}>Swiggy. Zomato.<br />Dine-in. One inventory.</h3>
               <p style={{ marginTop: 12 }}>
-                Items sync everywhere in real time. Mark something 86'd at the counter, it disappears
-                from every aggregator in under 4 seconds.
+                Items sync everywhere in real time. Mark something 86'd at the counter and Omega pushes
+                that state out to every aggregator.
               </p>
             </div>
             <div className="vis-channels">

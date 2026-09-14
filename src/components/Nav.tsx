@@ -20,7 +20,6 @@ export function Nav() {
         <a href="#industries" className="nav-link">Industries</a>
         <a href="#hardware" className="nav-link">Hardware</a>
         <a href="#pricing" className="nav-link">Pricing</a>
-        <a href="#customers" className="nav-link">Customers</a>
         <a href="#" className="nav-link">Docs</a>
       </div>
       <div className="nav-cta">
