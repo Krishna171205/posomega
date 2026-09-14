@@ -16,11 +16,11 @@ export function Nav() {
         <span>Omega</span>
       </a>
       <div className="nav-links">
-        <a href="#product" className="nav-link">Product</a>
-        <a href="#industries" className="nav-link">Industries</a>
-        <a href="#hardware" className="nav-link">Hardware</a>
-        <a href="#pricing" className="nav-link">Pricing</a>
-        <a href="#" className="nav-link">Docs</a>
+        <a href="/features" className="nav-link">Product</a>
+        <a href="/for" className="nav-link">Industries</a>
+        <a href="/integrations" className="nav-link">Integrations</a>
+        <a href="/#hardware" className="nav-link">Hardware</a>
+        <a href="/pricing" className="nav-link">Pricing</a>
       </div>
       <div className="nav-cta">
         <a href="https://cafe.posomega.com/login" className="btn btn-ghost btn-sm">Sign in</a>

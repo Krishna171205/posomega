@@ -4,12 +4,12 @@ export function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <a href="#" className="nav-logo">
+            <a href="/" className="nav-logo">
               <span className="glyph">Ω</span>
               <span>Omega</span>
             </a>
             <p className="desc">
-              The point of sale, perfected for restaurants. Built in Bangalore, running in 19 cities.
+              The point of sale, perfected for restaurants. Built in India, for Indian kitchens.
             </p>
             <div style={{ display: 'flex', gap: 8 }}>
               {['Twitter', 'LinkedIn', 'Instagram', 'YouTube'].map(s => (
@@ -24,40 +24,40 @@ export function Footer() {
           <div className="footer-col">
             <h5>Product</h5>
             <ul>
-              <li><a href="#product">Orders & POS</a></li>
-              <li><a href="#product">Inventory & AI</a></li>
-              <li><a href="#features">Payments</a></li>
-              <li><a href="#hardware">Hardware</a></li>
-              <li><a href="#integrations">Integrations</a></li>
-              <li><a href="#features">What's new</a></li>
+              <li><a href="/features/billing-and-kot">Billing & KOT</a></li>
+              <li><a href="/features/kitchen-display">Kitchen display</a></li>
+              <li><a href="/features/inventory-and-forecasting">Inventory</a></li>
+              <li><a href="/features/offline-mode">Offline mode</a></li>
+              <li><a href="/integrations/upi-and-payments">Payments</a></li>
+              <li><a href="/#hardware">Hardware</a></li>
             </ul>
           </div>
           <div className="footer-col">
             <h5>Industries</h5>
             <ul>
-              <li><a href="#industries">Cafés</a></li>
-              <li><a href="#industries">QSR</a></li>
-              <li><a href="#industries">Fine dining</a></li>
-              <li><a href="#industries">Cloud kitchens</a></li>
-              <li><a href="#industries">Bars & lounges</a></li>
+              <li><a href="/for/cafes">Cafés</a></li>
+              <li><a href="/for/qsr">QSR</a></li>
+              <li><a href="/for/fine-dining">Fine dining</a></li>
+              <li><a href="/for/cloud-kitchens">Cloud kitchens</a></li>
+              <li><a href="/for/bars">Bars & lounges</a></li>
             </ul>
           </div>
           <div className="footer-col">
             <h5>Company</h5>
             <ul>
-              <li><a href="#features">About</a></li>
+              <li><a href="/pricing">Pricing</a></li>
               <li><a href="mailto:careers@unifiednexgrade.com">Careers <span style={{ fontSize: 10, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '2px 6px', borderRadius: 4, marginLeft: 6 }}>14 OPEN</span></a></li>
               <li><a href="mailto:hello@unifiednexgrade.com">Press</a></li>
-              <li><a href="#cta">Contact</a></li>
+              <li><a href="/get-started">Contact</a></li>
             </ul>
           </div>
           <div className="footer-col">
             <h5>Resources</h5>
             <ul>
-              <li><a href="#faq">Docs</a></li>
-              <li><a href="#faq">API</a></li>
-              <li><a href="#faq">Help centre</a></li>
-              <li><a href="#cta">Status</a></li>
+              <li><a href="/restaurant-billing-software">Restaurant billing software</a></li>
+              <li><a href="/gst-billing-software-for-restaurants">GST billing</a></li>
+              <li><a href="/integrations/swiggy-zomato">Swiggy & Zomato sync</a></li>
+              <li><a href="/#faq">FAQ</a></li>
               <li><a href="mailto:security@unifiednexgrade.com">Security</a></li>
             </ul>
           </div>

@@ -7,9 +7,16 @@ import type { NextConfig } from 'next'
 // verified by actually loading the page: it pulls stock photos from Unsplash, brand
 // logos from Clearbit, and icons from Simple Icons, all hardcoded into page content
 // (not caught by grepping package.json deps).
+// In production, @vercel/analytics and @vercel/speed-insights load from
+// /_vercel/*/script.js on our own origin, so 'self' covers them. In development
+// they load the .debug.js builds from va.vercel-scripts.com, which the production
+// CSP correctly blocks. Allow that host in dev only so local runs are not full of
+// CSP errors, without loosening what actually ships.
+const devScriptHosts = process.env.NODE_ENV === 'development' ? ' https://va.vercel-scripts.com' : ''
+
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${devScriptHosts}`,
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
   "img-src 'self' data: https:",
