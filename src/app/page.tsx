@@ -7,6 +7,7 @@ import { Industries } from '@/components/Industries'
 import { Hardware } from '@/components/Hardware'
 import { Integrations } from '@/components/Integrations'
 import { Pricing } from '@/components/Pricing'
+import { WorkingWithUs } from '@/components/WorkingWithUs'
 import { FAQ } from '@/components/FAQ'
 import { CTA } from '@/components/CTA'
 import { Footer } from '@/components/Footer'
@@ -23,6 +24,7 @@ export default function Page() {
       <Hardware />
       <Integrations />
       <Pricing />
+      <WorkingWithUs />
       <FAQ />
       <CTA />
       <Footer />
