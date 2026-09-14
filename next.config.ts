@@ -44,6 +44,20 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]
   },
+  async redirects() {
+    return [
+      {
+        // www.posomega.com served a 200 duplicate of the apex. The canonical tag
+        // pointed search engines at the apex, but a duplicate that resolves is
+        // still a duplicate: it can be linked, shared and indexed on its own.
+        // 308 preserves the method and is treated as a permanent redirect.
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.posomega.com' }],
+        destination: 'https://posomega.com/:path*',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 export default nextConfig

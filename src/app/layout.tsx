@@ -23,6 +23,15 @@ export const metadata: Metadata = {
   authors: [{ name: 'Omega POS' }],
   applicationName: 'Omega POS',
   alternates: { canonical: '/' },
+  // Set GOOGLE_SITE_VERIFICATION / BING_SITE_VERIFICATION in the Vercel project
+  // and redeploy. Verifying Search Console and Bing Webmaster needs the Google and
+  // Microsoft accounts, but it should not also need a code change to land the token.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { 'msvalidate.01': process.env.BING_SITE_VERIFICATION }
+      : {},
+  },
   robots: {
     index: true,
     follow: true,
