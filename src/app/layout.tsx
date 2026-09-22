@@ -89,7 +89,22 @@ const jsonLd = {
       logo: 'https://posomega.com/og-image.png',
       address: { '@type': 'PostalAddress', addressCountry: 'IN' },
       parentOrganization: { '@id': 'https://www.unifiednexgrade.com/#organization' },
-      sameAs: ['https://www.unifiednexgrade.com'],
+      sameAs: [
+        'https://www.unifiednexgrade.com',
+        'https://play.google.com/store/apps/details?id=com.unifiednexgrade.omega',
+      ],
+    },
+    {
+      '@type': 'MobileApplication',
+      '@id': 'https://posomega.com/#android-app',
+      name: 'Omega POS - Cafe Billing & KOT',
+      operatingSystem: 'Android',
+      applicationCategory: 'BusinessApplication',
+      url: 'https://posomega.com/app',
+      installUrl: 'https://play.google.com/store/apps/details?id=com.unifiednexgrade.omega',
+      downloadUrl: 'https://play.google.com/store/apps/details?id=com.unifiednexgrade.omega',
+      publisher: { '@id': 'https://posomega.com/#organization' },
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
     },
     {
       '@type': 'WebSite',

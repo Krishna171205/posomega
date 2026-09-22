@@ -2,6 +2,85 @@ import type { MarketingPage } from './types'
 
 export const LANDING_PAGES: MarketingPage[] = [
   {
+    slug: 'app',
+    crumb: 'Android app',
+    eyebrow: 'Android app',
+    h1: 'Omega POS Android app',
+    h1Tail: 'early access on Google Play.',
+    lede:
+      'A Kotlin-native tablet terminal for billing, orders and the kitchen queue, built offline-first so the till keeps working when the connection does not. It is on Google Play in early access, and we would rather you knew exactly what that means before you install it.',
+    metaTitle: 'Omega POS Android App | Restaurant Billing App on Google Play',
+    metaDescription:
+      'Omega POS on Google Play: an offline-first Android tablet app for restaurant billing, orders and the kitchen queue. Early access, same account as the web POS.',
+    primaryCta: {
+      href: 'https://play.google.com/store/apps/details?id=com.unifiednexgrade.omega',
+      label: 'Get it on Google Play',
+      external: true,
+    },
+    sections: [
+      {
+        kind: 'prose',
+        heading: 'What early access actually means here',
+        body: [
+          'The app is published and installable. It is not yet the surface we put a paying café on by default, and we would rather say that on our own website than have you find out on a Friday night.',
+          'The web POS at cafe.posomega.com is the primary terminal today. It runs in a browser on the same tablet, it is what our live cafés are billing on, and every feature lands there first. The Android app is the same product in a native shell, ahead on feel and on offline behaviour, behind on a small number of things that genuinely need device hardware.',
+          'If you are evaluating Omega, start on the web POS. Install the app alongside it if you want to see where the product is going, or if offline reliability is the specific thing you are shopping for.',
+        ],
+      },
+      {
+        kind: 'cards',
+        heading: 'What the app does today',
+        cards: [
+          { t: 'Offline-first billing', d: 'Orders are written to the device first and synced after, so the terminal does not slow down or stop when the connection does.' },
+          { t: 'Orders and kitchen queue', d: 'The same order queue and kitchen display as the web POS, including aggregator orders, on one screen.' },
+          { t: 'One account, both surfaces', d: 'Sign in with your existing Omega credentials. Outlets, menu, staff and reporting are shared, not duplicated.' },
+          { t: 'Register and shift close', d: 'Open and close the register on the device, with the day reconciling into the same reporting as everything else.' },
+          { t: 'Catalogue and inventory', d: 'Menu, modifiers and stock, editable from the terminal rather than only from a back office.' },
+          { t: 'Built for a tablet', d: 'Designed for a counter tablet in landscape, not a phone layout stretched to fit.' },
+        ],
+      },
+      {
+        kind: 'prose',
+        heading: 'What is not finished',
+        body: [
+          'Thermal printing over ESC/POS and barcode scanning are still landing. Both depend on physical hardware we cannot meaningfully verify without it in hand, so we are not going to claim them until they are done. Today, printing runs through the web POS.',
+          'That is the honest reason the app is in early access rather than pitched as the main terminal. Everything else in the list above works, and the offline behaviour is genuinely ahead of the browser.',
+        ],
+      },
+      {
+        kind: 'prose',
+        heading: 'iOS',
+        body: [
+          'The codebase is Kotlin Multiplatform and the iOS target is wired, so an iPad build is a question of finishing and shipping rather than of rewriting. There is no public iOS build yet and no date we are willing to put on this page.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'Is the Omega POS app free?',
+        a: 'The app is a free download. It signs in to an Omega account, and the account is what is billed: Rs 1,499 per outlet per month for a single location. There is no separate charge for the Android app, and no per-device or per-seat fee, so installing it on a second tablet costs nothing.',
+      },
+      {
+        q: 'What Android version and hardware does it need?',
+        a: 'A modern Android tablet is the target. It is built for a landscape counter tablet rather than a phone. If you are buying hardware specifically for this, wait until printing lands or talk to us first, because the right answer depends on the printer you intend to use.',
+      },
+      {
+        q: 'Does the app work without internet?',
+        a: 'Yes, and this is the part it does better than the browser. Orders are written to the device first and queued for sync, so billing continues through an outage and reconciles automatically afterwards. Card and UPI payments still need a connection, because they cannot be confirmed without one.',
+      },
+      {
+        q: 'Do I need the app to use Omega?',
+        a: 'No. The web POS at cafe.posomega.com is the primary surface and is what our live cafés bill on. The app is an alternative terminal for the same account, not a requirement and not an upsell.',
+      },
+      {
+        q: 'Can I use the app and the web POS at the same time?',
+        a: 'Yes. They are two terminals on one account, so a counter can run the browser while a second station runs the app. Orders, menu and reporting are shared, and pricing is per outlet, so running both costs no more than running one.',
+      },
+    ],
+    related: ['pricing', 'features/offline-mode', 'restaurant-billing-software', 'for/cafes'],
+  },
+
+  {
     slug: 'restaurant-billing-software',
     crumb: 'Restaurant billing software',
     eyebrow: 'Restaurant billing software',

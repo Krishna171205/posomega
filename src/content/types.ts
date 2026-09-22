@@ -21,4 +21,10 @@ export type MarketingPage = {
   faq: { q: string; a: string }[]
   /** Slugs of related pages, rendered as an internal-link block. */
   related: string[]
+  /**
+   * Overrides the default "Book a demo" button. Set it when the page's real next
+   * step is somewhere else, e.g. the Play Store listing. `external` opens in a new
+   * tab and is rendered as a plain <a> rather than a next/link.
+   */
+  primaryCta?: { href: string; label: string; external?: boolean }
 }

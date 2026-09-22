@@ -30,6 +30,7 @@ export function Footer() {
               <li><a href="/features/offline-mode">Offline mode</a></li>
               <li><a href="/integrations/upi-and-payments">Payments</a></li>
               <li><a href="/#hardware">Hardware</a></li>
+              <li><a href="https://play.google.com/store/apps/details?id=com.unifiednexgrade.omega" target="_blank" rel="noopener">Get it on Google Play</a></li>
             </ul>
           </div>
           <div className="footer-col">
@@ -54,6 +55,7 @@ export function Footer() {
           <div className="footer-col">
             <h5>Resources</h5>
             <ul>
+              <li><a href="/app">Android app</a></li>
               <li><a href="/restaurant-billing-software">Restaurant billing software</a></li>
               <li><a href="/gst-billing-software-for-restaurants">GST billing</a></li>
               <li><a href="/integrations/swiggy-zomato">Swiggy & Zomato sync</a></li>

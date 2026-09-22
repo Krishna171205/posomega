@@ -89,9 +89,26 @@ export function MarketingPageView({ page }: { page: MarketingPage }) {
             </h1>
             <p className="lede mk-lede">{page.lede}</p>
             <div className="mk-cta-row">
-              <Link href="/get-started" className="btn btn-primary">
-                Book a demo <Icon.Arrow size={12} />
-              </Link>
+              {page.primaryCta ? (
+                page.primaryCta.external ? (
+                  <a
+                    href={page.primaryCta.href}
+                    className="btn btn-primary"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    {page.primaryCta.label} <Icon.ArrowUpRight size={12} />
+                  </a>
+                ) : (
+                  <Link href={page.primaryCta.href} className="btn btn-primary">
+                    {page.primaryCta.label} <Icon.Arrow size={12} />
+                  </Link>
+                )
+              ) : (
+                <Link href="/get-started" className="btn btn-primary">
+                  Book a demo <Icon.Arrow size={12} />
+                </Link>
+              )}
               <Link href="/pricing" className="btn btn-secondary">See pricing</Link>
             </div>
           </header>
