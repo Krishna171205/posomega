@@ -22,37 +22,53 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
 const ease = (t: number) => 1 - Math.pow(1 - t, 3)
 
 /**
- * attio.com's letter flip, values taken from their bundle: each glyph turns 88° on
- * X, staggered 20ms, 0.8s on cubic-bezier(.83,0,.17,1). All words share one grid
- * cell so the line never reflows as they swap.
+ * attio.com's mechanical letter flip:
+ * Each glyph turns 88° on X, staggered 20ms, 0.75s on cubic-bezier(.83,0,.17,1).
+ * All words share one CSS grid cell so the line never reflows as they swap.
+ * Strict idle visibility hiding ensures non-active words never overlap or flash.
  */
 function Rotator({ words }: { words: readonly string[] }) {
   const [i, setI] = useState(0)
+  const [prev, setPrev] = useState<number | null>(null)
+
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const id = window.setInterval(() => setI(n => (n + 1) % words.length), 2800)
+    const id = window.setInterval(() => {
+      setI(curr => {
+        setPrev(curr)
+        return (curr + 1) % words.length
+      })
+    }, 2800)
     return () => window.clearInterval(id)
   }, [words.length])
-  const prev = (i - 1 + words.length) % words.length
+
   return (
-    <span className="rot">
-      {words.map((w, wi) => (
-        <span key={w} className={`rot-w ${wi === i ? 'on' : wi === prev ? 'off' : ''}`}>
-          {(() => {
-            let n = 0
-            // Words stay unbroken groups so the phrase can still wrap on a phone.
-            return w.split(' ').map((word, k) => (
-              <span key={k} className="rot-word">
-                {word.split('').map(ch => {
-                  const d = n++ * 20
-                  return <span key={d} className="rot-ch" style={{ transitionDelay: `${d}ms` }}>{ch}</span>
-                })}
-                {k < w.split(' ').length - 1 ? ' ' : null}
-              </span>
-            ))
-          })()}
-        </span>
-      ))}
+    <span className="rot" aria-hidden="true">
+      {words.map((w, wi) => {
+        const isOn = wi === i
+        const isOff = wi === prev
+        const stateClass = isOn ? 'on' : isOff ? 'off' : 'idle'
+        return (
+          <span key={w} className={`rot-w ${stateClass}`}>
+            {(() => {
+              let n = 0
+              return w.split(' ').map((word, k) => (
+                <span key={k} className="rot-word">
+                  {word.split('').map(ch => {
+                    const d = n++ * 20
+                    return (
+                      <span key={d} className="rot-ch" style={{ transitionDelay: `${d}ms` }}>
+                        {ch}
+                      </span>
+                    )
+                  })}
+                  {k < w.split(' ').length - 1 ? '\u00A0' : null}
+                </span>
+              ))
+            })()}
+          </span>
+        )
+      })}
     </span>
   )
 }
@@ -198,16 +214,40 @@ export function Hero() {
         />
       </div>
       <div className="hero-copy">
-        <h1 id="hero-title" className="hero-title blur-in" aria-label={HERO.h1}>
-          <span aria-hidden="true">{HERO.h1Lead}<br className="hero-br" /> {HERO.h1Mid} <Rotator words={HERO.h1Words} /></span>
+        <div className="hero-pill-wrap">
+          <a href="/features/billing-and-kot" className="hero-pill">
+            <span className="hero-pill-border" aria-hidden="true">
+              <span className="hero-pill-spinner" />
+            </span>
+            <span className="hero-pill-ambient" aria-hidden="true">
+              <span className="hero-pill-ambient-spinner" />
+            </span>
+            <span className="hero-pill-inner">
+              <span className="hero-pill-text">GTM lessons from Elena Verna and more</span>
+              <Icon.Arrow size={11} className="hero-pill-arrow" />
+            </span>
+          </a>
+        </div>
+
+        <h1 id="hero-title" className="hero-title" aria-label={HERO.h1}>
+          <span className="hero-line-mask" aria-hidden="true">
+            <span className="hero-line-inner line-1">
+              {HERO.h1Lead}
+            </span>
+          </span>
+          <span className="hero-line-mask" aria-hidden="true">
+            <span className="hero-line-inner line-2">
+              {HERO.h1Mid}{' '}
+              <Rotator words={HERO.h1Words} />
+            </span>
+          </span>
         </h1>
-        <p className="hero-sub blur-in" style={{ animationDelay: '60ms' }}>{HERO.sub}</p>
-        <div className="hero-ctas blur-in" style={{ animationDelay: '120ms' }}>
+        <p className="hero-sub">{HERO.sub}</p>
+        <div className="hero-ctas">
           <a href={HERO.primary.href} className="btn btn-blue">{HERO.primary.label}</a>
           <a href={HERO.secondary.href} className="btn btn-tint">{HERO.secondary.label}</a>
-
         </div>
-        <ul className="hero-meta blur-in" style={{ animationDelay: '180ms' }}>
+        <ul className="hero-meta">
           {HERO.meta.map(m => <li key={m}><Icon.Check size={12} />{m}</li>)}
         </ul>
       </div>

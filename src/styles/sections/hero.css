@@ -1,7 +1,138 @@
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
+/* ── Announcement pill with orbiting laser beam ─────────────── */
+.hero-pill-wrap {
+  display: inline-block;
+  position: relative;
+  margin-bottom: 22px;
+  will-change: transform, opacity;
+  animation: heroElementReveal 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.04s both;
+  z-index: 5;
+}
+
+.hero-pill {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  padding: 1.5px;
+  border-radius: 999px;
+  background: var(--white-400);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 14px rgba(0, 113, 227, 0.06);
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.hero-pill-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-pill-spinner,
+.hero-pill-ambient-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260%;
+  height: 260%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  will-change: transform;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    transparent 270deg,
+    rgba(0, 113, 227, 0.2) 295deg,
+    rgba(0, 113, 227, 0.8) 325deg,
+    #0071E3 345deg,
+    #38BDF8 354deg,
+    #FFFFFF 360deg
+  );
+  animation: rotateLaserBeam 3.6s linear infinite;
+}
+
+.hero-pill-ambient {
+  position: absolute;
+  top: -6px;
+  left: -8px;
+  right: -8px;
+  bottom: -6px;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  filter: blur(10px) saturate(1.4);
+  opacity: 0.8;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.hero-pill-inner {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 14px 6px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 999px;
+  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+  transition: background 0.2s ease;
+}
+
+.hero-pill-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--fg);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.hero-pill-arrow {
+  display: inline-block;
+  color: var(--fg-3);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease;
+}
+
+.hero-pill-wrap:hover .hero-pill {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 113, 227, 0.16), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.hero-pill-wrap:hover .hero-pill-inner {
+  background: #ffffff;
+}
+
+.hero-pill-wrap:hover .hero-pill-arrow {
+  transform: translateX(3px);
+  color: var(--link);
+}
+
+.hero-pill-wrap:hover .hero-pill-ambient {
+  opacity: 1;
+  filter: blur(12px) saturate(1.6);
+}
+
+.hero-pill-wrap:hover .hero-pill-spinner,
+.hero-pill-wrap:hover .hero-pill-ambient-spinner {
+  animation-duration: 2.2s;
+}
+
+.hero-pill-wrap:active .hero-pill {
+  transform: scale(0.98) translateY(0);
+}
+
+@keyframes rotateLaserBeam {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
 /* ── Hero copy (attio.com values) ───────────────────────── */
-.hero { position: relative; padding-top: clamp(48px, 8.5svh, 104px); }
+.hero { position: relative; padding-top: clamp(40px, 7svh, 88px); }
 .hero-copy {
   display: flex; flex-direction: column; align-items: center; text-align: center;
   max-width: 1040px; margin-inline: auto; padding-inline: var(--gutter);
@@ -10,22 +141,70 @@
   font-family: var(--font-display);
   font-variation-settings: 'opsz' 32;
   font-weight: 600;
-  font-size: clamp(40px, 10.5vw, 52px);
-  line-height: .95;
+  font-size: clamp(38px, 9vw, 54px);
+  line-height: 1.08;
   letter-spacing: -0.035em;
   color: var(--fg);
   text-wrap: balance;
-  padding-bottom: .15em; margin-bottom: -.15em;
+  margin: 0 auto;
 }
 @media (min-width: 768px) {
-  .hero-title { font-size: var(--fs-hero); letter-spacing: var(--ls-hero); max-width: 14em; }
+  .hero-title { font-size: var(--fs-hero); letter-spacing: var(--ls-hero); max-width: 14em; line-height: 1.06; }
 }
+
+/* Line-by-line masked reveal animation */
+.hero-line-mask {
+  display: block;
+  overflow: hidden;
+  padding-top: 0.04em;
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+
+.hero-line-inner {
+  display: inline-block;
+  will-change: transform, opacity;
+  animation: heroLineReveal 0.74s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-line-inner.line-1 {
+  animation-delay: 0.14s;
+}
+
+.hero-line-inner.line-2 {
+  animation-delay: 0.28s; /* 140ms stagger */
+}
+
+@keyframes heroLineReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(115%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroElementReveal {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero-sub {
-  margin-top: 14px;
-  max-width: 27em;
-  font-size: 16px; font-weight: 500; line-height: 1.3; letter-spacing: -0.17px;
+  margin-top: 16px;
+  max-width: 28em;
+  font-size: 16px; font-weight: 500; line-height: 1.38; letter-spacing: -0.17px;
   color: var(--fg-accent);
   text-wrap: balance;
+  will-change: transform, opacity;
+  animation: heroElementReveal 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.42s both;
 }
 @media (min-width: 768px) { .hero-sub { font-size: 18px; letter-spacing: -0.18px; } }
 
@@ -34,6 +213,8 @@
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
   gap: 8px 10px;
   margin-top: 28px;
+  will-change: transform, opacity;
+  animation: heroElementReveal 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.54s both;
 }
 
 /* "Send me a demo": Attio's inline capture, here a WhatsApp number */
@@ -339,8 +520,87 @@
 .hs.s3 .app-print { display: block; animation: blur-in .35s var(--ease-out-cubic); }
 .pr-docked { border-radius: 12px; box-shadow: var(--sh-ring); }
 
-.rot-w.on .rot-ch { opacity: 1; transform: none; }
-.rot-w.off .rot-ch { opacity: 0; transform: rotateX(88deg) translateZ(-0.12em); }
+/* ── Rotating 3D Letter Flip (Attio split-flap mechanical flip) ─ */
+.rot {
+  display: inline-grid;
+  grid-template-columns: minmax(min-content, max-content);
+  vertical-align: baseline;
+  position: relative;
+  perspective: 900px;
+  -webkit-perspective: 900px;
+  text-align: left;
+}
+
+.rot-w {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.rot-w.on {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.rot-w.off {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: none;
+  position: relative;
+  z-index: 1;
+}
+
+.rot-w.idle {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.rot-word {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.rot-ch {
+  display: inline-block;
+  transform-origin: 50% 50% -0.32em;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: transform, opacity;
+  transition: transform 0.75s cubic-bezier(0.83, 0, 0.17, 1),
+              opacity 0.75s cubic-bezier(0.83, 0, 0.17, 1);
+}
+
+/* Idle characters wait tilted back, ready to roll in */
+.rot-w.idle .rot-ch {
+  opacity: 0;
+  transform: rotateX(-88deg) translateZ(-0.12em);
+  transition: none;
+}
+
+/* Active characters are flat, crisp, and fully visible */
+.rot-w.on .rot-ch {
+  opacity: 1;
+  transform: rotateX(0deg) translateZ(0);
+}
+
+/* Outgoing characters roll forward and down into the fold */
+.rot-w.off .rot-ch {
+  opacity: 0;
+  transform: rotateX(88deg) translateZ(-0.12em);
+  transition: transform 0.68s cubic-bezier(0.83, 0, 0.17, 1),
+              opacity 0.45s ease-in;
+}
 
 /* ── Background: faint dot grid + cool glow behind the copy ── */
 .hero { isolation: isolate; }
@@ -356,10 +616,35 @@
 /* ── Proof line under the CTAs ──────────────────────────── */
 .hero-meta {
   display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 18px;
-  margin-top: 18px; font-size: 13px; font-weight: 500; color: var(--fg-3);
+  margin-top: 20px; font-size: 13px; font-weight: 500; color: var(--fg-3);
+  will-change: transform, opacity;
+  animation: heroElementReveal 0.72s cubic-bezier(0.22, 1, 0.36, 1) 0.66s both;
 }
 .hero-meta li { display: inline-flex; align-items: center; gap: 6px; }
 .hero-meta svg { color: var(--ok); }
 
 /* DotGrid (ui/DotGrid.tsx) fills the masked hero background */
 .hero-bg .dot-grid { position: absolute; inset: 0; }
+
+/* ── Accessible Reduced Motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-pill-wrap,
+  .hero-pill-spinner,
+  .hero-pill-ambient-spinner,
+  .hero-line-inner,
+  .hero-sub,
+  .hero-ctas,
+  .hero-meta,
+  .rot-ch {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .hero-line-mask {
+    overflow: visible !important;
+  }
+  .rot-w:not(.on) {
+    display: none !important;
+  }
+}
