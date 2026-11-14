@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
+import { ScrollRail } from '@/components/ScrollRail'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -124,6 +125,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en-IN">
+      <head>
+        {/* The two faces the hero paints with; everything else loads on demand. */}
+        <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/inter-latin-ext.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+      </head>
       <body>
         <script
           type="application/ld+json"
@@ -133,6 +139,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
         />
         <div id="root">{children}</div>
+        <ScrollRail />
         <Analytics />
         <SpeedInsights />
       </body>

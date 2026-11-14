@@ -1,0 +1,37 @@
+/* ══ Blue accent layer ════════════════════════════════════════
+   Everywhere Attio blue appears beyond links and focus rings, in one
+   place so the amount of blue can be tuned (or removed) without hunting
+   through the section files. Imported last in globals.css. The blue
+   buttons themselves (.btn-blue, .btn-tint) live in base.css. */
+
+/* Small markers */
+.eyebrow .dot { background: var(--blue-500); opacity: 1; }
+.theme-dark .eyebrow .dot { background: var(--blue-400); }
+.check-list li svg, .price-feat li svg { color: var(--blue-500); }
+.banner-new { background: var(--blue-500); }
+.fm-seg button[aria-selected='true'] svg { color: var(--blue-500); }
+.hs-steps li.done .n { background: var(--blue-500); }
+.faq-item.open .faq-plus { background: var(--blue-500); }
+.crew-dots span.on { background: var(--blue-500); }
+
+/* Inline links read as links, the way Notion's "Learn more →" do */
+.text-link { color: var(--blue-500); }
+.text-link:hover { color: var(--blue-600); }
+
+/* Tinted surfaces */
+.crew-blob { fill: var(--blue-100); }
+.proof-ic { color: var(--blue-500); background: var(--blue-100); box-shadow: inset 0 0 0 1px var(--blue-200); }
+.int-item { transition: box-shadow .2s var(--ease-emph); }
+.int-item:hover .int-mark { color: var(--blue-600); background: var(--blue-100); box-shadow: inset 0 0 0 1px var(--blue-200); }
+.price-offer { background: var(--blue-100); box-shadow: inset 0 0 0 1px var(--blue-200); }
+.price-offer > svg { color: var(--blue-500); }
+
+/* The recommended plan */
+.price-card.featured { box-shadow: 0 0 0 1.5px var(--blue-500), 0 0 0 5px var(--blue-100), var(--sh-float); }
+.price-card.featured .price-top {
+  background: linear-gradient(180deg, var(--blue-100), var(--white-100) 72%);
+  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+}
+
+/* Closing call to action: a blue wash rising from the bottom edge */
+.cta { background: radial-gradient(70% 90% at 50% 115%, color-mix(in oklab, var(--blue-300) 38%, transparent), transparent 70%); }

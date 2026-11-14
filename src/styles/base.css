@@ -1,0 +1,224 @@
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + 56px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  font-feature-settings: 'cv11', 'ss01';
+  font-variation-settings: 'opsz' 14;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img, svg { display: block; max-width: 100%; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+a { color: inherit; text-decoration: none; }
+h1, h2, h3, h4, h5, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--focus-ring); border-radius: var(--r-md); }
+::selection { background: var(--blue-200); color: var(--black-100); }
+[hidden] { display: none !important; }
+
+/* ── Scrollbar: native bar hidden; ScrollRail draws an overlay pill inside the page ── */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; width: 0; height: 0; }
+/* Inner scroll areas keep a slim black-on-transparent bar */
+:where(.seg, .app-table-wrap, .drawer-body)::-webkit-scrollbar { width: 6px; height: 6px; }
+:where(.seg, .app-table-wrap, .drawer-body)::-webkit-scrollbar-button { display: none; }
+:where(.seg, .app-table-wrap, .drawer-body)::-webkit-scrollbar-track { background: transparent; }
+:where(.seg, .app-table-wrap, .drawer-body)::-webkit-scrollbar-thumb { background: var(--black-0); border-radius: 999px; border: 1px solid transparent; background-clip: padding-box; }
+
+.srail {
+  position: fixed; top: 6px; bottom: 6px; right: 4px; z-index: 120;
+  width: 14px;
+  display: flex; justify-content: center;
+  cursor: pointer;
+}
+.srail-thumb {
+  position: absolute; top: 0;
+  width: 4px; min-height: 48px; border-radius: 999px;
+  background: var(--black-0);
+  box-shadow: 0 0 0 1.5px var(--white-100);   /* white ring keeps it legible on dark bands */
+  opacity: .28;
+  transition: opacity .35s var(--ease-emph), width .2s var(--ease-emph);
+  cursor: grab;
+  will-change: transform;
+}
+.srail:hover .srail-thumb, .srail.is-active .srail-thumb { opacity: 1; }
+.srail:hover .srail-thumb, .srail.is-dragging .srail-thumb { width: 8px; }
+.srail.is-dragging .srail-thumb { cursor: grabbing; }
+@media (hover: none) { .srail { display: none; } }
+
+/* ── Layout ─────────────────────────────────────────────── */
+.container { width: 100%; max-width: calc(var(--container) + var(--gutter) * 2); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--section-y); position: relative; }
+.section-tight { padding-block: clamp(48px, 6vw, 80px); }
+.rule { border-top: 1px solid var(--stroke-weak); }
+
+/* ── Type ───────────────────────────────────────────────── */
+.display, .h-display, .h-section, .h3 {
+  font-family: var(--font-display);
+  font-variation-settings: 'opsz' 32;
+  font-weight: 600;
+  color: var(--fg);
+  text-wrap: balance;
+}
+.h-display { font-size: clamp(40px, 6vw, 64px); line-height: 1; letter-spacing: -0.03em; }
+.h-section { font-size: var(--fs-h2); line-height: 1.02; letter-spacing: -0.025em; }
+.h3 { font-size: var(--fs-h3); line-height: 1.08; letter-spacing: -0.02em; }
+/* Serif accent: Attio sets the odd word in Tiempos; we use Newsreader italic. */
+.h-italic, .serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  font-variation-settings: normal;
+}
+.lede {
+  font-size: var(--fs-lede);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+  color: var(--fg-accent);
+  max-width: 36em;
+  text-wrap: pretty;
+}
+.muted { color: var(--fg-3); }
+.mono { font-family: var(--font-mono); font-variation-settings: normal; font-feature-settings: 'zero'; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--fg-3);
+}
+.eyebrow .dot {
+  width: 6px; height: 6px; border-radius: 2px;
+  background: var(--fg); opacity: .85;
+}
+
+.sec-head { display: grid; gap: 16px; margin-bottom: clamp(40px, 5vw, 64px); }
+.sec-head.center { justify-items: center; text-align: center; }
+.sec-head.center .lede { margin-inline: auto; }
+
+/* ── Buttons (attio.com: 36px, 10px radius, radial-gradient primary) ── */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--r-btn);
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: color .3s var(--ease-emph), border-color .3s var(--ease-emph), background-color .3s var(--ease-emph), box-shadow .3s var(--ease-emph);
+}
+.btn:hover, .btn:active { transition-duration: 50ms; }
+.btn:has(> svg:last-child) { padding-right: 9px; }
+.btn-sm { height: 32px; padding: 0 10px; font-size: 13.5px; }
+.btn-lg { height: 40px; padding: 0 16px; font-size: 14.5px; }
+
+.btn-primary {
+  color: var(--white-100);
+  background-color: var(--black-100);
+  background-image: radial-gradient(at center -10%, var(--black-500) 0%, var(--black-100) 100%);
+  border-color: var(--black-100);
+  box-shadow: inset 0 1px 0 0 color-mix(in oklab, var(--white-100) 14%, transparent), var(--sh-2);
+}
+.btn-primary:hover { background-image: radial-gradient(at center -10%, var(--black-600) 0%, var(--black-200) 100%); }
+.btn-primary:active { background-image: none; background-color: var(--black-500); }
+
+.btn-secondary, .btn-outline {
+  color: var(--black-400);
+  background: var(--white-100);
+  border-color: var(--white-800);
+  box-shadow: var(--sh-1);
+}
+.btn-secondary:hover, .btn-outline:hover { border-color: var(--black-700); }
+.btn-secondary:active, .btn-outline:active { background: var(--white-300); border-color: var(--black-500); }
+
+/* Blue call to action (the Notion-style primary) and its soft tinted partner */
+.btn-blue {
+  color: var(--white-100);
+  background-color: var(--blue-500);
+  background-image: radial-gradient(at center -10%, var(--blue-400) 0%, var(--blue-500) 100%);
+  border-color: var(--blue-600);
+  box-shadow: inset 0 1px 0 0 color-mix(in oklab, var(--white-100) 24%, transparent), 0 1px 2px color-mix(in oklab, var(--blue-600) 32%, transparent), var(--sh-2);
+}
+.btn-blue:hover { background-image: none; background-color: var(--blue-600); }
+.btn-blue:active { background-image: none; background-color: color-mix(in oklab, var(--blue-600) 88%, var(--black-0)); }
+.btn-tint { color: var(--blue-600); background: var(--blue-100); }
+.btn-tint:hover { background: var(--blue-200); }
+.btn-tint:active { background: var(--blue-200); color: var(--blue-800); }
+
+.btn-ghost { color: var(--black-400); }
+.btn-ghost:hover { background: var(--white-300); color: var(--black-300); }
+
+.theme-dark .btn-primary {
+  color: var(--black-100);
+  background-color: var(--white-100);
+  background-image: none;
+  border-color: var(--white-100);
+}
+.theme-dark .btn-primary:hover { background-color: var(--white-400); }
+.theme-dark .btn-secondary, .theme-dark .btn-outline {
+  color: var(--white-100);
+  background: transparent;
+  border-color: var(--black-500);
+}
+.theme-dark .btn-secondary:hover, .theme-dark .btn-outline:hover { border-color: var(--black-800); }
+
+.icon-arrow { transition: transform .25s var(--ease-out-cubic); }
+.btn:hover .icon-arrow, a:hover > .icon-arrow { transform: translateX(2px); }
+
+.text-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: var(--fg); font-weight: 500; font-size: 14px;
+}
+.text-link:hover { color: var(--link); }
+
+/* ── Pills & tags ───────────────────────────────────────── */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  height: 22px; padding: 0 7px;
+  border-radius: var(--r-md);
+  font-size: 12px; font-weight: 500;
+  background: var(--bg-subtle); color: var(--fg-2);
+  box-shadow: inset 0 0 0 1px var(--stroke-weak);
+  white-space: nowrap;
+}
+.tag .d { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.tag-ok { background: var(--ok-soft); color: var(--ok); box-shadow: none; }
+.tag-bad { background: var(--bad-soft); color: var(--bad); box-shadow: none; }
+.tag-warn { background: var(--warn-soft); color: var(--warn); box-shadow: none; }
+.tag-info { background: var(--info-soft); color: var(--info); box-shadow: none; }
+
+/* Attio's load-in: text resolves from a 1.5px blur. Runs from CSS so it starts
+   before hydration and does not hold back LCP. */
+@keyframes blur-in {
+  from { opacity: 0; filter: blur(1.5px); transform: translateY(4px); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: scale(.98); }
+  to { opacity: 1; transform: none; }
+}
+.blur-in { animation: blur-in .7s var(--ease-out-cubic) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Nav } from '@/components/Nav'
 import { Footer } from '@/components/Footer'
 import { Icon } from '@/components/Icons'
@@ -34,6 +34,12 @@ export default function GetStartedPage() {
   const [submitted, setSubmitted] = useState(false)
   const [fallbackHref, setFallbackHref] = useState<string | null>(null)
 
+  // The homepage "Send me a demo" field hands the number over as ?phone=.
+  useEffect(() => {
+    const phone = new URLSearchParams(window.location.search).get('phone')
+    if (phone && /^[6-9]\d{9}$/.test(phone)) setForm((prev) => (prev.phone ? prev : { ...prev, phone }))
+  }, [])
+
   function update<K extends keyof LeadForm>(key: K, value: string) {
     setForm((prev) => ({ ...prev, [key]: value }))
     setErrors((prev) => ({ ...prev, [key]: undefined }))
@@ -66,7 +72,7 @@ export default function GetStartedPage() {
   return (
     <>
       <Nav />
-      <section className="section" style={{ paddingTop: 160, paddingBottom: 100 }}>
+      <section className="section" style={{ paddingTop: 72, paddingBottom: 100 }}>
         <div className="container form-shell">
           {!submitted ? (
             <>
@@ -118,7 +124,7 @@ export default function GetStartedPage() {
                     />
                   </div>
 
-                  <button type="submit" disabled={busy} className="btn btn-primary btn-lg form-submit">
+                  <button type="submit" disabled={busy} className="btn btn-blue btn-lg form-submit">
                     {busy ? 'Sending…' : 'Book a demo'}
                     {!busy && <Icon.Arrow size={14} />}
                   </button>

@@ -1,13 +1,15 @@
 import { Nav } from '@/components/Nav'
 import { Hero } from '@/components/Hero'
-import { Bento } from '@/components/Bento'
-import { InteractivePosDemo } from '@/components/InteractivePosDemo'
-import { Walkthrough } from '@/components/Walkthrough'
-import { Industries } from '@/components/Industries'
-import { Hardware } from '@/components/Hardware'
+import { Strip } from '@/components/Strip'
+import { Platform } from '@/components/Platform'
+import { Crew } from '@/components/Crew'
+import { Offline } from '@/components/Offline'
+import { Formats } from '@/components/Formats'
 import { Integrations } from '@/components/Integrations'
-import { Pricing } from '@/components/Pricing'
+import { Hardware } from '@/components/Hardware'
 import { WorkingWithUs } from '@/components/WorkingWithUs'
+import { Pricing } from '@/components/Pricing'
+import { Changelog } from '@/components/Changelog'
 import { FAQ } from '@/components/FAQ'
 import { CTA } from '@/components/CTA'
 import { Footer } from '@/components/Footer'
@@ -16,18 +18,22 @@ export default function Page() {
   return (
     <>
       <Nav />
-      <Hero />
-      <Bento />
-      <InteractivePosDemo />
-      <Walkthrough />
-      <Industries />
-      <Hardware />
-      <Integrations />
-      <Pricing />
-      <WorkingWithUs />
-      <FAQ />
-      <CTA />
-      <Footer />
+      <main>
+        <Hero />
+        <Strip />
+        <Crew />
+        <Platform />
+        <Offline />
+        <Formats />
+        <Integrations />
+        <Hardware />
+        <WorkingWithUs />
+        <Pricing />
+        <Changelog />
+        <FAQ />
+        <CTA />
+      </main>
+      <Footer crew />
     </>
   )
 }

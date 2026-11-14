@@ -141,7 +141,7 @@ export default function PricingPage() {
             <p className="lede">
               Tell us about your outlet and we will show you the system running on your own menu.
             </p>
-            <Link href="/get-started" className="btn btn-primary btn-lg">
+            <Link href="/get-started" className="btn btn-blue btn-lg">
               Book a demo <Icon.Arrow size={13} />
             </Link>
           </section>

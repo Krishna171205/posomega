@@ -1,0 +1,153 @@
+/*
+ * Design tokens. The raw scale is attio.com's, value for value; the semantic layer
+ * mirrors Attio's own mapping (primary-foreground = black-100, accent-foreground =
+ * black-700, and so on). Components only ever use the semantic names.
+ */
+:root {
+  color-scheme: light;
+
+  /* ── Raw scale (attio.com) ─────────────────────────────── */
+  --white-100: #ffffff;
+  --white-200: #fafafb;
+  --white-300: #f3f4f6;
+  --white-400: #edeff3;
+  --white-500: #e4e7ec;
+  --white-600: #dee2e7;
+  --white-700: #d3d8df;
+  --white-800: #cad0d9;
+  --white-900: #b5bdc9;
+
+  --black-0: #000000;
+  --black-50: #101010;
+  --black-100: #1c1d1f;
+  --black-200: #202124;
+  --black-300: #232529;
+  --black-400: #2e3238;
+  --black-500: #383e47;
+  --black-600: #505967;
+  --black-700: #6f7988;
+  --black-800: #8f99a8;
+  --black-900: #a4adba;
+
+  --blue-100: #e8f0ff;
+  --blue-200: #c8dcff;
+  --blue-300: #94b9ff;
+  --blue-400: #709ff5;
+  --blue-450: #538bf3;
+  --blue-500: #266df0;
+  --blue-600: #245bc2;
+  --blue-800: #1a2233;
+
+  --green-500: #0fc27b;
+  --green-600: #0db472;
+  --red-500: #ff5b59;
+  --red-600: #f65351;
+  --yellow-500: #f5b900;
+  --yellow-600: #dba601;
+  --yellow-700: #ad7c00;
+
+  /* ── Semantic ──────────────────────────────────────────── */
+  --bg: var(--white-100);            /* primary background */
+  --bg-2: var(--white-200);          /* secondary background */
+  --bg-subtle: var(--white-300);     /* surface subtle */
+  --surface: var(--white-400);       /* surface / muted */
+  --stroke-weak: var(--white-400);
+  --stroke-subtle: var(--white-500);
+  --stroke: var(--white-700);
+  --stroke-strong: var(--white-800);
+
+  --fg: var(--black-100);            /* primary foreground */
+  --fg-2: var(--black-300);          /* secondary foreground */
+  --fg-3: var(--black-600);          /* tertiary foreground */
+  --fg-accent: var(--black-700);     /* subheads, ledes */
+  --fg-caption: var(--black-900);
+  --fg-disabled: var(--white-700);
+
+  --link: var(--blue-500);
+  --link-strong: var(--blue-600);
+  --focus-ring: color-mix(in oklab, var(--blue-500) 30%, transparent);
+
+  /* Status, used only for operational state: ready / 86'd / pending / live */
+  --ok: var(--green-600);
+  --ok-soft: color-mix(in oklab, var(--green-500) 12%, transparent);
+  --bad: var(--red-600);
+  --bad-soft: color-mix(in oklab, var(--red-500) 12%, transparent);
+  --warn: var(--yellow-700);
+  --warn-soft: color-mix(in oklab, var(--yellow-500) 16%, transparent);
+  --info: var(--blue-500);
+  --info-soft: var(--blue-100);
+
+  /* ── Type ──────────────────────────────────────────────── */
+  --font-sans: 'Inter', 'Inter Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Inter', 'Inter Display Fallback', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Newsreader', 'Newsreader Fallback', Georgia, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Hero h1: attio.com's exact clamp. */
+  --fs-hero: clamp(44px, calc(16px + 5.333svh), 80px);
+  --ls-hero: clamp(-2.4px, calc(2.08px - 0.3733svh), -1.28px);
+  --fs-h2: clamp(34px, 4vw, 52px);
+  --fs-h3: clamp(26px, 2.6vw, 34px);
+  --fs-lede: 18px;
+
+  /* ── Shape & depth (attio.com) ─────────────────────────── */
+  --r-xs: 2px;
+  --r-sm: 4px;
+  --r-md: 6px;
+  --r-lg: 8px;
+  --r-btn: 10px;
+  --r-xl: 12px;
+  --r-2xl: 16px;
+  --r-3xl: 20px;
+
+  --sh-1: 0 1px 3px 0 #00000003;
+  --sh-2: 0 2px 4px -1px #00000005;
+  --sh-3: 0 4px 8px -2px #00000008;
+  --sh-4: 0 8px 16px -4px #0000000a;
+  --sh-5: 0 16px 32px -8px #0000000d;
+  --sh-6: 0 32px 64px -16px #0000000f;
+  --sh-card: var(--sh-1), var(--sh-2), var(--sh-3);
+  --sh-float: var(--sh-1), var(--sh-2), var(--sh-3), var(--sh-4), var(--sh-5), var(--sh-6);
+  --sh-ring: 0 0 0 1px color-mix(in oklab, var(--black-0) 6%, transparent);
+
+  --ease-out: cubic-bezier(0, 0, 0, 1);
+  --ease-out-cubic: cubic-bezier(.33, 1, .68, 1);
+  --ease-emph: cubic-bezier(.2, 0, 0, 1);
+  --ease-reveal: cubic-bezier(0, 0, .58, 1);
+
+  /* ── Layout ────────────────────────────────────────────── */
+  --container: 1200px;
+  --gutter: clamp(16px, 4vw, 32px);
+  --nav-h: 52px;
+  --banner-h: 40px;
+  --section-y: clamp(72px, 10vw, 136px);
+}
+
+@media (min-width: 768px) {
+  :root { --nav-h: 68px; --banner-h: 44px; }
+}
+
+/*
+ * Dark bands (hardware, closing CTA). The page itself is light-first, as attio.com
+ * is; these sections remap the same semantic names onto the black scale.
+ */
+.theme-dark {
+  color-scheme: dark;
+  --bg: var(--black-100);
+  --bg-2: var(--black-200);
+  --bg-subtle: var(--black-300);
+  --surface: var(--black-400);
+  --stroke-weak: var(--black-300);
+  --stroke-subtle: var(--black-400);
+  --stroke: var(--black-500);
+  --stroke-strong: var(--black-600);
+  --fg: var(--white-100);
+  --fg-2: var(--white-400);
+  --fg-3: var(--black-900);
+  --fg-accent: var(--black-800);
+  --fg-caption: var(--black-700);
+  --link: var(--blue-400);
+  --sh-ring: 0 0 0 1px color-mix(in oklab, var(--white-100) 8%, transparent);
+  background: var(--bg);
+  color: var(--fg);
+}

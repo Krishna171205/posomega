@@ -1,2 +1,13 @@
-@import './landing-fonts.css';
-@import './landing.css';
+/* Design system: attio.com tokens and type, restaurant-POS content. See src/styles/. */
+@import '../styles/fonts.css';
+@import '../styles/tokens.css';
+@import '../styles/base.css';
+@import '../styles/primitives.css';
+@import '../styles/sections/nav.css';
+@import '../styles/sections/hero.css';
+@import '../styles/sections/platform.css';
+@import '../styles/sections/features.css';
+@import '../styles/sections/characters.css';
+@import '../styles/sections/closing.css';
+@import '../styles/sections/templates.css';
+@import '../styles/accent.css';
