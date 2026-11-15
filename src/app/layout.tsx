@@ -2,7 +2,26 @@ import type { Metadata } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { ScrollRail } from '@/components/ScrollRail'
-import './globals.css'
+/*
+ * Design system: attio.com tokens and type, restaurant-POS content. Order matters:
+ * tokens first, accents last. Each sheet is imported here rather than through
+ * CSS @import, because the dev server only notices edits to stylesheets that are
+ * imported from JavaScript.
+ */
+import '../styles/fonts.css'
+import '../styles/tokens.css'
+import '../styles/base.css'
+import '../styles/primitives.css'
+import '../styles/sections/nav.css'
+import '../styles/sections/hero.css'
+import '../styles/sections/platform.css'
+import '../styles/sections/features.css'
+import '../styles/sections/outlets.css'
+import '../styles/sections/testimonials.css'
+import '../styles/sections/characters.css'
+import '../styles/sections/closing.css'
+import '../styles/sections/templates.css'
+import '../styles/accent.css'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://posomega.com'),
@@ -75,7 +94,7 @@ const jsonLd = {
         priceCurrency: 'INR',
         // Matches the Starter tier in src/components/Pricing.tsx.
         description: 'Starter plan, per outlet per month. Unlimited seats.',
-        url: 'https://posomega.com/#pricing',
+        url: 'https://posomega.com/pricing',
       },
     },
     {

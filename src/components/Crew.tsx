@@ -76,9 +76,9 @@ export function Crew() {
   return (
     <section ref={rootRef} className={`section crew ${seen ? 'is-seen' : ''}`} aria-labelledby="crew-title">
       <div className="container">
-        <div className="sec-head center">
+        <div className="sec-head center" data-rv>
           <span className="eyebrow"><span className="dot" />How it works</span>
-          <h2 id="crew-title" className="h-section">Your whole team, <span className="h-italic">on one system.</span></h2>
+          <h2 id="crew-title" className="h-section">Your whole team, <span className="h-muted">on one system.</span></h2>
           <p className="lede">Five people, one service. Here is what each of them does differently with Omega.</p>
         </div>
 

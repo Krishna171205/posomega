@@ -12,7 +12,7 @@ export function Changelog() {
       <div className="container">
         <div className="cl-head">
           <div className="eyebrow"><span className="dot" />Changelog</div>
-          <h2 className="h-section">What shipped <span className="h-italic">recently.</span></h2>
+          <h2 className="h-section">What shipped <span className="h-muted">recently.</span></h2>
         </div>
         <ol className="cl-grid">
           {CHANGELOG.slice(0, 4).map(e => {

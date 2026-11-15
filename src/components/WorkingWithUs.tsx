@@ -33,7 +33,7 @@ export function WorkingWithUs() {
   return (
     <section className="section proof" id="early">
       <div className="container">
-        <div className="proof-top">
+        <div className="proof-top" data-rv>
           <div className="eyebrow"><span className="dot" />Where we are</div>
           <blockquote className="proof-quote">
             Omega runs real cafés today, and not many of them. If you want a POS with two hundred logos
@@ -54,8 +54,8 @@ export function WorkingWithUs() {
         )}
 
         <div className="proof-grid peeks">
-          {POINTS.map(p => (
-            <div className={`proof-card ${p.peek ? 'has-peek' : ''}`} key={p.t}>
+          {POINTS.map((p, i) => (
+            <div className={`proof-card ${p.peek ? 'has-peek' : ''}`} key={p.t} data-rv style={{ ['--rv-i' as string]: i }}>
               {p.peek && <Peek {...p.peek} />}
               <span className="proof-ic">{p.ic}</span>
               <h3>{p.t}</h3>

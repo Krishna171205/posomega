@@ -82,7 +82,7 @@ export default function GetStartedPage() {
                   Get started
                 </div>
                 <h1 className="h-section" style={{ marginTop: 16, textAlign: 'center' }}>
-                  Let&apos;s get your <span className="h-italic">counter</span> live.
+                  Let&apos;s get your <span className="h-muted">counter</span> live.
                 </h1>
                 <p className="lede" style={{ margin: '0 auto', textAlign: 'center' }}>
                   Tell us about your place. Our team will call within 24 hours to book a demo

@@ -34,9 +34,9 @@ export function Offline() {
   return (
     <section className="section offline" id="offline">
       <div className="container offline-grid">
-        <div>
+        <div data-rv>
           <div className="eyebrow"><span className="dot" />Offline-first</div>
-          <h2 className="h-section offline-h">The internet drops.<br /><span className="h-italic">Billing doesn’t.</span></h2>
+          <h2 className="h-section offline-h">The internet drops.<br /><span className="h-muted">Billing doesn’t.</span></h2>
           <p className="lede offline-lede">
             Cloud POS has one failure mode, and it is the expensive one. Omega treats the device
             in your restaurant as the source of truth and the cloud as the place it syncs to.
@@ -52,7 +52,7 @@ export function Offline() {
           <a href="/features/offline-mode" className="text-link offline-link">How offline mode works <Icon.Arrow size={12} /></a>
         </div>
 
-        <div className="panel dots-bg offline-vis has-peek">
+        <div className="panel dots-bg offline-vis has-peek" data-rv style={{ ['--rv-i' as string]: 1 }}>
           {/* Reacts to the simulator: calm online, sweating offline, relieved on sync. */}
           <Peek
             who="server"

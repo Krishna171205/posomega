@@ -8,7 +8,6 @@ const COLS: { h: string; links: { href: string; t: string; ext?: boolean }[] }[]
       { href: '/features/kitchen-display', t: 'Kitchen display' },
       { href: '/features/inventory-and-forecasting', t: 'Inventory' },
       { href: '/features/offline-mode', t: 'Offline mode' },
-      { href: '/#hardware', t: 'Hardware' },
       { href: '/app', t: 'Android app' },
     ],
   },

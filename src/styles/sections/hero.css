@@ -253,39 +253,64 @@
 }
 
 /* ── Stage ──────────────────────────────────────────────── */
-.hs { position: relative; margin-top: clamp(36px, 6svh, 64px); overflow-x: clip; overflow-clip-margin: 0; }
+.hs { position: relative; margin-top: clamp(24px, 4svh, 44px); overflow-x: clip; overflow-clip-margin: 0; }
 .hs-sticky {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 20px;
   padding: 0 var(--gutter) 32px;
 }
+/* Sized like attio.com's hero: the window box is 75% of the viewport (up to 1440px)
+   with a pane of min(40.35vw, 775px); Hero.tsx then shrinks the window to about 81%
+   as you scroll, which leaves the margins for the small windows. */
 .hs-frame { position: relative; width: 100%; max-width: 1200px; }
-@media (min-width: 900px) { .hs-frame { width: 82vw; } }
-@media (min-width: 1280px) { .hs-frame { width: 76vw; max-width: 1320px; } }
+@media (min-width: 900px) { .hs-frame { width: 74vw; } }
+@media (min-width: 1200px) { .hs-frame { width: min(75vw, 1440px); max-width: none; } }
 
 .hs-shell { animation: rise-in .9s .18s var(--ease-out-cubic) both; position: relative; z-index: 2; }
 .hs-win { transition: background-color .4s var(--ease-emph); }
 .hs.is-scrolling .hs-win { background: var(--white-300); -webkit-backdrop-filter: none; backdrop-filter: none; }
 .hs-pane { height: clamp(380px, 40.35vw, 640px); container-type: inline-size; }
+@media (min-width: 1200px) { .hs-pane { height: min(40.35vw, 775px); } }
 
 /* Pinned scroll choreography: wide screens that allow motion only. The JS uses the
    same two conditions, so CSS and script never disagree about the mode. */
 @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
-  .hs { height: 250svh; margin-top: clamp(48px, 8svh, 96px); }
+  .hs { height: 380svh; margin-top: clamp(8px, 1.5svh, 20px); }
   /* Top-aligned, not centred: centring let a tall window ride up over the CTAs. */
-  .hs-sticky { position: sticky; top: var(--nav-h); height: calc(100svh - var(--nav-h)); justify-content: flex-start; padding-top: clamp(16px, 3svh, 32px); padding-bottom: 12px; }
-  .hs-float { left: 0 !important; top: 0 !important; }
+  .hs-sticky { position: sticky; top: var(--nav-h); height: calc(100svh - var(--nav-h)); justify-content: center; justify-content: safe center; padding-top: 12px; padding-bottom: 16px; }
   /* Slightly low and large on load; JS settles it as it scrolls to centre (see Hero.tsx). */
-  .hs-frame { transform: translate3d(0, 48px, 0) scale(1.06); transform-origin: 50% 0%; will-change: transform; }
+  .hs-win { transform-origin: 50% 50%; will-change: transform; }   /* Hero.tsx shrinks it as you scroll */
+  .hs-float { opacity: 0; }                                         /* and grows these in once it has */
 }
 
 .hs-floats { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .hs-float { position: absolute; transform-origin: 0 0; will-change: transform, opacity; }
-.hs-float-order { left: -7%; top: 4%; width: clamp(230px, 25%, 290px); }
-.hs-float-kds { left: 78%; top: 30%; width: clamp(260px, 31%, 360px); }
+/* Where they wait, as on attio.com: placed against the full-size window box, so they
+   sit just outside the window once it has shrunk. Order above the top-left corner,
+   kitchen off the right edge, bill over the bottom-left edge. */
+.hs-float-order { left: -128px; top: -16px; width: 30%; max-width: 268px; }
+.hs-float-order .fw-actions .ui-btn { white-space: nowrap; padding-inline: 8px; font-size: 11.5px; }
+.hs-float-order .fw-order-top .ui-num { white-space: nowrap; }
+.hs-float-kds { right: -128px; top: 40px; width: 30%; max-width: 272px; }
+.hs-float-kds .fw-kds { grid-template-columns: minmax(0, 1fr); }   /* a portrait stack, like Attio's call window */
 /* Floating windows sit over the app, so their chrome is opaque (the shell's is translucent). */
 .hs-float .win { background: var(--white-300); -webkit-backdrop-filter: none; backdrop-filter: none; }
-.hs-float-bill { left: -9%; top: 46%; width: clamp(200px, 20%, 236px); }
+.hs-float-bill { left: -96px; bottom: 32px; width: 33%; max-width: 300px; }
+@media (min-width: 1280px) {
+  .hs-float-order { left: -160px; }
+  .hs-float-kds { right: -160px; }
+  .hs-float-bill { left: -128px; }
+}
+
+/* Draggable until their docking slice starts: pick up, lift, throw */
+@media (min-width: 900px) {
+  .hs.has-js .hs-float.is-free { pointer-events: auto; cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; }
+  .hs.has-js .hs-float.is-grabbed { cursor: grabbing; }
+  .hs-float :is(.win, .pr) { transition: box-shadow .3s var(--ease-emph); }
+  .hs-float.is-grabbed :is(.win, .pr) {
+    box-shadow: var(--sh-ring), 0 32px 64px -20px rgb(16 16 16 / .34), 0 12px 24px -12px rgb(16 16 16 / .2);
+  }
+}
 .hs-float-in { animation: float-in .8s var(--ease-out-cubic) both; }
 @keyframes float-in { from { opacity: 0; filter: blur(3px); transform: translateY(10px); } to { opacity: 1; filter: none; transform: none; } }
 @media (max-width: 899px) { .hs-floats, .hs-steps { display: none; } }
@@ -436,7 +461,7 @@
   padding: 8px 9px 12px; border-radius: 10px 10px 4px 4px;
   background: var(--white-100);
 }
-.pr-mark { flex: none; width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; background: var(--blue-800); color: var(--white-100); font-family: var(--font-serif); font-style: italic; font-size: 15px; }
+.pr-mark { flex: none; width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; background: var(--blue-800); color: var(--white-100); font-family: var(--font-display); font-variation-settings: 'opsz' 32; font-weight: 700; font-size: 14px; }
 .pr-where { display: grid; min-width: 0; line-height: 1.2; }
 .pr-where b { font-size: 11.5px; font-weight: 600; }
 .pr-where span { font-size: 9.5px; color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

@@ -71,6 +71,7 @@ export function Peek({ who, side = 'right', x = '10%', say, mood = 'happy', ente
   const [seen, setSeen] = useState(false)
   const [talk, setTalk] = useState(false)
   const up = active === undefined ? seen : active && inView
+  const controlled = useRef(active !== undefined)
 
   useEffect(() => {
     const el = ref.current
@@ -78,7 +79,7 @@ export function Peek({ who, side = 'right', x = '10%', say, mood = 'happy', ente
     const io = new IntersectionObserver(([e]) => {
       setInView(e.isIntersecting)
       if (e.isIntersecting) setSeen(true)
-    }, { rootMargin: '0px 0px -12% 0px' })
+    }, { rootMargin: controlled.current ? '0px' : '0px 0px -12% 0px' })
     io.observe(el)
     return () => io.disconnect()
   }, [])

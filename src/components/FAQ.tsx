@@ -9,13 +9,13 @@ export function FAQ() {
   return (
     <section className="section" id="faq">
       <div className="container faq-grid">
-        <div className="faq-side">
+        <div className="faq-side" data-rv>
           <div className="eyebrow"><span className="dot" />Questions</div>
-          <h2 className="h-section">Things you’re <span className="h-italic">probably wondering.</span></h2>
+          <h2 className="h-section">Things you’re <span className="h-muted">probably wondering.</span></h2>
           <p className="lede">Still curious? Talk to a person. The team are former café operators, not a call centre.</p>
           <a href="/get-started" className="btn btn-outline">Talk to us <Icon.Arrow size={12} /></a>
         </div>
-        <div className="faq-list has-peek">
+        <div className="faq-list has-peek" data-rv style={{ ['--rv-i' as string]: 1 }}>
           <Peek who="store" mood="think" say="Hmm, good question…" side="right" x="6%" enter="eyes" />
           {FAQS.map((f, i) => {
             const isOpen = open === i

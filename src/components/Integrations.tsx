@@ -14,10 +14,10 @@ export function Integrations() {
   return (
     <section className="section" id="integrations">
       <div className="container">
-        <div className="int-head">
+        <div className="int-head" data-rv>
           <div className="sec-head">
             <div className="eyebrow"><span className="dot" />Integrations</div>
-            <h2 className="h-section">Your whole counter, <span className="h-italic">connected.</span></h2>
+            <h2 className="h-section">Your whole counter, <span className="h-muted">connected.</span></h2>
             <p className="lede">
               The aggregators, payment rails and hardware Indian restaurants already pay for.
               The list is short because every item on it works.
@@ -27,8 +27,8 @@ export function Integrations() {
         </div>
 
         <div className="int-grid peeks">
-          {INTEGRATION_GROUPS.map(g => (
-            <div key={g.tag} className={`int-group ${PEEKS[g.tag] ? 'has-peek' : ''}`}>
+          {INTEGRATION_GROUPS.map((g, i) => (
+            <div key={g.tag} className={`int-group ${PEEKS[g.tag] ? 'has-peek' : ''}`} data-rv style={{ ['--rv-i' as string]: i }}>
               {PEEKS[g.tag] && <Peek {...PEEKS[g.tag]} />}
               <div className="int-group-h">
                 <h3>{g.tag}</h3>

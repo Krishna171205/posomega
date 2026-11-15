@@ -12,7 +12,7 @@
 .mk-crumbs [aria-current] { color: var(--fg-2); }
 .mk-hero { display: grid; gap: 18px; justify-items: start; padding-block: clamp(36px, 6vw, 72px) clamp(24px, 4vw, 48px); border-bottom: 1px solid var(--stroke-weak); }
 .mk-h1 { font-size: clamp(40px, 5.6vw, 60px); line-height: 1; letter-spacing: -0.035em; max-width: 16em; }
-.mk-h1 .h-italic { color: var(--fg-accent); }
+.mk-h1 .h-muted { color: var(--fg-accent); }
 .mk-lede { max-width: 40em; }
 .mk-cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
 .mk-block { padding-block: clamp(36px, 5vw, 56px); border-bottom: 1px solid var(--stroke-weak); }
@@ -53,7 +53,7 @@
 .legal-meta { display: flex; align-items: center; gap: 8px; margin-top: 32px; font-size: 13px; color: var(--fg-3); }
 .legal-meta .dot { width: 6px; height: 6px; border-radius: 2px; background: var(--fg); }
 .legal-title { margin-top: 16px; font-size: clamp(36px, 5vw, 52px); }
-.legal-title .h-italic { color: var(--fg-accent); }
+.legal-title .h-muted { color: var(--fg-accent); }
 .legal-intro { margin-top: 18px; }
 .legal-content { margin-top: 40px; display: grid; gap: 32px; }
 .legal-content h2 { font-size: 18px; font-weight: 600; letter-spacing: -0.015em; }

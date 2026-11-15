@@ -6,7 +6,7 @@
   font-size: clamp(26px, 3.4vw, 40px); font-weight: 600; line-height: 1.15; letter-spacing: -0.025em;
   text-wrap: balance;
 }
-.proof-em { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; color: var(--fg-accent); }
+.proof-em { color: var(--black-700); }
 .proof-by { font-size: 13.5px; color: var(--fg-3); }
 .proof-customers { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 40px; }
 .proof-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: clamp(40px, 5vw, 64px); }

@@ -56,7 +56,7 @@ export function Pricing() {
       <div className="container">
         <div className="sec-head center">
           <div className="eyebrow"><span className="dot" />Pricing</div>
-          <h2 className="h-section">Pay for outlets, <span className="h-italic">not seats.</span></h2>
+          <h2 className="h-section">Pay for outlets, <span className="h-muted">not seats.</span></h2>
           <p className="lede">
             One flat fee per outlet. Unlimited staff, terminals and transactions. No setup fee, and no cut
             of your payments.
