@@ -463,9 +463,6 @@ export function Hero() {
           <a href={HERO.primary.href} className="btn btn-blue">{HERO.primary.label}</a>
           <a href={HERO.secondary.href} className="btn btn-tint">{HERO.secondary.label}</a>
         </div>
-        <ul className="hero-meta">
-          {HERO.meta.map(m => <li key={m}><Icon.Check size={12} />{m}</li>)}
-        </ul>
       </div>
 
       <div className="hs" ref={stageRef}>

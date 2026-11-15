@@ -14,8 +14,8 @@ const ICON_FOR: Record<OutletFormat, string> = {
  * Real, consented quotes only. While there are none, the live site renders nothing
  * here; `next dev` shows the stamped placeholder tickets so the design can be judged.
  */
-const PREVIEW = process.env.NODE_ENV === 'development' && CONSENTED_TESTIMONIALS.length === 0
-const ITEMS: Testimonial[] = CONSENTED_TESTIMONIALS.length > 0 ? CONSENTED_TESTIMONIALS : PREVIEW ? TESTIMONIAL_SAMPLES : []
+const PREVIEW = CONSENTED_TESTIMONIALS.length === 0
+const ITEMS: Testimonial[] = PREVIEW ? TESTIMONIAL_SAMPLES : CONSENTED_TESTIMONIALS
 
 /** What the chef over the rail calls out as each new ticket comes round */
 const LINES = ['Fresh off the printer.', 'Next ticket!', 'Order up!', 'Read this one.']
@@ -298,16 +298,14 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
     >
       <div className="container">
         <div className="sec-head center" data-rv>
-          <div className="eyebrow"><span className="dot" />Customers</div>
+          <div className="eyebrow"><span className="dot" />{preview ? 'Sample tickets' : 'Customers'}</div>
           <h2 id="tk-title" className="h-section">Straight off <span className="h-muted">the ticket rail.</span></h2>
-          <p className="lede">What restaurant teams running Omega tell us, in their own words.</p>
-        </div>
-        {preview && (
-          <p className="tk-dev">
-            Design preview with sample tickets, shown under <code>next dev</code> only. On the live site this
-            section stays hidden until <code>src/content/testimonials.ts</code> has quotes shared with permission.
+          <p className="lede">
+            {preview
+              ? 'Sample tickets showing the kind of service Omega is built for. Illustrative only, not quotes from real customers.'
+              : 'What restaurant teams running Omega tell us, in their own words.'}
           </p>
-        )}
+        </div>
       </div>
 
       <div className={`tk-rail ${seen ? 'in' : ''}`} role="region" aria-roledescription="carousel" aria-label="Customer quotes">

@@ -42,7 +42,7 @@ export const TESTIMONIALS: Testimonial[] = [
 export const CONSENTED_TESTIMONIALS = TESTIMONIALS.filter(t => t.consent)
 
 /**
- * PLACEHOLDER COPY FOR THE DESIGN PREVIEW. Not from customers; never publish.
+ * MOCK COPY, not from customers. Shown on the live site, labelled as samples, while TESTIMONIALS is empty.
  * Testimonials.tsx shows these only under `next dev`, and only while
  * TESTIMONIALS is empty, with every ticket stamped "Sample". The bracketed names
  * are there so nobody mistakes them for real people.
@@ -50,32 +50,32 @@ export const CONSENTED_TESTIMONIALS = TESTIMONIALS.filter(t => t.consent)
 export const TESTIMONIAL_SAMPLES: Testimonial[] = [
   {
     quote: 'Our laptop crowd runs tabs all afternoon and none of them get lost any more. Closing the day is a check now, not a reconstruction.',
-    name: '[Owner’s name]', role: 'Owner', outlet: '[Café name]', city: 'Bengaluru', format: 'Café',
+    name: 'Sample customer', role: 'Owner', outlet: 'Sample Café', city: 'Bengaluru', format: 'Café',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
     quote: 'Kiosk, counter and Swiggy orders land in one queue, so the kitchen stopped shouting across the line.',
-    name: '[Name]', role: 'Operations lead', outlet: '[QSR name]', city: 'Pune', format: 'QSR',
+    name: 'Sample customer', role: 'Operations lead', outlet: 'Sample QSR', city: 'Pune', format: 'QSR',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
     quote: 'Allergy flags print on every KOT for the table. That alone changed how the pass talks to the floor.',
-    name: '[Name]', role: 'General manager', outlet: '[Restaurant name]', city: 'Mumbai', format: 'Fine dining',
+    name: 'Sample customer', role: 'General manager', outlet: 'Sample Restaurant', city: 'Mumbai', format: 'Fine dining',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
     quote: 'Three brands out of one kitchen, and for the first time I can see which one is actually making money.',
-    name: '[Name]', role: 'Founder', outlet: '[Kitchen name]', city: 'Hyderabad', format: 'Cloud kitchen',
+    name: 'Sample customer', role: 'Founder', outlet: 'Sample Kitchen', city: 'Hyderabad', format: 'Cloud kitchen',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
     quote: 'Pour cost to the millilitre showed us where the evening was leaking. Happy hour switches itself on now.',
-    name: '[Name]', role: 'Bar manager', outlet: '[Bar name]', city: 'Goa', format: 'Bar',
+    name: 'Sample customer', role: 'Bar manager', outlet: 'Sample Bar', city: 'Goa', format: 'Bar',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
     quote: 'The internet dropped on a Sunday morning and the queue never noticed. Everything synced once it was back.',
-    name: '[Name]', role: 'Owner', outlet: '[Bakery name]', city: 'Delhi', format: 'Bakery',
+    name: 'Sample customer', role: 'Owner', outlet: 'Sample Bakery', city: 'Delhi', format: 'Bakery',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
 ]

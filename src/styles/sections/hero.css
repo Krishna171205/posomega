@@ -275,7 +275,7 @@
 /* Pinned scroll choreography: wide screens that allow motion only. The JS uses the
    same two conditions, so CSS and script never disagree about the mode. */
 @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
-  .hs { height: 380svh; margin-top: clamp(8px, 1.5svh, 20px); }
+  .hs { height: 380svh; margin-top: clamp(40px, 6svh, 72px); }
   /* Top-aligned, not centred: centring let a tall window ride up over the CTAs. */
   .hs-sticky { position: sticky; top: var(--nav-h); height: calc(100svh - var(--nav-h)); justify-content: center; justify-content: safe center; padding-top: 12px; padding-bottom: 16px; }
   /* Slightly low and large on load; JS settles it as it scrolls to centre (see Hero.tsx). */
