@@ -3,20 +3,21 @@ import { useEffect, useRef, useState } from 'react'
 import { Icon } from './Icons'
 import { HERO } from '@/content/home'
 import DotGrid from './ui/DotGrid'
-import { AppWindow, KitchenWindow, OrderWindow, ReceiptWindow } from './hero/HeroScene'
+import { AppWindow, KitchenWindow, OrderWindow, OfflineWindow } from './hero/HeroScene'
 
 /**
  * The hero scene, after attio.com's (values read from its markup): the app window
  * starts big (75% of the viewport, its pane min(40.35vw, 775px) tall) and shrinks
- * to about 81% as the page scrolls up to it, while the headline blurs away. Once it
+ * to about 87% as the page scrolls down to it, as attio.com's does. Once it
  * has settled, the three small windows grow out from the corner nearest it, each
  * sized and placed like Attio's (30% of the window box, up to 268–300px, hanging
- * 96–160px past its edges). Then, one by one, they fly in and dock inside the app.
+ * 96–160px past its edges). They stay out, each playing its own loop (HeroScene.tsx),
+ * while the app window cycles its own scene (the .s1/.s2/.s3 steps below).
  *
- *  show    slice of the pinned scroll in which it appears
+ *  show    slice of the timeline in which it appears
  *  origin  the corner it grows from, as fractions of its own box
  *  to      where it docks, as fractions of the window (before the window's scale)
- *  span    slice of the pinned scroll in which it docks
+ *  span    slice of the timeline in which it docks
  *
  * While shown and not yet docking, each can be dragged about and thrown; docking
  * then flies it in from wherever it was left.
@@ -27,7 +28,11 @@ const FLOATS = [
   { key: 'bill', show: [0.08, 0.18], origin: [1, 0], to: [0.8, 0.42], span: [0.68, 0.9] },
 ] as const
 /** How far the window shrinks before the small windows appear */
-const SHRINK = 0.81
+const SHRINK = 0.872   // attio.com settles its window at scale(0.872275)
+/* The app window's own scene (.s1/.s2/.s3: new order, KOT, paid) plays on a clock
+   once the hero is in view, over PLAY ms, holds, and loops. The window's size and the
+   small windows follow the scroll instead (see readTargets). */
+const SETTLE_DELAY = 600, SETTLE = 1800, PLAY = 9000, HOLD = 3000
 
 const STEPS = ['Swiggy order accepted', 'KOT fired to the hot line', 'Table 7 paid, bill printed']
 
@@ -122,7 +127,6 @@ export function Hero() {
   const stageRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<HTMLDivElement>(null)
   const winRef = useRef<HTMLDivElement>(null)
-  const copyRef = useRef<HTMLDivElement>(null)
   const stepsRef = useRef<HTMLOListElement>(null)
   const floatRefs = useRef<(HTMLDivElement | null)[]>([])
   const [active, setActive] = useState(-1)
@@ -132,7 +136,6 @@ export function Hero() {
     const frame = frameRef.current
     const win = winRef.current
     if (!stage || !frame || !win) return
-    const copy = copyRef.current
     const steps = stepsRef.current
     const mqWide = window.matchMedia('(min-width: 900px)')
     const mqCalm = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -148,6 +151,8 @@ export function Hero() {
        pT: progress while pinned) and the smoothed values the scene is drawn with, so
        it glides after the wheel instead of jumping a notch at a time. */
     let aT = 0, pT = 0, aS = 0, pS = 0
+    let elapsed = 0                                       // ms of timeline played while in view
+    let visible = true
 
     /* Dragging: an offset per window, with momentum, a tilt into the motion and a lift */
     type Drag = { x: number; y: number; vx: number; vy: number; tilt: number; lift: number; held: boolean }
@@ -200,11 +205,14 @@ export function Hero() {
     function readTargets() {
       animated = mqWide.matches && !mqCalm.matches
       if (!animated) { aT = 0; pT = 0; return }
+      // As on attio.com: at the top of the page the app window is full size and alone;
+      // scrolling down to it pulls it back and brings the small windows out, and
+      // scrolling up reverses that. What plays inside the windows runs on its own clock.
       const r = stage!.getBoundingClientRect()
-      const range = stage!.offsetHeight - window.innerHeight
-      pT = range > 0 ? clamp01(-r.top / range) : 0
       const startTop = r.top + window.scrollY - navH
       aT = clamp01(startTop > 0 ? window.scrollY / startTop : 1)
+      const loop = elapsed - SETTLE_DELAY - SETTLE
+      pT = loop <= 0 ? 0 : clamp01((loop % (PLAY + HOLD)) / PLAY)
     }
 
     /** Momentum, tilt and lift for the windows; returns whether anything still moves */
@@ -241,7 +249,7 @@ export function Hero() {
 
     function paint() {
       stage!.classList.toggle('is-pinned', animated)
-      // 1. The window shrinks as the page scrolls up to it, and the headline blurs away
+      // 1. The window settles (shrinks) into place
       winScale = animated ? 1 - (1 - SHRINK) * smooth(aS) : 1
       win!.style.transform = animated ? `scale(${winScale.toFixed(4)})` : ''
       // The layout box stays full size while the window is drawn smaller, so as it
@@ -257,11 +265,6 @@ export function Hero() {
         frame!.style.transform = ''
         if (steps) steps.style.transform = ''
       }
-      if (copy) {
-        const q = animated ? clamp01((aS - 0.35) / 0.65) : 0
-        copy.style.opacity = q > 0 ? (1 - 0.8 * q).toFixed(3) : ''
-        copy.style.filter = q > 0.01 ? `blur(${(q * 3).toFixed(2)}px)` : ''
-      }
       // 2. Then the small windows grow out of their corners, and 3. dock one by one
       const cx = size.w / 2
       const cy = size.h / 2
@@ -269,13 +272,16 @@ export function Hero() {
         const el = floatRefs.current[i]
         if (!el) return
         const d = drag[i]
-        const show = animated ? ease(clamp01((pS - f.show[0]) / (f.show[1] - f.show[0]))) : 1
-        const t = animated ? ease(clamp01((pS - f.span[0]) / (f.span[1] - f.span[0]))) : 0
+        // Grow in once, after the window settles, then stay out and draggable for good
+        // (they no longer dock: each plays its own loop, as on attio.com)
+        // they grow out once the window has mostly pulled back, one after another
+        const show = animated ? ease(clamp01((aS - 0.45 - i * 0.12) / 0.3)) : 1
+        const t = 0
         const isFree = show > 0.98 && t < 0.001
         if (isFree !== free[i]) {
           free[i] = isFree
           el.classList.toggle('is-free', isFree)
-          if (!isFree && grab?.i === i) release(null)      // the scroll takes over mid-drag
+          if (!isFree && grab?.i === i) release(null)      // the timeline takes over mid-drag
         }
         const sc = (0.72 + 0.28 * show) * (1 - 0.55 * t)
         const ox = f.origin[0] * dims[i].w
@@ -316,33 +322,45 @@ export function Hero() {
       const raw = (now - last) / 1000
       last = now
       const dt = Math.min(0.05, raw)                       // physics steps stay small and stable
+      // the timeline pauses while a window is held, and while the hero is off screen
+      if (animated && visible && !grab) elapsed += Math.min(0.25, raw) * 1000
       readTargets()
-      // about 170ms behind the scroll (a slow, soft follow), on the real frame time, so a slow machine
+      // about 170ms behind the timeline (a slow, soft follow), on the real frame time, so a slow machine
       // catches up as quickly as a fast one
       const k = 1 - Math.exp(-Math.min(0.25, raw) * 6)
       aS += (aT - aS) * k
       pS += (pT - pS) * k
       if (Math.abs(aT - aS) < 0.0004) aS = aT
       if (Math.abs(pT - pS) < 0.0004) pS = pT
+      if (pT < pS - 0.5) pS = pT                           // the loop restarts: jump back, don't rewind
       const moving = stepDrag(dt)
       paint()
-      if (moving || aS !== aT || pS !== pT) tick = requestAnimationFrame(frameTick)
+      if (moving || aS !== aT || pS !== pT || (animated && visible)) tick = requestAnimationFrame(frameTick)
     }
     const kick = () => { if (!tick) { last = performance.now(); tick = requestAnimationFrame(frameTick) } }
 
+    /** Whichever window is hovered or clicked, the app or a small one, comes to the front */
+    const raise = (el: HTMLElement | null | undefined) => {
+      if (el && el.style.zIndex !== String(zTop)) el.style.zIndex = String(++zTop)
+    }
+    // hovering raises too, except while another window is being dragged across it
+    const enters = [...FLOATS.map((_, i) => () => { if (!grab) raise(floatRefs.current[i]) }), () => { if (!grab) raise(shell) }]
+    const shell = win.parentElement
+    const downShell = (e: PointerEvent) => { if (e.pointerType !== 'mouse' || e.button === 0) raise(shell) }
+
     function down(i: number, e: PointerEvent) {
       if (e.pointerType === 'mouse' && e.button !== 0) return
-      if (!free[i] || !mqWide.matches) return
-      e.preventDefault()
       const el = floatRefs.current[i]
       if (!el) return
+      raise(el)
+      if (!free[i] || !mqWide.matches) return
+      e.preventDefault()
       el.setPointerCapture(e.pointerId)
       const d = drag[i]
       d.held = true
       d.vx = 0
       d.vy = 0
       grab = { i, id: e.pointerId, sx: e.clientX, sy: e.clientY, x0: d.x, y0: d.y, samples: [{ t: e.timeStamp, x: d.x, y: d.y }] }
-      el.style.zIndex = String(++zTop)                     // the one you pick up comes to the front
       el.classList.add('is-grabbed')
       kick()
     }
@@ -385,20 +403,27 @@ export function Hero() {
     floatRefs.current.forEach(el => { if (el) ro.observe(el) })
     const downs = FLOATS.map((_, i) => (e: PointerEvent) => down(i, e))
     floatRefs.current.forEach((el, i) => el?.addEventListener('pointerdown', downs[i]))
+    shell?.addEventListener('pointerdown', downShell)
+    floatRefs.current.forEach((el, i) => el?.addEventListener('pointerenter', enters[i]))
+    shell?.addEventListener('pointerenter', enters[FLOATS.length])
     window.addEventListener('pointermove', move)
     window.addEventListener('pointerup', release)
     window.addEventListener('pointercancel', release)
-    window.addEventListener('scroll', kick, { passive: true })
+    const io = new IntersectionObserver(([en]) => { visible = en.isIntersecting; kick() })
+    io.observe(stage)
     window.addEventListener('resize', onResize)
     mqWide.addEventListener('change', onResize)
     mqCalm.addEventListener('change', onResize)
     return () => {
       ro.disconnect()
       floatRefs.current.forEach((el, i) => el?.removeEventListener('pointerdown', downs[i]))
+      shell?.removeEventListener('pointerdown', downShell)
+      floatRefs.current.forEach((el, i) => el?.removeEventListener('pointerenter', enters[i]))
+      shell?.removeEventListener('pointerenter', enters[FLOATS.length])
       window.removeEventListener('pointermove', move)
       window.removeEventListener('pointerup', release)
       window.removeEventListener('pointercancel', release)
-      window.removeEventListener('scroll', kick)
+      io.disconnect()
       window.removeEventListener('resize', onResize)
       mqWide.removeEventListener('change', onResize)
       mqCalm.removeEventListener('change', onResize)
@@ -431,7 +456,7 @@ export function Hero() {
           clickShock={true}
         />
       </div>
-      <div className="hero-copy" ref={copyRef}>
+      <div className="hero-copy">
         <div className="hero-pill-wrap">
           <a href="/features/offline-mode" className="hero-pill">
             <span className="hero-pill-border" aria-hidden="true">
@@ -481,7 +506,7 @@ export function Hero() {
             </div>
 
             <div className="hs-floats" aria-hidden="true">
-              {[<OrderWindow key="o" />, <KitchenWindow key="k" />, <ReceiptWindow key="r" />].map((w, i) => (
+              {[<OrderWindow key="o" />, <KitchenWindow key="k" />, <OfflineWindow key="off" />].map((w, i) => (
                 <div
                   key={FLOATS[i].key}
                   className={`hs-float hs-float-${FLOATS[i].key}`}

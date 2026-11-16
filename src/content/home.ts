@@ -3,7 +3,7 @@
  *
  * Every product claim here traces back to the long-form pages in src/content/*
  * (features.ts, segments.ts, integrations.ts), which are the vetted source. Mock data
- * (orders, tables, stock) is illustrative: the outlet is "Demo Café", never a real
+ * (orders, tables, stock) is illustrative: the outlet is "Brewbari Café" (Hauz Khas Village, New Delhi), made up, never a real
  * business, and no number below is presented as a customer metric.
  */
 

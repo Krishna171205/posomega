@@ -19,7 +19,8 @@ const ITEMS: Testimonial[] = PREVIEW ? TESTIMONIAL_SAMPLES : CONSENTED_TESTIMONI
 
 /** What the chef over the rail calls out as each new ticket comes round */
 const LINES = ['Fresh off the printer.', 'Next ticket!', 'Order up!', 'Read this one.']
-const DWELL = 3500
+/** The rail creeps along on its own like a kitchen conveyor, in px/s */
+const DRIFT = 34
 
 /* Physics, in px and seconds */
 const SPRING = 190        // pull toward the ticket it settles on
@@ -60,8 +61,9 @@ const mod = (a: number, b: number) => ((a % b) + b) % b
  *    with a rubber-band pull
  *  - every ticket is a damped pendulum hanging from its clip, kicked by changes in
  *    the rail's speed, so a hard fling sets them swinging and they settle on their own
- * Every few seconds it moves on by one ticket by itself, and holds still while the
- * pointer or focus is inside the section. The chef over the rail calls out each new
+ * On its own it creeps along slowly, like a conveyor, and eases to a stop while the
+ * pointer is on a ticket (or focus is inside), so a quote can be read. The ticket
+ * arriving at the pass gets its quote printed line by line and its stamp thumped. The chef over the rail calls out each new
  * ticket, and gets a fright when you fling it.
  */
 function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
@@ -87,9 +89,10 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
   const sim = useRef({
     x: 0, v: 0, target: null as number | null,
     step: 326, width: 1200, maxX: 0,
-    dragging: false, lastVs: 0, idx: 0,
+    dragging: false, lastVs: 0, idx: 0, vAuto: 0, pass: -1,
     theta: [] as number[], omega: [] as number[],
   })
+  const auto = useRef(false)                            // read by the frame loop
   const drag = useRef<{ id: number; sx: number; x0: number; samples: { t: number; x: number }[]; moved: boolean; captured: boolean } | null>(null)
   const suppressClick = useRef(false)
 
@@ -162,6 +165,10 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
       const s = sim.current
       const dt = Math.min(0.034, (now - last) / 1000)
       last = now
+      // the conveyor: eases up to DRIFT, and back down to a stop when held
+      const want = auto.current && !s.dragging && s.target == null ? DRIFT : 0
+      s.vAuto += (want - s.vAuto) * Math.min(1, dt * 2.5)
+      if (!s.dragging && s.target == null) s.x += s.vAuto * dt
       if (!s.dragging && s.target != null) {
         const h = dt / 2
         for (let k = 0; k < 2; k++) {
@@ -173,16 +180,18 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
       }
       // The rail moves opposite to x. A change in its speed kicks every pendulum: when
       // the rail speeds up to the right, the bottom of a ticket lags to the left.
-      const vs = -s.v
+      const vs = -(s.v + s.vAuto)
       const dv = vs - s.lastVs
       s.lastVs = vs
       const P = N * s.step
+      let pass = -1, near = Infinity
       for (let j = 0; j < N; j++) {
         const el = els.current[j]
         const sw = swings.current[j]
         if (!el || !sw) continue
         const p = loop ? mod(j * s.step - s.x + s.step, P) - s.step : j * s.step - s.x
         el.style.transform = `translate3d(${(p - j * s.step).toFixed(2)}px,0,0)`
+        if (Math.abs(p) < near) { near = Math.abs(p); pass = j }
         let th = s.theta[j] || 0
         let om = s.omega[j] || 0
         om += (SWING_KICK + (j % 2) * 0.01) * dv
@@ -193,6 +202,12 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
         s.omega[j] = om
         const idle = calm ? 0 : 0.8 * Math.sin(now * 0.00095 + j * 1.7)
         sw.style.transform = `rotate(${(th + idle).toFixed(2)}deg)`
+      }
+      // the ticket at the pass (the first slot) gets printed and stamped
+      if (pass !== s.pass) {
+        els.current[s.pass]?.classList.remove('is-pass')
+        els.current[pass]?.classList.add('is-pass')
+        s.pass = pass
       }
       const at = Math.round(s.x / s.step)
       const idx = loop ? mod(at, n) : Math.min(n - 1, Math.max(0, at))
@@ -230,13 +245,8 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
     return () => { vp.removeEventListener('wheel', wheel); window.clearTimeout(settle) }
   }, [loop]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Moves on by one ticket every few seconds, unless someone is reading or dragging
-  const playing = seen && inView && !hold && !dragging && !calm && n > 1
-  useEffect(() => {
-    if (!playing) return
-    const t = window.setTimeout(() => go(1), DWELL)
-    return () => window.clearTimeout(t)
-  }, [playing, tick]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Creeps along by itself, unless someone is reading or dragging
+  auto.current = seen && inView && !hold && !dragging && !calm && loop
 
   /* ── Dragging ── */
   function down(e: React.PointerEvent<HTMLDivElement>) {
@@ -291,8 +301,6 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
       className="section tk-sec"
       id="customers"
       aria-labelledby="tk-title"
-      onPointerEnter={e => { if (e.pointerType === 'mouse') setHold(true) }}
-      onPointerLeave={e => { if (e.pointerType === 'mouse') setHold(false) }}
       onFocus={() => setHold(true)}
       onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setHold(false) }}
     >
@@ -347,7 +355,11 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
                 >
                   <div className="tk-swing" ref={el => { swings.current[j] = el }}>
                     <span className="tk-clip" aria-hidden="true" />
-                    <figure className="tk-paper">
+                    <figure
+                      className="tk-paper"
+                      onPointerEnter={e => { if (e.pointerType === 'mouse') setHold(true) }}
+                      onPointerLeave={e => { if (e.pointerType === 'mouse') setHold(false) }}
+                    >
                       <div className="tk-h">
                         <span className="ui-num">KOT #{String(412 + idx).padStart(4, '0')}</span>
                         <span className="tk-fmt"><span className="tk-fmt-ic" aria-hidden="true"><OutletIcon id={ICON_FOR[t.format]} /></span>{t.format}</span>
@@ -376,17 +388,6 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
         </div>
       </div>
 
-      <div className="container tk-ctl">
-        <span className="tk-count ui-num">{String(index + 1).padStart(2, '0')} / {String(n).padStart(2, '0')}</span>
-        <span className="tk-progress" aria-hidden="true">
-          <i key={`${tick}-${playing}`} className={playing ? 'run' : ''} style={{ ['--dwell' as string]: `${DWELL}ms` }} />
-        </span>
-        <span className="tk-hint" aria-hidden="true">Drag the rail</span>
-        <div className="tk-btns">
-          <button type="button" className="tk-back" onClick={() => go(-1)} aria-label="Previous ticket"><Icon.Arrow size={14} /></button>
-          <button type="button" className="btn btn-primary btn-sm tk-bump" onClick={() => go(1)}>Next <Icon.Arrow size={12} /></button>
-        </div>
-      </div>
     </section>
   )
 }

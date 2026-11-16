@@ -12,7 +12,9 @@ import type { NextConfig } from 'next'
 // they load the .debug.js builds from va.vercel-scripts.com, which the production
 // CSP correctly blocks. Allow that host in dev only so local runs are not full of
 // CSP errors, without loosening what actually ships.
-const devScriptHosts = process.env.NODE_ENV === 'development' ? ' https://va.vercel-scripts.com' : ''
+// Dev also needs 'unsafe-eval': React Refresh evaluates modules as strings, and without
+// it no client JS runs locally at all. Never in production.
+const devScriptHosts = process.env.NODE_ENV === 'development' ? " 'unsafe-eval' https://va.vercel-scripts.com" : ''
 
 const csp = [
   "default-src 'self'",
