@@ -21,6 +21,7 @@ import '../styles/sections/testimonials.css'
 import '../styles/sections/characters.css'
 import '../styles/sections/closing.css'
 import '../styles/sections/templates.css'
+import '../styles/sections/outlet.css'
 import '../styles/accent.css'
 
 export const metadata: Metadata = {

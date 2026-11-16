@@ -18,7 +18,11 @@ const COLS: { h: string; links: { href: string; t: string; ext?: boolean }[] }[]
       { href: '/for/qsr', t: 'QSR' },
       { href: '/for/fine-dining', t: 'Fine dining' },
       { href: '/for/cloud-kitchens', t: 'Cloud kitchens' },
-      { href: '/for/bars', t: 'Bars & lounges' },
+      { href: '/for/bars', t: 'Bars & breweries' },
+      { href: '/for/food-courts', t: 'Food courts' },
+      { href: '/for/bakeries', t: 'Bakeries & desserts' },
+      { href: '/for/pizzerias', t: 'Pizzerias' },
+      { href: '/for/chains', t: 'Chains' },
     ],
   },
   {

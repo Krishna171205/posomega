@@ -49,7 +49,7 @@ const FAQ = [
   },
   {
     q: 'What happens if I go over ten outlets?',
-    a: 'Growth covers up to ten. Beyond that, Enterprise is priced per chain rather than per outlet and includes the multi-outlet command centre, regional menu overrides and per-brand reporting. Tell us your store count and we will quote against it.',
+    a: 'Growth covers up to ten. Beyond that, Enterprise is priced per chain rather than per outlet. Tell us your store count and we will quote against it.',
   },
   {
     q: 'Am I locked into a contract?',
@@ -98,10 +98,10 @@ export default function PricingPage() {
             <div className="mk-prose">
               <p>
                 Every plan includes the whole system rather than a billing core with the useful parts
-                sold separately. GST-compliant invoicing, KOT routing, the kitchen display, recipe-level
-                inventory, offline mode, UPI and card collection, and the reporting are all in the base
-                price. The plans differ on outlet count, how many aggregator integrations are connected,
-                and whether you get the demand-prediction and multi-outlet command-centre layers.
+                sold separately. GST invoicing, KOT routing, the kitchen display, recipe-level
+                inventory, the offline-first Android app, UPI and card recording, and the reporting are all
+                in the base price. The plans differ on outlet count, how many aggregator integrations are
+                connected, and the level of support.
               </p>
               <p>
                 Migration from your existing POS is included in onboarding. So is support: email on

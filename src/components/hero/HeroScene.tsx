@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react'
 import { Icon } from '../Icons'
 import { CHANNEL_LABEL, CHANNEL_MARK, HERO_INCOMING, HERO_ORDERS, type Channel } from '@/content/home'
 
-const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
+export const inr = (n: number) => '₹' + n.toLocaleString('en-IN')
 
 /**
  * A seconds counter that drives each side window's own loop, the way every small
  * window on attio.com plays its own scene. Frozen at 0 for reduced motion.
  */
-function useSeconds() {
+export function useSeconds() {
   const [s, setS] = useState(0)
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -18,7 +18,7 @@ function useSeconds() {
   }, [])
   return s
 }
-const clock = (secs: number) => `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
+export const clock = (secs: number) => `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
 
 export function ChannelBadge({ ch }: { ch: Channel }) {
   return <span className={`ch-badge ch-${ch}`} aria-label={CHANNEL_LABEL[ch]}>{CHANNEL_MARK[ch]}</span>
@@ -320,7 +320,7 @@ function InventoryView() {
     <>
       <main className="app-main av-in" key="inventory">
         <div className="ui-head">Inventory · Before tomorrow’s delivery <span className="sp" /></div>
-        <div className="av-alert"><Icon.Sparkle size={13} /> 3 items predicted to run out before the next delivery</div>
+        <div className="av-alert"><Icon.Sparkle size={13} /> 3 items running low before the next delivery</div>
         <div className="app-table-wrap">
           <table className="ui-table app-table">
             <thead><tr><th>Item</th><th className="r">On hand</th><th className="app-hide-sm">Stock level</th><th>Status</th></tr></thead>
@@ -352,7 +352,7 @@ function InventoryView() {
   )
 }
 
-function Bar({ title }: { title: string }) {
+export function Bar({ title }: { title: string }) {
   return (
     <div className="win-bar">
       <div className="win-dots"><span /><span /><span /></div>
@@ -370,17 +370,17 @@ const INCOMING = [
 const ORDER_SECS = 7          // per order: 5s waiting with the ring counting down, 2s accepted
 
 /** Stand-in for Attio's "call" window: new aggregator orders arrive and get accepted, on a loop. */
-export function OrderWindow() {
+export function OrderWindow({ orders = INCOMING, title = 'Online orders' }: { orders?: typeof INCOMING; title?: string } = {}) {
   const s = useSeconds()
   const n = Math.floor(s / ORDER_SECS)
   const k = s % ORDER_SECS
-  const o = INCOMING[n % INCOMING.length]
+  const o = orders[n % orders.length]
   const accepted = k >= 5
   const secs = 42 - k * 6
   const total = Math.round(o.items.reduce((t, i) => t + i.q * i.p, 0) * 1.05)
   return (
     <div className="win sm fw-card">
-      <Bar title="Online orders" />
+      <Bar title={title} />
       <div className="win-pane ui fw-order" key={n}>
         <div className="fw-order-top fw-in">
           <ChannelBadge ch={o.ch} />
@@ -425,14 +425,16 @@ const BUMP_SECS = 5           // every 5s the top ticket is bumped and a new one
 const SLOT_AGE = [372, 228, 41] // seconds already on the rail, per position, when a round starts
 
 /** Stand-in for Attio's "Slack" window: the hot line's kitchen display, live. */
-export function KitchenWindow() {
+export type KdsTicket = { id: string; ch: Channel; l: string[]; f?: string }
+
+export function KitchenWindow({ tickets = TICKETS, title = 'Kitchen · Hot line' }: { tickets?: KdsTicket[]; title?: string } = {}) {
   const s = useSeconds()
   const round = Math.floor(s / BUMP_SECS)
   const k = s % BUMP_SECS
-  const shown = [0, 1, 2].map(j => TICKETS[(round + j) % TICKETS.length])
+  const shown = [0, 1, 2].map(j => tickets[(round + j) % tickets.length])
   return (
     <div className="win sm fw-card">
-      <Bar title="Kitchen · Hot line" />
+      <Bar title={title} />
       <div className="win-pane ui fw-kds">
         {shown.map((t, j) => {
           const age = SLOT_AGE[j] + k

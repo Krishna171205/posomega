@@ -4,10 +4,9 @@
  * only official artwork, served from public/logos:
  *  - Swiggy, Zomato, Google Pay, PhonePe, Paytm, Android, Apple, Bluetooth: Simple
  *    Icons 14.0.0 (CC0), cropped to the mark, in the brand's own colour
- *  - UPI, OpenTable, Windows: Wikimedia Commons, public domain
- * Pine Labs, EazyDiner and Dineout are integrations too, but no official mark was
- * available to source, so they are left out rather than imitated. To add one, put its
- * official SVG in public/logos and add a row here.
+ *  - UPI, Windows: Wikimedia Commons, public domain
+ * Only integrations that ship are listed. To add one, put its official SVG in
+ * public/logos and add a row here.
  *
  * `aspect` is width / height of the artwork, used to give every logo the same visual
  * weight whether it is a square symbol or a long wordmark.
@@ -21,7 +20,6 @@ export const LOGOS: Logo[] = [
   { n: 'Google Pay', file: '/logos/googlepay.svg', aspect: 2.518, role: 'UPI payments' },
   { n: 'PhonePe', file: '/logos/phonepe.svg', aspect: 1.000, role: 'UPI payments' },
   { n: 'Paytm', file: '/logos/paytm.svg', aspect: 3.130, role: 'UPI payments' },
-  { n: 'OpenTable', file: '/logos/opentable.svg', aspect: 3.735, role: 'Reservations' },
   { n: 'Android', file: '/logos/android.svg', aspect: 1.716, role: 'Runs on Android tablets' },
   { n: 'iPad', file: '/logos/apple.svg', aspect: 0.815, role: 'Runs on iPad' },
   { n: 'Windows', file: '/logos/windows.svg', aspect: 1.000, role: 'Runs on Windows terminals' },

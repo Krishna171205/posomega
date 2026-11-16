@@ -5,7 +5,7 @@ import type { Enter } from './crew/Peek'
 import type { Who } from './crew/parts'
 
 const PEEKS: Record<string, { who: Who; say: string; side: 'left' | 'right'; x?: string; enter?: Enter }> = {
-  Delivery: { who: 'manager', say: 'Same menu on every app.', side: 'right', x: '12%', enter: 'pop' },
+  Delivery: { who: 'manager', say: 'Swiggy and Zomato, one queue.', side: 'right', x: '12%', enter: 'pop' },
   Hardware: { who: 'chef', say: 'KOT printed. Nice.', side: 'left', x: '12%', enter: 'hat' },
 }
 

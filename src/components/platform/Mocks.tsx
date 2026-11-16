@@ -202,7 +202,7 @@ export function StockMock() {
   const [ordered, setOrdered] = useState<Record<string, boolean>>({})
   return (
     <MockWindow title="Inventory · Before tomorrow’s delivery">
-      <div className="stock-banner"><Icon.Sparkle size={13} /> 3 items predicted to run out before the next delivery</div>
+      <div className="stock-banner"><Icon.Sparkle size={13} /> 3 items running low before the next delivery</div>
       <div className="app-table-wrap">
         <table className="ui-table">
           <thead><tr><th>Item</th><th className="r">On hand</th><th className="hide-xs">Cover</th><th>Status</th><th /></tr></thead>
@@ -268,14 +268,14 @@ export function ChannelsMock() {
   const [on, setOn] = useState(true)
   const [shown, setShown] = useState(4)
   useEffect(() => {
-    // Push the stock change out to each surface in turn, as the sync does.
+    // Show the stock change reaching each Omega surface in turn.
     setShown(0)
     let i = 0
     const id = window.setInterval(() => { i += 1; setShown(i); if (i >= 4) window.clearInterval(id) }, 260)
     return () => window.clearInterval(id)
   }, [on])
   const surfaces: { ch: Channel; label: string }[] = [
-    { ch: 'dine', label: 'Counter POS' }, { ch: 'qr', label: 'QR menu' }, { ch: 'swiggy', label: 'Swiggy' }, { ch: 'zomato', label: 'Zomato' },
+    { ch: 'dine', label: 'Counter POS' }, { ch: 'qr', label: 'QR menu' },
   ]
   return (
     <MockWindow title="Online · Menu & queue">
@@ -355,7 +355,7 @@ export function DayEndMock() {
         <div className="dayend-foot">
           <span className="tag tag-ok"><Icon.Check size={11} /> UPI matched to bills</span>
           <button className="ui-btn" onClick={() => setExported(true)}>
-            {exported ? <><Icon.Check size={12} /> GSTR-ready export prepared</> : <><Icon.Download size={12} /> Export for accountant</>}
+            {exported ? <><Icon.Check size={12} /> Tally export ready</> : <><Icon.Download size={12} /> Export for accountant</>}
           </button>
         </div>
       </div>

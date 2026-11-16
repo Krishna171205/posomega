@@ -13,7 +13,7 @@ const STEPS = [
     role: 'Floor captain',
     title: 'Punch the order once.',
     body: 'Take it on the tablet at the table. Omega fires the KOT to the right kitchen station and keeps the bill running for that table.',
-    lines: ['Table 7, two masala dosa. Sent!', 'No more running slips to the kitchen.', 'Split by seat? Done at the table.'],
+    lines: ['Table 7, two masala dosa. Sent!', 'No more running slips to the kitchen.', 'Call waiter? I see it on my screen.'],
   },
   {
     who: 'Chef' as const,

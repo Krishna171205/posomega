@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { MarketingPageView } from '@/components/marketing/MarketingPageView'
+import { OutletPageView } from '@/components/outlet/OutletPageView'
 import { SEGMENTS } from '@/content/segments'
 import { pageMetadata } from '@/lib/seo'
 
@@ -25,5 +25,5 @@ export async function generateMetadata(
 export default async function Page({ params }: { params: Promise<{ segment: string }> }) {
   const page = find((await params).segment)
   if (!page) notFound()
-  return <MarketingPageView page={page} />
+  return <OutletPageView page={page} siblings={SEGMENTS} />
 }
