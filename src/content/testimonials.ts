@@ -43,18 +43,18 @@ export const CONSENTED_TESTIMONIALS = TESTIMONIALS.filter(t => t.consent)
 
 /**
  * MOCK COPY, not from customers. Shown on the live site, labelled as samples, while TESTIMONIALS is empty.
- * Testimonials.tsx shows these only under `next dev`, and only while
- * TESTIMONIALS is empty, with every ticket stamped "Sample". The bracketed names
+ * Testimonials.tsx shows these only while
+ * TESTIMONIALS is empty, stamped "Sample" and without a source line. The "Sample" names
  * are there so nobody mistakes them for real people.
  */
 export const TESTIMONIAL_SAMPLES: Testimonial[] = [
   {
-    quote: 'Our laptop crowd runs tabs all afternoon and none of them get lost any more. Closing the day is a check now, not a reconstruction.',
+    quote: 'Our regulars get their stamp at the counter without an app. Closing the day is a check now, not a reconstruction.',
     name: 'Sample customer', role: 'Owner', outlet: 'Sample Café', city: 'Bengaluru', format: 'Café',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
-    quote: 'Kiosk, counter and Swiggy orders land in one queue, so the kitchen stopped shouting across the line.',
+    quote: 'QR, counter and Swiggy orders land in one queue, so the kitchen stopped shouting across the line.',
     name: 'Sample customer', role: 'Operations lead', outlet: 'Sample QSR', city: 'Pune', format: 'QSR',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
@@ -64,17 +64,17 @@ export const TESTIMONIAL_SAMPLES: Testimonial[] = [
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
-    quote: 'Three brands out of one kitchen, and for the first time I can see which one is actually making money.',
+    quote: 'Swiggy, Zomato and our own riders on one screen, and for the first time I can see what every dish costs.',
     name: 'Sample customer', role: 'Founder', outlet: 'Sample Kitchen', city: 'Hyderabad', format: 'Cloud kitchen',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
-    quote: 'Pour cost to the millilitre showed us where the evening was leaking. Happy hour switches itself on now.',
+    quote: 'Happy hour switches itself on and off now, and the bar and kitchen work from the same order.',
     name: 'Sample customer', role: 'Bar manager', outlet: 'Sample Bar', city: 'Goa', format: 'Bar',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },
   {
-    quote: 'The internet dropped on a Sunday morning and the queue never noticed. Everything synced once it was back.',
+    quote: 'The internet dropped on a Sunday morning and the Android till kept billing. Everything synced once it was back.',
     name: 'Sample customer', role: 'Owner', outlet: 'Sample Bakery', city: 'Delhi', format: 'Bakery',
     source: { kind: 'permission', date: '2026-11-01' }, consent: false,
   },

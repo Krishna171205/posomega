@@ -3,7 +3,7 @@
  *
  * Every product claim here traces back to the long-form pages in src/content/*
  * (features.ts, segments.ts, integrations.ts), which are the vetted source. Mock data
- * (orders, tables, stock) is illustrative: the outlet is "Demo Café", never a real
+ * (orders, tables, stock) is illustrative: the outlet is "Brewbari Café" (Hauz Khas Village, New Delhi), made up, never a real
  * business, and no number below is presented as a customer metric.
  */
 
@@ -16,7 +16,7 @@ export const HERO = {
   /** Kept short so the rotating part never wraps differently between words. */
   h1Words: ['an order.', 'a KOT.', 'a bill.', 'a table.'] as const,
   /** Facts carried over from the committed homepage copy. */
-  meta: ['Same-day setup', 'No setup fee', 'Works offline'],
+  meta: ['Same-day setup', 'No setup fee', 'Offline on Android'],
   sub: 'Omega bills, fires KOTs, syncs Swiggy and Zomato, and tracks stock, even when the internet doesn’t.',
   /** Sign-up happens in the POS app; under `next dev` this opens the local preview of the redesigned page (app/signup). */
   primary: { label: 'Start free trial', href: process.env.NODE_ENV === 'development' ? '/signup' : 'https://cafe.posomega.com/onboard' },
@@ -94,9 +94,9 @@ export const KDS: KdsTicket[] = [
 
 export type StockRow = { name: string; unit: string; onHand: number; need: number; daysLeft: number; note: string }
 export const STOCK: StockRow[] = [
-  { name: 'Paneer', unit: 'kg', onHand: 4.2, need: 6.5, daysLeft: 0.8, note: 'Busier Friday predicted' },
-  { name: 'Cold brew concentrate', unit: 'L', onHand: 12, need: 14, daysLeft: 1.5, note: 'Weekend uplift' },
-  { name: 'Sourdough loaf', unit: 'pc', onHand: 28, need: 30, daysLeft: 1.1, note: 'Brunch Sunday' },
+  { name: 'Paneer', unit: 'kg', onHand: 4.2, need: 6.5, daysLeft: 0.8, note: 'Below what tonight needs' },
+  { name: 'Cold brew concentrate', unit: 'L', onHand: 12, need: 14, daysLeft: 1.5, note: 'Running low' },
+  { name: 'Sourdough loaf', unit: 'pc', onHand: 28, need: 30, daysLeft: 1.1, note: 'Running low' },
   { name: 'Whole milk', unit: 'L', onHand: 42, need: 30, daysLeft: 3.2, note: 'Healthy' },
   { name: 'Tea leaves', unit: 'kg', onHand: 6.5, need: 2, daysLeft: 5.0, note: 'Healthy' },
 ]
@@ -140,38 +140,36 @@ export const DAY_END = {
 
 /** Integrations named in src/content (integrations.ts, segments.ts, pricing). Nothing else. */
 export const WORKS_WITH = [
-  'Swiggy', 'Zomato', 'UPI', 'Google Pay', 'PhonePe', 'Paytm', 'Pine Labs', 'EazyDiner', 'Dineout',
+  'Swiggy', 'Zomato', 'UPI', 'Google Pay', 'PhonePe', 'Paytm', 'Tally',
 ]
 
 export const INTEGRATION_GROUPS: { tag: string; blurb: string; href?: string; items: { n: string; d: string }[] }[] = [
   {
     tag: 'Delivery',
-    blurb: 'Menu, stock and orders in both directions.',
+    blurb: 'Orders in the same queue as dine-in.',
     href: '/integrations/swiggy-zomato',
     items: [
-      { n: 'Swiggy', d: 'Orders land in the kitchen queue; 86s push out.' },
-      { n: 'Zomato', d: 'Same queue, same menu, same stock.' },
+      { n: 'Swiggy', d: 'Accept with a prep time; the KOT goes to the kitchen.' },
+      { n: 'Zomato', d: 'Same queue, same kitchen display.' },
     ],
   },
   {
     tag: 'Payments',
-    blurb: 'Collected against the order, reconciled at close.',
+    blurb: 'Recorded against the order, matched at close.',
     href: '/integrations/upi-and-payments',
     items: [
-      { n: 'UPI', d: 'Dynamic, order-linked collection.' },
-      { n: 'Google Pay', d: 'Through the same flow as UPI.' },
-      { n: 'PhonePe', d: 'Through the same flow as UPI.' },
-      { n: 'Paytm', d: 'Through the same flow as UPI.' },
-      { n: 'Pine Labs', d: 'Alongside the card terminal you run.' },
+      { n: 'UPI', d: 'Collected against the bill.' },
+      { n: 'Google Pay', d: 'Any UPI app pays the bill.' },
+      { n: 'PhonePe', d: 'Any UPI app pays the bill.' },
+      { n: 'Paytm', d: 'Any UPI app pays the bill.' },
     ],
   },
   {
-    tag: 'Reservations',
-    blurb: 'One diary instead of three tabs.',
-    href: '/for/fine-dining',
+    tag: 'Accounts',
+    blurb: 'Sales into the books without re-keying.',
+    href: '/gst-billing-software-for-restaurants',
     items: [
-      { n: 'EazyDiner', d: 'Bookings into the floor plan.' },
-      { n: 'Dineout', d: 'Bookings into the floor plan.' },
+      { n: 'Tally', d: 'Sales export that Tally imports.' },
     ],
   },
   {
@@ -180,17 +178,17 @@ export const INTEGRATION_GROUPS: { tag: string; blurb: string; href?: string; it
     href: '/pricing',
     items: [
       { n: 'Thermal printers', d: 'Bluetooth, USB or network.' },
-      { n: 'Any tablet or PC', d: 'Android, iPad or Windows.' },
+      { n: 'Any tablet or PC', d: 'Web POS in the browser, Android app for offline.' },
     ],
   },
 ]
 
 export const FAQS = [
-  { q: 'How long does setup actually take?', a: "Most cafés are taking orders the same day. Your menu, taxes, table layout and printer pair via one QR code, and there is no on-site engineer visit to schedule. If you're migrating from another POS, our team imports your menu, customers and inventory for free." },
-  { q: 'What happens when the internet goes down?', a: 'Omega keeps running. Billing, KOTs and cash payments all work from the local device. Every order is queued on the terminal and reconciled automatically the moment connectivity returns, so nothing is lost and nobody has to fall back to a paper bill book. Card and UPI genuinely need a connection, so Omega shows them as unavailable rather than pretending.' },
-  { q: 'Do I have to buy your hardware?', a: 'No. Omega runs on any modern Android tablet, iPad or Windows terminal and pairs with standard thermal printers over Bluetooth, USB or network. Our hardware is optional, and most restaurants keep the printer and cash drawer they already have.' },
-  { q: 'How does the Swiggy / Zomato integration work?', a: 'Two-way sync. Items, prices, stock and modifiers stay in step across every platform, and aggregator orders land in the same queue as your dine-in and takeaway tickets. Mark an item out of stock at the counter and Omega pushes that state out to each aggregator, so you stop taking orders you cannot fulfil.' },
+  { q: 'How long does setup actually take?', a: "Most cafés are taking orders the same day. Menu, taxes, tables and printer are set up in one flow, with no on-site engineer visit to schedule. If you're moving from another POS, our team sets up your menu and modifiers as part of onboarding." },
+  { q: 'What happens when the internet goes down?', a: 'On the Omega Android app, billing keeps going: orders are saved on the tablet and synced automatically when the line returns, without duplicates. The web POS and the kitchen display need a connection, and card and UPI payments always do. Cash keeps working.' },
+  { q: 'Do I have to buy your hardware?', a: 'No. The web POS runs in a browser on an Android tablet, iPad or PC and prints to standard thermal printers. Our hardware is optional, and most restaurants keep the printer and cash drawer they already have.' },
+  { q: 'How does the Swiggy / Zomato integration work?', a: 'Swiggy and Zomato orders arrive in the same queue as dine-in and takeaway. Accept with a prep time and the KOT goes to the right station. Menu, price and stock changes on the platforms are still made on their side today.' },
   { q: "What's your pricing in plain English?", a: '₹1,499 per outlet per month for Starter, ₹3,499 for Growth, custom for Enterprise. No setup fees, no per-seat charges, no per-transaction fees. Pay annually and save 20%.' },
   { q: 'Is my data secure?', a: "Your data sits in Indian data centres and is encrypted at rest and in transit. Card payments are handled by PCI-DSS certified payment partners, so raw card data never touches Omega's systems. We don't train AI on your customer data. Our SOC 2 programme is in progress and we will publish the report when it is complete." },
-  { q: 'Can I switch from Petpooja / Posist / another POS?', a: 'Yes. Migration is included in onboarding at no extra cost. We export your menu, modifiers, customers and inventory from your current POS and load them into Omega before you switch over, so you are not re-typing a menu on a Friday night.' },
+  { q: 'Can I switch from Petpooja / Posist / another POS?', a: 'Yes. Our team sets up your menu and modifiers in Omega as part of onboarding at no extra cost, and you can run both systems side by side while you switch.' },
 ]

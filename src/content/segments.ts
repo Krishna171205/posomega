@@ -1,452 +1,707 @@
-import type { MarketingPage } from './types'
+import type { MarketingPage, OutletExtras } from './types'
+
+/*
+ * Outlet-type pages (/for/*). Every feature named here ships in Omega today
+ * (checked against omegaservice / omegawebui / omega-pos master, 2026-11-16).
+ * Where a format usually expects something Omega does not do yet, the FAQ says so
+ * plainly instead of implying it. Mock data (items, names, amounts) is made up.
+ */
 
 const INDUSTRIES = { label: 'Industries', slug: 'for' }
 
-export const SEGMENTS: MarketingPage[] = [
+type OutletPage = MarketingPage & { outlet: OutletExtras }
+
+const PRINTER_FAQ = {
+  q: 'Does it work with the printer I already have?',
+  a: 'Omega runs on Android tablets, iPads and Windows or Mac machines, and pairs with standard thermal printers over Bluetooth, USB or network. If you already have a counter setup, you usually keep the printer and the cash drawer and replace only the software.',
+}
+const OFFLINE_FAQ = {
+  q: 'What happens when the internet goes down mid-service?',
+  a: 'On the Omega Android app, billing and cash keep running: orders are saved on the tablet and sync the moment the connection comes back, so nothing is lost. The web POS and the kitchen display need a connection.',
+}
+
+export const SEGMENTS: OutletPage[] = [
   {
     slug: 'for/cafes',
     parent: INDUSTRIES,
     crumb: 'Cafés',
-    eyebrow: 'For specialty coffee, bakeries and all-day cafés',
-    h1: 'Café billing software',
-    h1Tail: 'built for the morning rush.',
-    lede:
-      'Open tabs, fast order entry, tip pools that actually balance, and billing that keeps working when the internet does not. Omega is a point-of-sale system for cafés, coffee roasters and bakeries in India.',
-    metaTitle: 'Café Billing Software for Cafes in India | Omega POS',
-    metaDescription:
-      "Café billing software for Indian coffee shops and bakeries: open tabs, fast order entry, GST billing, KOT printing, UPI and offline mode.",
+    eyebrow: 'For coffee shops and all-day cafés',
+    h1: 'Café POS software',
+    h1Tail: 'that keeps up with the morning rush.',
+    lede: 'Modifiers one tap from the item, regulars remembered by their phone number, and stock that deducts itself as every cup sells. Omega is billing and operations for cafés in India.',
+    metaTitle: 'Café POS and Billing Software in India | Omega POS',
+    metaDescription: 'Café POS software for Indian coffee shops: fast billing with modifiers, KOTs, phone-number loyalty and stamp cards, recipe-level stock, UPI, GST and offline mode.',
+    outlet: {
+      photos: { hero: { id: 'photo-1509042239860-f550ce710b93', alt: 'Latte with leaf art on a wooden café table' }, strip: [{ id: 'photo-1442512595331-e89e73853f31', alt: 'Barista making pour-over coffee' }, { id: 'photo-1495474472287-4d71bcdd2085', alt: 'Two cups of latte art held together' }, { id: 'photo-1497515114629-f71d768fd07c', alt: 'Steaming coffee cup on roasted beans' }] },
+      order: ['pains', 'tabs', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'Cafés',
+      format: 'Café',
+      hero: {
+        kind: 'counter',
+        title: 'Counter · Billing',
+        items: [
+          { n: 'Cappuccino', p: 220, mod: 'Oat milk' },
+          { n: 'Butter croissant', p: 160 },
+          { n: 'Cold coffee', p: 210, mod: 'Extra shot' },
+        ],
+      },
+      peek: { who: 'server', say: 'Oat milk, extra shot. One tap.' },
+      pains: ['Two hundred orders before 11 AM', 'Every drink comes with three modifiers', 'Regulars expect you to remember them', 'Milk and beans vanish without a trace'],
+      tabs: [
+        {
+          label: 'Fast billing',
+          h: 'Modifiers one tap from the item',
+          d: 'Sizes, milks and extra shots sit on the item itself, so a new barista bills a custom drink without hunting through screens.',
+          points: ['Variations and add-on groups', 'KOT sent as you charge', 'UPI, card or cash'],
+          mock: { kind: 'counter', title: 'Counter · Billing', items: [{ n: 'Flat white', p: 230, mod: 'Large' }, { n: 'Masala chai', p: 90 }, { n: 'Banana bread', p: 140 }] },
+        },
+        {
+          label: 'Loyalty',
+          h: 'Regulars, remembered by phone number',
+          d: 'Look a guest up by phone at the counter. Stamp cards and coins add up on every bill, with no app for the guest to download.',
+          points: ['Stamp cards and coins', 'Customer notes and history', 'Win-back list for regulars who stop coming'],
+          mock: { kind: 'loyalty', item: 'cappuccino', stamps: 8 },
+        },
+        {
+          label: 'Recipe stock',
+          h: 'Stock that deducts itself, cup by cup',
+          d: 'Link each drink to its recipe. Every sale takes the beans and the milk off, and low items are flagged before the rush instead of during it.',
+          points: ['Recipes for variations and add-ons too', 'Wastage logged with a reason', 'Reorder suggestions in the app'],
+          mock: { kind: 'stock', sold: 'Cappuccino', uses: [{ n: 'Milk', q: 180, unit: 'ml', left: 2000, par: 1100 }, { n: 'Coffee beans', q: 18, unit: 'g', left: 400, par: 200 }] },
+        },
+        {
+          label: 'Pickup orders',
+          h: 'Orders paid before they reach the counter',
+          d: 'Guests order and pay ahead on Grabbit, our customer app, and pick up in a slot. The order lands in Omega like any other.',
+          points: ['Pickup slots you control', 'Paid online, no queue', 'Same KOT and same reports'],
+          mock: { kind: 'preorder', title: 'Grabbit · Pickup orders', orders: [{ t: '8:40', n: '2× Cappuccino', who: 'Riya' }, { t: '8:45', n: 'Cold coffee, croissant', who: 'Arjun' }, { t: '8:50', n: '3× Masala chai', who: 'Office order' }] },
+        },
+      ],
+      outcomes: [
+        { t: 'Shorter queue', d: 'Custom drinks billed in a couple of taps, with the KOT already on its way.' },
+        { t: 'Regulars come back', d: 'Stamps and coins keyed to a phone number, visible at every bill.' },
+        { t: 'Variance you can see', d: 'Theoretical stock from recipes, so a missing litre of milk shows up the same day.' },
+        { t: 'A day-end that adds up', d: 'Cash, UPI and card matched to bills in one report.' },
+      ],
+    },
     sections: [
       {
         kind: 'prose',
-        heading: 'What makes café billing different from restaurant billing',
+        heading: 'What makes café billing different',
         body: [
-          'A café is not a small restaurant. The order value is lower, the order count is far higher, and almost all of it lands inside a ninety-minute window in the morning and a second, softer one in the evening. A system that works fine for a forty-cover dining room falls apart at a counter taking two hundred orders before eleven.',
-          'The failure mode is always the same: too many taps. If ordering a flat white with oat milk takes six screens, the queue backs out of the door and the barista starts writing on cups again. Every café that has abandoned a POS has abandoned it for this reason, not for a missing report.',
-          'Omega is built around that constraint. The order screen puts your highest-volume items on the first surface with no category drilling, modifiers are one tap from the item rather than a separate screen, and the whole flow is usable one-handed while the other hand is on the group head.',
-        ],
-      },
-      {
-        kind: 'cards',
-        heading: 'What you get',
-        cards: [
-          {
-            t: 'Open tabs and pre-authorisation',
-            d: 'Run a tab for a guest working through the afternoon without losing track of it. Tabs auto-close at end of day so nothing carries silently into tomorrow.',
-          },
-          {
-            t: 'Fast order entry',
-            d: 'Bigger targets, fewer taps, modifiers attached to the item. Built to be operated at speed by someone who started last week.',
-          },
-          {
-            t: 'Tip pools that balance',
-            d: 'Split tips by role, by hours worked or by station, automatically. No spreadsheet at the end of the week.',
-          },
-          {
-            t: 'Phone-number loyalty',
-            d: 'Punch cards keyed to a phone number. No app for the customer to download, no card for them to lose.',
-          },
-          {
-            t: 'GST-compliant billing',
-            d: 'Correct tax treatment on dine-in and takeaway, HSN codes on the invoice, and GSTR-ready exports for your accountant.',
-          },
-          {
-            t: 'Offline mode',
-            d: 'Billing, KOTs and cash all run from the device. Orders queue locally and reconcile the moment the connection returns.',
-          },
-        ],
-      },
-      {
-        kind: 'prose',
-        heading: 'Inventory that survives a milk-based menu',
-        body: [
-          'Café inventory is deceptively hard because the recipes are shallow and the shrinkage is invisible. A twenty-rupee variance on milk per day is six thousand rupees a year per outlet, and nobody notices it because nobody weighs the jug.',
-          'Omega tracks stock at the recipe level, so pulling a cappuccino deducts the beans and the milk rather than decrementing an abstract "cappuccino" count. When the theoretical stock and the counted stock diverge, you see the gap in rupees instead of in units, which is the only form in which anyone acts on it.',
-          'The same data drives demand prediction. Omega learns the shape of your week, flags the items likely to run out before the next delivery, and tells you what to order rather than leaving you to reconstruct it from last month\'s bills.',
-        ],
-      },
-      {
-        kind: 'prose',
-        heading: 'One inventory across the counter and the aggregators',
-        body: [
-          'Most cafés now take a meaningful share of revenue through Swiggy and Zomato, and most run those as a separate universe with a separate tablet and a separate menu that drifts out of date within a month.',
-          'Omega syncs both directions. Items, prices, modifiers and stock stay in step, aggregator orders arrive in the same queue as the counter and the KDS, and marking something out of stock at the counter pushes that state out to each platform so you stop accepting orders you cannot fulfil.',
+          'A café is not a small restaurant. The order value is lower, the order count is far higher, and most of it lands inside a short window in the morning. A system that is fine for a forty-cover dining room falls apart at a counter taking two hundred orders before eleven.',
+          'The failure is always the same: too many taps. Omega puts the busiest items on the first screen and keeps modifiers on the item, so the flow works one-handed while the other hand is on the machine.',
         ],
       },
     ],
     faq: [
-      {
-        q: 'Can Omega handle a café with one outlet?',
-        a: 'Yes. The Starter plan is Rs 1,499 per outlet per month and is designed for exactly that: one location, unlimited staff logins, unlimited orders, one aggregator integration, daily reports and email support. There is no per-seat charge, so putting a second terminal on the counter costs nothing extra in software.',
-      },
-      {
-        q: 'Does it work with the printer I already have?',
-        a: 'Omega runs on any modern Android tablet, iPad or Windows terminal and pairs with standard thermal printers over Bluetooth, USB or network. Our own hardware is optional. If you are already running a counter setup, the usual outcome is that you keep the printer and the cash drawer and replace only the software.',
-      },
-      {
-        q: 'What happens to my open tabs if the tablet dies mid-shift?',
-        a: 'Orders are written locally and synced to the cloud continuously, so an open tab is recoverable from any other device signed into the same outlet. If the outlet is offline at that moment, the tab is restored from the queue the next time the device reconnects.',
-      },
-      {
-        q: 'How long does it take to train a new barista on it?',
-        a: 'Most cafés put a new hire on the till within their first shift. The order screen is the only surface a barista needs, and it is deliberately shallow: no nested menus, no admin functions mixed into the ordering flow, and destructive actions like voids sit behind a manager PIN.',
-      },
+      { q: 'Can Omega handle a café with one outlet?', a: 'Yes. The Starter plan is Rs 1,499 per outlet per month for one location, with no per-seat charge, so a second terminal on the counter costs nothing extra in software.' },
+      PRINTER_FAQ,
+      { q: 'How long does it take to train a new barista?', a: 'Most new staff bill on their first shift. The order screen is the only surface a barista needs, and it stays shallow: busy items first, modifiers on the item.' },
+      OFFLINE_FAQ,
     ],
-    related: ['for/cloud-kitchens', 'for/qsr', 'features/offline-mode', 'pricing'],
+    related: ['features/billing-and-kot', 'features/inventory-and-forecasting', 'for/bakeries', 'pricing'],
   },
-
   {
     slug: 'for/qsr',
     parent: INDUSTRIES,
     crumb: 'QSR',
-    eyebrow: 'For QSR chains and food courts',
-    h1: 'QSR POS software',
-    h1Tail: 'for throughput at scale.',
-    lede:
-      'Self-order kiosks, drive-thru flows and multi-station kitchen routing. Omega is a point-of-sale system for quick-service restaurants and food-court operators who are measured in covers per hour.',
-    metaTitle: 'QSR POS Software for Quick Service Restaurants | Omega',
-    metaDescription:
-      "QSR POS software for Indian quick-service chains and food courts: self-order kiosks, drive-thru flow, multi-station KDS and throughput analytics.",
+    eyebrow: 'For quick-service restaurants',
+    h1: 'QSR billing software',
+    h1Tail: 'built for the lunch line.',
+    lede: 'Combos billed in seconds, tickets split by kitchen station, a token screen that answers "is mine ready?", and Swiggy and Zomato orders in the same queue as the counter.',
+    metaTitle: 'QSR POS and Billing Software in India | Omega POS',
+    metaDescription: 'QSR billing software for Indian quick-service restaurants: combo billing, station-wise KOT and kitchen display, token display, QR ordering, aggregator orders and offline mode.',
+    outlet: {
+      photos: { hero: { id: 'photo-1606491956689-2ea866880c84', alt: 'Pav bhaji with buttered pav' }, strip: [{ id: 'photo-1601050690597-df0568f70950', alt: 'Samosas with green chutney' }, { id: 'photo-1568901346375-23c9450c58cd', alt: 'A stacked burger' }] },
+      order: ['pains', 'tabs', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'QSR',
+      format: 'QSR',
+      hero: { kind: 'token', title: 'Token display', start: 41 },
+      peek: { who: 'chef', say: 'Token 44, your order is ready!' },
+      pains: ['A queue that never ends at 1 PM', 'Counter, QR and Swiggy orders at once', 'Guests asking "is mine ready?"', 'Combos that confuse new staff'],
+      tabs: [
+        {
+          label: 'Combo billing',
+          h: 'Combos and add-ons without the confusion',
+          d: 'Build combos and add-on groups once. Staff tap the meal, pick the drink, and charge.',
+          points: ['Variations and add-on groups', 'Discount report', 'UPI, card or cash'],
+          mock: { kind: 'counter', title: 'Counter · Billing', items: [{ n: 'Paneer wrap meal', p: 249, mod: 'Fries + Coke' }, { n: 'Masala fries', p: 99, mod: 'Peri peri' }, { n: 'Cold coffee', p: 129 }] },
+        },
+        {
+          label: 'Kitchen display',
+          h: 'Every station sees only its own tickets',
+          d: 'KOTs split by station the moment the order is billed. Tickets age on screen, so the line can see what is running late.',
+          points: ['Station routing per item', 'Ticket timers', 'Runs in a browser on any screen'],
+          mock: { kind: 'kds', title: 'Kitchen · Grill', tickets: [{ id: '#0512', ch: 'take', l: ['2× Aloo tikki burger'] }, { id: '#0513', ch: 'swiggy', l: ['1× Paneer wrap', '1× Fries'] }, { id: '#0514', ch: 'qr', l: ['3× Veg burger'], f: 'No mayo' }, { id: '#0515', ch: 'dine', l: ['1× Chicken wrap'] }] },
+        },
+        {
+          label: 'Token display',
+          h: 'A screen that answers "is mine ready?"',
+          d: 'Every order gets a daily token. The display shows what is being prepared and what is ready, so the counter stops fielding the same question.',
+          points: ['Daily token numbers', 'Any TV or monitor', 'Menu slides between calls'],
+          mock: { kind: 'token', title: 'Token display', start: 41 },
+        },
+        {
+          label: 'Online orders',
+          h: 'Swiggy and Zomato in the same queue',
+          d: 'Aggregator orders arrive in Omega next to counter and QR orders. Accept with a prep time and the KOT goes straight to the kitchen.',
+          points: ['Accept or reject in Omega', 'Prep time on every order', 'One kitchen queue'],
+          mock: { kind: 'orders', title: 'Online orders' },
+        },
+      ],
+      outcomes: [
+        { t: 'Faster lunch line', d: 'Combos billed in a few taps, with the KOT already split by station.' },
+        { t: 'A calmer pickup counter', d: 'Guests watch the token screen instead of asking the cashier.' },
+        { t: 'No tablet pile', d: 'Swiggy and Zomato orders accepted in the same place as the counter.' },
+        { t: 'Peak hours in numbers', d: 'Hourly item-wise sales show exactly where the rush comes from.' },
+      ],
+    },
     sections: [
       {
         kind: 'prose',
-        heading: 'In QSR, the POS is a throughput instrument',
+        heading: 'In QSR, the POS sets the speed of the line',
         body: [
-          'Every other format can absorb a slow point of sale. QSR cannot, because the queue is the product. A counter that takes forty seconds per order instead of twenty-five does not serve slightly fewer people, it serves visibly fewer people and the line becomes the reason the next customer walks past.',
-          'That makes the interesting number time-to-handoff rather than average order value, and almost no POS reports it. Omega does, broken down by stage: order entry, payment, kitchen, expo. When the number moves you can see which stage moved it.',
-        ],
-      },
-      {
-        kind: 'cards',
-        heading: 'What you get',
-        cards: [
-          {
-            t: 'Self-order kiosks and QR ordering',
-            d: 'Customers place their own orders in the language they read. Every kiosk order lands in the same queue as the counter, so the kitchen sees one list.',
-          },
-          {
-            t: 'Drive-thru flow',
-            d: 'Order, pay and dispatch from a single terminal operated by a single staffer, with the order held open across the window sequence.',
-          },
-          {
-            t: 'Multi-station KDS routing',
-            d: 'Hot side, cold side and expo each see only what they are responsible for. Routing is driven by the item, not by someone remembering to press the right button.',
-          },
-          {
-            t: 'Throughput analytics',
-            d: 'Time from order to handoff, by stage and by hour. Find the shift that is slow rather than the store that is slow.',
-          },
-          {
-            t: 'Unified aggregator queue',
-            d: 'Swiggy, Zomato and your own channels arrive on the same screen and are prepared in the same sequence as walk-ins.',
-          },
-          {
-            t: 'Multi-outlet menu control',
-            d: 'Push a price change or a new item to every store from one screen. Regional overrides where you need them.',
-          },
-        ],
-      },
-      {
-        kind: 'steps',
-        heading: 'How a peak-hour order moves through Omega',
-        intro:
-          'The path is deliberately short. Every step that is not required to get food to a customer has been removed from the critical path.',
-        steps: [
-          { t: 'Entry', d: 'Counter, kiosk, QR or aggregator. All four write into the same order queue with the same shape.' },
-          { t: 'Payment', d: 'UPI, card, wallet or cash. UPI settles against the order rather than requiring a manual match afterwards.' },
-          { t: 'Routing', d: 'The KOT splits by station automatically. Hot items go to the hot line, drinks go to the beverage station, nothing is printed twice.' },
-          { t: 'Expo', d: 'The expo screen shows the order as one unit again, with the slowest item flagged, so the handoff is not waiting on something nobody started.' },
-        ],
-      },
-      {
-        kind: 'prose',
-        heading: 'Running more than one store',
-        body: [
-          'The multi-outlet problem in QSR is not reporting, it is consistency. A price that is correct in eleven stores and wrong in the twelfth costs more in trust than it does in revenue, and the usual cause is a manual menu update that somebody skipped.',
-          'Omega treats the menu as central with per-outlet overrides rather than as twelve independent menus that happen to look similar. Push once, and every store that has not been deliberately overridden takes the change. The outlets that have been overridden are listed explicitly, so the exceptions are visible instead of accidental.',
+          'A quick-service counter lives or dies on throughput. Every extra tap at billing and every ticket that reaches the wrong station shows up as minutes in the queue.',
+          'Omega keeps the order screen shallow, routes each item to its station as it is billed, and gives guests a token screen so the counter can keep billing instead of answering questions.',
         ],
       },
     ],
     faq: [
-      {
-        q: 'How many outlets can Omega handle?',
-        a: 'The Growth plan covers up to ten outlets at Rs 3,499 per outlet per month. Beyond that, Enterprise pricing is per chain rather than per outlet and includes the multi-outlet command centre, regional menu overrides and per-brand reporting. Get in touch and we will quote against your actual store count.',
-      },
-      {
-        q: 'Can kiosks run in more than one language?',
-        a: 'Yes. Kiosk and QR ordering surfaces support multiple languages, which matters more in food courts and transport hubs than it does in a neighbourhood store. The kitchen-side display stays in one working language so the line is not switching context.',
-      },
-      {
-        q: 'Does the KDS need its own hardware?',
-        a: 'No. The kitchen display runs in a browser on any screen you can mount, including a spare tablet or an existing monitor with a cheap stick PC. Most kitchens start on whatever is already in the building and buy dedicated screens later, if at all.',
-      },
-      {
-        q: 'What happens during an internet outage at peak hour?',
-        a: 'Billing, KOT printing and cash payments continue from the local device. Card and UPI need connectivity by nature, so those are the only functions affected. Orders queue on the terminal and reconcile automatically when the line comes back, including the aggregator orders that arrived during the gap.',
-      },
+      { q: 'Does the kitchen display need its own hardware?', a: 'No. It runs in a browser on any screen you can mount, including a spare tablet or an existing monitor. Most kitchens start with what is already in the building.' },
+      { q: 'Can guests order from their table by QR?', a: 'Yes. Each table gets a QR code, the guest orders from their phone, and the order lands in the same queue and the same kitchen display as the counter.' },
+      { q: 'How many outlets can Omega handle?', a: 'The Growth plan covers up to ten outlets at Rs 3,499 per outlet per month, with reports across all of them. For more than ten, get in touch and we will quote against your store count.' },
+      OFFLINE_FAQ,
     ],
-    related: ['for/cloud-kitchens', 'for/cafes', 'features/kitchen-display', 'pricing'],
+    related: ['features/kitchen-display', 'integrations/swiggy-zomato', 'for/food-courts', 'pricing'],
   },
-
   {
     slug: 'for/fine-dining',
     parent: INDUSTRIES,
     crumb: 'Fine dining',
-    eyebrow: 'For chef-led restaurants',
+    eyebrow: 'For fine dine and casual dining restaurants',
     h1: 'Fine dining restaurant POS',
-    h1Tail: 'with hospitality instrumented.',
-    lede:
-      'Course pacing, table mapping, allergy flags and a guestbook that remembers everyone. Omega is a point-of-sale system for chef-led restaurants where the service, not the transaction, is the product.',
-    metaTitle: 'Fine Dining Restaurant POS System India | Omega POS',
-    metaDescription:
-      "Fine dining POS for chef-led Indian restaurants: course pacing, table mapping, allergy flags on every KOT and integrated reservations.",
+    h1Tail: 'that reads the room for you.',
+    lede: 'A floor plan that shows every table at a glance, guests who can call a waiter or pay from the table, reservations with a waitlist, and allergies printed on the kitchen ticket.',
+    metaTitle: 'Fine Dining Restaurant POS Software | Omega POS',
+    metaDescription: 'POS for fine dining restaurants in India: floor plan, call waiter and pay at table, reservations and waitlist, allergen tags on KOTs, captain reports, GST billing.',
+    outlet: {
+      photos: { hero: { id: 'photo-1606660023296-81d67734170a', alt: 'A dining table set with plates, glasses and candles' }, strip: [{ id: 'photo-1723132688333-83018f3560be', alt: 'A plated dish and a glass of wine' }, { id: 'photo-1484156818044-c040038b0719', alt: 'Wine glasses lined along a table' }] },
+      order: ['pains', 'tabs', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'Fine dining',
+      format: 'Fine dining',
+      hero: { kind: 'floor', title: 'Floor · Main hall' },
+      peek: { who: 'captain', say: 'Table 3 needs us. On my way.' },
+      pains: ['Twelve tables and one manager', 'Guests waiting to catch an eye', 'Allergies lost between floor and kitchen', 'Walk-ins on a full Saturday'],
+      tabs: [
+        {
+          label: 'Floor plan',
+          h: 'The whole room on one screen',
+          d: 'Lay tables out the way the room is. Guests can call a waiter or pay the bill from their table, and the request shows up on the floor straight away.',
+          points: ['Floor plan that matches the room', 'Call waiter from the table', 'Pay at the table by UPI'],
+          mock: { kind: 'floor', title: 'Floor · Main hall' },
+        },
+        {
+          label: 'Reservations',
+          h: 'Bookings and the waitlist in one list',
+          d: 'Take bookings, note the occasion, and keep walk-ins on a waitlist that turns into a seated table when one frees up.',
+          points: ['Reservations with notes', 'Walk-in waitlist', 'Tables marked as they free up'],
+          mock: { kind: 'reserve', title: 'Reservations · Tonight' },
+        },
+        {
+          label: 'Allergies',
+          h: 'Allergies that reach the kitchen',
+          d: 'Tag dishes with allergens and dietary marks, and add the guest\'s note to the order. It prints on the KOT and shows on the kitchen display.',
+          points: ['Allergen and dietary tags', 'Notes on the ticket', 'Station routing per dish'],
+          mock: { kind: 'kds', title: 'Kitchen · Mains', tickets: [{ id: 'T4', ch: 'dine', l: ['1× Dal makhani', '2× Butter naan'] }, { id: 'T7', ch: 'dine', l: ['1× Paneer tikka'], f: 'Nut allergy' }, { id: 'T2', ch: 'dine', l: ['2× Mushroom risotto'], f: 'Gluten free' }, { id: 'T9', ch: 'dine', l: ['1× Lamb shank'] }] },
+        },
+        {
+          label: 'Captain reports',
+          h: 'Know who on the floor is selling',
+          d: 'Sales per captain, item performance and discounts given, all from the same bills. Coaching starts from numbers, not hunches.',
+          points: ['Captain performance report', 'Discount and void audit', 'Item performance'],
+          mock: { kind: 'bars', title: 'Reports · Captain performance', caption: 'Tonight, sales by captain', rows: [{ l: 'Rohit', v: 38400 }, { l: 'Simran', v: 31200 }, { l: 'Imran', v: 26900 }, { l: 'Neha', v: 19800 }] },
+        },
+      ],
+      outcomes: [
+        { t: 'Guests stop waving', d: 'Call waiter and pay at table put the request on the floor screen.' },
+        { t: 'A full room, managed', d: 'Reservations and the waitlist in one place, tables marked as they free up.' },
+        { t: 'Safer kitchen tickets', d: 'Allergens and notes travel with the dish, printed and on screen.' },
+        { t: 'Coaching from numbers', d: 'Captain and item reports from the same bills, every night.' },
+      ],
+    },
     sections: [
       {
         kind: 'prose',
-        heading: 'The POS is the only thing that remembers',
+        heading: 'The POS is the only thing that sees every table',
         body: [
-          'In a chef-led room, the thing that separates a good service from a great one is memory. That a guest sat at table four last March, that they do not drink, that their partner is allergic to shellfish, that the anniversary is next week. Traditionally that memory lived in a head waiter who had been there eleven years.',
-          'Very few rooms still have that person, and no room can rely on having them. What is left is whatever the system recorded, which in most restaurants is a bill total and a phone number.',
-          'Omega treats guest history as first-class rather than as a CRM bolt-on. Every cover is attached to a guest record, the record surfaces at the point the table is seated rather than at the point the bill is printed, and it survives the departure of the person who built it.',
-        ],
-      },
-      {
-        kind: 'cards',
-        heading: 'What you get',
-        cards: [
-          {
-            t: 'Course pacing and fire',
-            d: 'Send courses on cue instead of all at once. The kitchen sees what is coming and when, so the pass is not guessing at the room.',
-          },
-          {
-            t: 'Allergy flags',
-            d: 'Recorded against the cover, warned to the kitchen automatically and printed on every KOT for that table. Not a note somebody shouted.',
-          },
-          {
-            t: 'Table mapping',
-            d: 'A floor plan that matches your actual room, with covers, course state and elapsed time visible at a glance.',
-          },
-          {
-            t: 'Guestbook',
-            d: 'Birthdays, preferences, previous visits and what they drank. Present when the table is seated, not when it is paid.',
-          },
-          {
-            t: 'Integrated reservations',
-            d: 'EazyDiner, Dineout and OpenTable land in one diary rather than three tabs and a paper book.',
-          },
-          {
-            t: 'Split and merge that works',
-            d: 'Split by cover, by item or by arbitrary amount, and merge tables mid-service without rebuilding the order.',
-          },
-        ],
-      },
-      {
-        kind: 'prose',
-        heading: 'Pacing is a kitchen problem the floor creates',
-        body: [
-          'Most pacing failures are not kitchen failures. They are the result of four tables being seated in six minutes and every order hitting the pass simultaneously, which the floor could see coming and the kitchen could not.',
-          'Omega puts course state on both sides of the pass. The floor fires the next course when the table is ready; the kitchen sees the queue of what has been fired and what is held, with elapsed time per table. The effect is that the pass stops being a surprise, which is the only way a small brigade holds a full room together.',
-          'It also means the data exists afterwards. Which service ran long, on which section, against which menu. That is a question chefs ask constantly and almost never have an answer to, because the information was never written down.',
+          'In a dining room the manager cannot be at every table. The floor plan is the one place where the state of the room is visible at once: who is seated, who is waiting, who wants the bill.',
+          'Omega puts that state on one screen and lets the guest add to it, by calling a waiter or paying from the table, so service moves at the guest\'s pace instead of the waiter\'s.',
         ],
       },
     ],
     faq: [
-      {
-        q: 'Can I lay out my actual floor plan?',
-        a: 'Yes. Tables are placed on a plan that matches the room, including irregular shapes, bar seats and private dining. Covers, course state and time-since-seated are visible on the plan itself, so a manager reads the room from one screen rather than walking it.',
-      },
-      {
-        q: 'How are allergies handled?',
-        a: 'An allergy is recorded against the cover, not against the order. Once set, it warns on every item added for that cover that conflicts with it, and it is printed on every KOT for that table for the rest of the service. It also persists in the guest record for future visits.',
-      },
-      {
-        q: 'Does it work with EazyDiner and Dineout reservations?',
-        a: 'Yes, both land in the same diary alongside walk-ins and direct bookings, so the floor is working from one view of the night. Table assignment and guest history attach to the reservation rather than being re-keyed on arrival.',
-      },
-      {
-        q: 'Can I split a bill by cover rather than by item?',
-        a: 'Yes. Omega supports splitting by cover, by item, by an arbitrary amount, or any combination of those on the same table. Merging tables mid-service does not require rebuilding the order, which is the more common failure in restaurants that seat overflow.',
-      },
+      { q: 'Can I lay out my actual floor plan?', a: 'Yes. Tables are placed on a plan that matches the room, and each table shows whether it is free, seated or waiting on the bill.' },
+      { q: 'How are allergies handled?', a: 'Dishes carry allergen and dietary tags, and the guest\'s note is added to the order. Both print on the KOT and show on the kitchen display.' },
+      { q: 'Does Omega pace courses or split a bill by seat?', a: 'Not yet. Orders can be held and fired to the kitchen, but there is no course-by-course pacing or seat-level bill split today. We would rather tell you now than in the demo.' },
+      PRINTER_FAQ,
     ],
-    related: ['for/bars', 'for/cafes', 'features/billing-and-kot', 'pricing'],
+    related: ['features/billing-and-kot', 'features/kitchen-display', 'for/bars', 'pricing'],
   },
-
   {
     slug: 'for/cloud-kitchens',
     parent: INDUSTRIES,
     crumb: 'Cloud kitchens',
-    eyebrow: 'For delivery-only operations',
+    eyebrow: 'For delivery-first and cloud kitchens',
     h1: 'Cloud kitchen POS software',
-    h1Tail: 'run eight brands from one kitchen.',
-    lede:
-      'Multi-brand menu management, one unified queue across every aggregator, and per-brand profit and loss. Omega is a point-of-sale and order-management system for delivery-only kitchens in India.',
-    metaTitle: 'Cloud Kitchen POS Software India | Omega POS',
-    metaDescription:
-      "Cloud kitchen POS for Indian delivery-only operations: run several brands from one kitchen, unify Swiggy and Zomato, track per-brand P&L.",
+    h1Tail: 'for kitchens no guest ever sees.',
+    lede: 'Swiggy and Zomato orders in one queue with a prep time on each, a kitchen display split by station, your own riders tracked to the door, and recipe stock on every dish.',
+    metaTitle: 'Cloud Kitchen POS Software in India | Omega POS',
+    metaDescription: 'Cloud kitchen POS for India: Swiggy and Zomato orders in one queue, prep times, station-wise kitchen display, own delivery riders, recipe-level inventory, GST billing.',
+    outlet: {
+      photos: { hero: { id: 'photo-1617347454431-f49d7ff5c3b1', alt: 'Delivery rider on a scooter at night' }, strip: [{ id: 'photo-1585937421612-70a008356fbe', alt: 'Bowls of Indian curry' }, { id: 'photo-1519608487953-e999c86e7455', alt: 'City street at night' }] },
+      order: ['pains', 'tabs', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'Cloud kitchens',
+      format: 'Cloud kitchen',
+      hero: { kind: 'orders', title: 'Online orders' },
+      peek: { who: 'manager', say: 'Swiggy, Zomato. One queue.' },
+      pains: ['Orders from three apps on four tablets', 'Prep times promised, then missed', 'Your own riders to coordinate', 'Margins thin enough to read through'],
+      tabs: [
+        {
+          label: 'Aggregator orders',
+          h: 'Every app in one queue',
+          d: 'Swiggy and Zomato orders land in Omega. Accept with a prep time and the KOT goes to the kitchen without anyone retyping it.',
+          points: ['Accept or reject in Omega', 'Prep time on every order', 'Online order activity report'],
+          mock: { kind: 'orders', title: 'Online orders' },
+        },
+        {
+          label: 'Kitchen display',
+          h: 'Tickets by station, timed',
+          d: 'Each station sees only its own tickets, and every ticket ages on screen, so the late ones are obvious before the rider is waiting.',
+          points: ['Station routing per item', 'Ticket timers', 'Any screen with a browser'],
+          mock: { kind: 'kds', title: 'Kitchen · Tandoor', tickets: [{ id: '#0731', ch: 'swiggy', l: ['2× Paneer tikka', '4× Butter naan'] }, { id: '#0732', ch: 'zomato', l: ['1× Dal makhani bowl'] }, { id: '#0733', ch: 'swiggy', l: ['1× Chicken biryani'], f: 'Extra spicy' }, { id: '#0734', ch: 'zomato', l: ['2× Rajma rice bowl'] }] },
+        },
+        {
+          label: 'Own delivery',
+          h: 'Your own riders, tracked to the door',
+          d: 'For orders you deliver yourself, assign a rider and follow the order from accepted to delivered.',
+          points: ['Rider login', 'Assign and track', 'Delivered orders in reports'],
+          mock: { kind: 'delivery', order: '#0735 · 2 bowls, 1 naan', area: 'Sector 29, Gurugram' },
+        },
+        {
+          label: 'Recipe stock',
+          h: 'Food cost on every dish',
+          d: 'Recipes deduct ingredients as orders are accepted, so you know what each dish really costs and what will run out tonight.',
+          points: ['Recipe-level deduction', 'Wastage with a reason', 'Purchases and expenses logged'],
+          mock: { kind: 'stock', sold: 'Paneer butter masala', uses: [{ n: 'Paneer', q: 120, unit: 'g', left: 3000, par: 2400 }, { n: 'Makhani gravy', q: 250, unit: 'ml', left: 9000, par: 2000 }] },
+        },
+      ],
+      outcomes: [
+        { t: 'One screen, not four', d: 'Aggregator orders accepted next to everything else.' },
+        { t: 'Prep times you can keep', d: 'Timed tickets by station show the late order before the rider does.' },
+        { t: 'Own delivery, visible', d: 'Every rider order tracked from accepted to delivered.' },
+        { t: 'Real food cost', d: 'Recipe stock and purchases in one place, dish by dish.' },
+      ],
+    },
     sections: [
       {
         kind: 'prose',
         heading: 'The tablet wall is the problem',
         body: [
-          'Almost every cloud kitchen in India starts with a shelf of tablets, one per brand per aggregator. Eight brands across two platforms is sixteen devices, sixteen notification sounds and sixteen places an order can be missed at nine on a Friday.',
-          'The cost is not the hardware. It is that no single surface knows what the kitchen is actually committed to. Nobody can answer how many orders are open, which brand is running late, or whether the paneer will last until eleven, because the answer is distributed across sixteen screens and one person\'s memory.',
-          'Omega collapses that into one queue. Every order from every brand on every platform arrives in the same list, prepared in the sequence the kitchen should actually prepare it, with the brand shown on the ticket rather than implied by which tablet buzzed.',
-        ],
-      },
-      {
-        kind: 'cards',
-        heading: 'What you get',
-        cards: [
-          {
-            t: 'Multi-brand menus',
-            d: 'Run separate brands out of one kitchen with separate menus, separate pricing and separate reporting, sharing one inventory underneath.',
-          },
-          {
-            t: 'Unified aggregator queue',
-            d: 'All platforms, one screen. Mark an item unavailable once and it goes out of stock everywhere at the same time.',
-          },
-          {
-            t: 'Shared inventory, separate P&L',
-            d: 'One stock pool because there is one kitchen, but costs attributed per brand so you know which brand is actually making money.',
-          },
-          {
-            t: 'Rider dispatch',
-            d: 'Auto-assign by zone for your own delivery fleet, with distance tracked per drop.',
-          },
-          {
-            t: 'Prep-time control',
-            d: 'Set realistic prep times per brand and per hour instead of one number that is wrong at both ends of the day.',
-          },
-          {
-            t: 'Demand prediction',
-            d: 'Omega learns your pattern and flags the items likely to run out before the next delivery.',
-          },
-        ],
-      },
-      {
-        kind: 'prose',
-        heading: 'Per-brand economics, not blended economics',
-        body: [
-          'The structural trap in a multi-brand kitchen is that the blended number always looks acceptable. Revenue is up, the kitchen is busy, and the overall margin is fine, so nobody examines the brand that is quietly losing money on every order because its packaging cost was estimated once in the first month and never revisited.',
-          'Omega attributes food cost, packaging and commission per brand, which is enough to see that one of your eight is subsidising the rest. That is usually the single highest-value report a cloud kitchen operator runs, and it is the one almost nobody has, because a single shared inventory makes the attribution tedious to do by hand.',
-        ],
-      },
-      {
-        kind: 'prose',
-        heading: 'Eighty-sixing an item, once',
-        body: [
-          'In a delivery-only kitchen, accepting an order you cannot fulfil is more expensive than in any other format. The customer has already paid, the rider is already assigned, the cancellation counts against your rating on that platform, and you find out about all of it ten minutes later.',
-          'Because Omega holds one stock pool across every brand and every platform, marking an item unavailable at the kitchen pushes that state out everywhere at once rather than requiring the same action on sixteen tablets. The same applies in reverse when stock is replenished.',
+          'A delivery kitchen with a tablet per platform has to watch every tablet, retype every order and keep every menu in step by hand. Mistakes show up as cancellations and bad ratings.',
+          'Omega brings the orders into one queue and one kitchen display, so the kitchen works from a single list no matter where the order came from.',
         ],
       },
     ],
     faq: [
-      {
-        q: 'Can I run more than one brand on a single subscription?',
-        a: 'Yes. Pricing is per outlet, not per brand, so a single kitchen running eight virtual brands is one outlet. That is deliberate: a cloud kitchen is one set of walls and one set of staff, and charging per brand would penalise exactly the model the format exists to enable.',
-      },
-      {
-        q: 'How does inventory work across brands that share ingredients?',
-        a: 'Stock is a single pool at the kitchen level because there is a single physical store cupboard. Recipes deduct from that pool regardless of which brand the order came through, while cost is attributed back to the brand that consumed it. This gives you accurate stock counts and accurate per-brand margins at the same time.',
-      },
-      {
-        q: 'Do I still need the aggregator tablets?',
-        a: 'The integration is two-way, so day-to-day operation happens in Omega. Most kitchens keep the tablets powered on for a short period during changeover and then shelve them. Platform-side actions that have no API equivalent, such as some promotional settings, still happen on the platform.',
-      },
-      {
-        q: 'Does Omega handle my own delivery fleet as well as aggregator riders?',
-        a: 'Yes. Riders on your own fleet are auto-assigned by zone with distance tracked per drop, which matters when you are running direct orders alongside aggregator ones. Aggregator riders remain managed by the platform, but their pickups appear in the same queue so the kitchen sequences all of it together.',
-      },
+      { q: 'Do I still need the aggregator tablets?', a: 'Orders arrive and are accepted in Omega. Menu, price and stock changes on Swiggy and Zomato are still made on their side today, so most kitchens keep one partner app for that.' },
+      { q: 'Can I run several brands from one kitchen?', a: 'Not as one shared menu yet. Today each brand runs as its own outlet in Omega, with its own menu and its own reports. Shared stock across brands is not built.' },
+      { q: 'Does Omega handle my own delivery fleet?', a: 'Yes. Riders log in, get assigned orders, and each delivery is tracked from accepted to delivered.' },
+      OFFLINE_FAQ,
     ],
-    related: ['for/qsr', 'integrations/swiggy-zomato', 'features/inventory-and-forecasting', 'pricing'],
+    related: ['integrations/swiggy-zomato', 'features/kitchen-display', 'for/pizzerias', 'pricing'],
   },
-
   {
     slug: 'for/bars',
     parent: INDUSTRIES,
-    crumb: 'Bars & lounges',
-    eyebrow: 'For bars, breweries and lounges',
-    h1: 'Bar billing software',
-    h1Tail: 'pour, tab, track.',
-    lede:
-      'Liquor inventory by the millilitre, tab management with pre-authorisation, and age verification at the point of sale. Omega is a point-of-sale system for bars, breweries and lounges in India.',
-    metaTitle: 'Bar Billing Software & POS for Pubs in India | Omega POS',
-    metaDescription:
-      "Bar billing software for Indian bars and breweries: pour-cost tracking to the millilitre, tab management, age verification and GST billing.",
+    crumb: 'Bars & breweries',
+    eyebrow: 'For bars, pubs, lounges and breweries',
+    h1: 'Bar and brewery POS software',
+    h1Tail: 'with happy hour on autopilot.',
+    lede: 'Happy-hour prices that switch on and off by themselves, drinks to the bar and food to the kitchen from one order, and a floor plan for the late-night rush.',
+    metaTitle: 'Bar, Pub and Brewery POS Software | Omega POS',
+    metaDescription: 'Bar and brewery POS for India: automatic happy-hour pricing, bar and kitchen stations from one order, floor plan, call waiter, hourly sales reports, GST billing.',
+    outlet: {
+      photos: { hero: { id: 'photo-1785765991779-4003970f84a6', alt: 'Beer taps lined up on a dark bar counter' }, strip: [{ id: 'photo-1651980909099-ddb028d72855', alt: 'A back bar lined with bottles' }, { id: 'photo-1785765979897-71c046625d71', alt: 'Bar counter with taps in low light' }] },
+      order: ['tabs', 'pains', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'Bars & breweries',
+      format: 'Bar',
+      hero: {
+        kind: 'counter',
+        title: 'Bar · Billing',
+        happy: true,
+        items: [
+          { n: 'Draught wheat beer', p: 380, mod: 'Pint' },
+          { n: 'Peri peri fries', p: 240 },
+          { n: 'Whisky sour', p: 520 },
+        ],
+      },
+      peek: { who: 'server', say: 'Happy hour. Prices already changed.' },
+      pains: ['Happy hour priced from memory', 'Tables open until closing time', 'Drinks and food to different stations', 'A late-night rush with a short staff'],
+      tabs: [
+        {
+          label: 'Happy hour',
+          h: 'Prices that change on the clock',
+          d: 'Set a happy-hour window once. The discount applies itself when it starts and stops when it ends, and the reports show what was actually charged.',
+          points: ['Time-window offers', 'Discount report', 'No manual overrides needed'],
+          mock: { kind: 'counter', title: 'Bar · Billing', happy: true, items: [{ n: 'Craft lager', p: 360, mod: 'Pint' }, { n: 'Nachos', p: 280 }, { n: 'Old fashioned', p: 560 }] },
+        },
+        {
+          label: 'Bar and kitchen',
+          h: 'One order, two stations',
+          d: 'Drinks route to the bar and food to the kitchen from the same order, and both land on the same bill.',
+          points: ['Station routing per item', 'Ticket timers', 'Food and drinks on one bill'],
+          mock: { kind: 'kds', title: 'Bar station', tickets: [{ id: 'T2', ch: 'dine', l: ['2× Draught lager'] }, { id: 'T5', ch: 'dine', l: ['1× Margarita', '1× Mojito'], f: 'Less ice' }, { id: 'T8', ch: 'dine', l: ['3× Whisky sour'] }, { id: 'T1', ch: 'dine', l: ['1× LIIT'] }] },
+        },
+        {
+          label: 'Floor',
+          h: 'The room at a glance, late into the night',
+          d: 'See which tables are seated and which want the bill. Guests can call a waiter or pay from the table.',
+          points: ['Floor plan', 'Call waiter', 'Pay at the table by UPI'],
+          mock: { kind: 'floor', title: 'Floor · Taproom' },
+        },
+        {
+          label: 'Hourly sales',
+          h: 'See the night hour by hour',
+          d: 'Hourly item-wise sales show when the rush starts and which drinks carry it, so staffing and stock follow the numbers.',
+          points: ['Hourly sales report', 'Item performance', 'Discount and void audit'],
+          mock: { kind: 'bars', title: 'Reports · Hourly sales', caption: 'Friday, sales by hour', rows: [{ l: '7 PM', v: 18200 }, { l: '8 PM', v: 34600 }, { l: '9 PM', v: 52300 }, { l: '10 PM', v: 47100 }, { l: '11 PM', v: 28900 }] },
+        },
+      ],
+      outcomes: [
+        { t: 'Happy hour, exactly', d: 'Prices switch on time, every day, without anyone remembering.' },
+        { t: 'Bar and kitchen in step', d: 'One order, routed to both, on one bill.' },
+        { t: 'A readable floor', d: 'Every table\'s state on one screen through the late shift.' },
+        { t: 'Staffing from data', d: 'Hourly sales show when the rush really starts.' },
+      ],
+    },
     sections: [
       {
         kind: 'prose',
-        heading: 'Bars lose money in millilitres',
+        heading: 'Happy hour is a pricing rule, not a memory test',
         body: [
-          'The economics of a bar are unusually sensitive to a quantity nobody measures. A thirty-millilitre over-pour on a sixty-millilitre peg is a fifty per cent cost overrun on that drink, and it is completely invisible in a system that tracks stock by the bottle.',
-          'Over a month, across a busy bar, the difference between a disciplined pour and a generous one is a meaningful fraction of the profit. It does not show up as theft, it shows up as a margin that is slightly worse than the spreadsheet said it would be, every single month, for reasons nobody can locate.',
-          'Omega tracks pour cost at the recipe level, down to the millilitre. Every cocktail deducts its actual components, theoretical consumption is compared against counted stock, and the variance is reported in rupees. The point is not to catch anyone. The point is that a number that is invisible cannot be managed, and this one is worth managing.',
-        ],
-      },
-      {
-        kind: 'cards',
-        heading: 'What you get',
-        cards: [
-          {
-            t: 'Pour-cost tracking',
-            d: 'Recipe-level cost down to the millilitre, with theoretical against actual variance reported in rupees rather than in units.',
-          },
-          {
-            t: 'Tab management',
-            d: 'Pre-authorise on card, run the tab through the night and auto-close at last call so nothing walks.',
-          },
-          {
-            t: 'Age verification',
-            d: 'Scan an ID at the point of sale and automatically block age-restricted SKUs when the check fails.',
-          },
-          {
-            t: 'Stocktake by bottle',
-            d: 'Weigh and scan rather than counting and estimating. End-of-night close becomes a task rather than an evening.',
-          },
-          {
-            t: 'Happy hour and timed pricing',
-            d: 'Price rules that switch themselves on and off by time and day, so nobody has to remember at seven.',
-          },
-          {
-            t: 'GST-compliant billing',
-            d: 'Correct treatment of food and beverage lines on the same bill, with the exports your accountant needs.',
-          },
-        ],
-      },
-      {
-        kind: 'prose',
-        heading: 'Tabs are a trust problem, not a software problem',
-        body: [
-          'Every bar that runs tabs has lost money on them, and the loss is rarely dramatic. It is a table that left while the bar was three deep, a card that was never pre-authorised because it was busy, a tab that was opened under a first name and never closed.',
-          'Omega pre-authorises the card at open, holds the tab against it, and closes everything still open at last call rather than leaving it to be discovered the next afternoon. Tabs are visible on one screen with elapsed time and running total, which is the difference between noticing at eleven and noticing at two.',
-        ],
-      },
-      {
-        kind: 'prose',
-        heading: 'The late shift has different constraints',
-        body: [
-          'A bar at midnight is loud, dark and staffed by people who have been on their feet for seven hours. Interfaces that test well in an office do not survive it. Small targets get mis-tapped, confirmation dialogs get dismissed without reading, and anything requiring precision gets worked around.',
-          'The practical consequence in Omega is that the bar surface is deliberately coarse: large targets, high contrast, destructive actions behind a manager PIN rather than a dialog, and no admin functionality anywhere near the ordering flow.',
+          'When the bartender has to remember to switch prices, happy hour starts late, ends late, or never ends at all. Each of those leaks money or annoys a guest.',
+          'Omega treats it as a rule: a time window with a discount that the system applies and removes by itself, and that the reports record as charged.',
         ],
       },
     ],
     faq: [
+      { q: 'Does it handle happy-hour pricing?', a: 'Yes. Set the time window and the discount once, and it applies itself at the start and stops at the end. The discount report shows what was given.' },
+      { q: 'Can I run food and drinks on the same bill?', a: 'Yes. Drinks route to the bar station and food to the kitchen from the same order, and both land on one bill with GST on each line.' },
+      { q: 'Can Omega track liquor by the peg?', a: 'Not yet. Recipes and stock work for ingredients today, but peg-level pour tracking and bottle stocktakes are not built. We would rather say so up front.' },
+      PRINTER_FAQ,
+    ],
+    related: ['features/billing-and-kot', 'features/kitchen-display', 'for/fine-dining', 'pricing'],
+  },
+  {
+    slug: 'for/food-courts',
+    parent: INDUSTRIES,
+    crumb: 'Food courts & canteens',
+    eyebrow: 'For food courts, canteens and cafeterias',
+    h1: 'Food court and canteen POS',
+    h1Tail: 'where every order gets a token.',
+    lede: 'Guests order by QR or at the counter, every order gets a token, and the display calls it out when it is ready. Built for a lunch rush squeezed into one hour.',
+    metaTitle: 'Food Court and Canteen POS Software | Omega POS',
+    metaDescription: 'POS for food courts, canteens and cafeterias in India: QR ordering, token display, fast counter billing, kitchen display, UPI and cash, hourly sales, offline mode.',
+    outlet: {
+      photos: { hero: { id: 'photo-1559329007-40df8a9345d8', alt: 'A busy dining hall seen from above' }, strip: [{ id: 'photo-1546833999-b9f581a1996d', alt: 'Steel thali with curries and roti' }, { id: 'photo-1567337710282-00832b415979', alt: 'Thali with curries and bread' }] },
+      order: ['pains', 'tabs', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'Food courts',
+      format: 'Food court',
+      hero: { kind: 'token', title: 'Token display', start: 112 },
+      peek: { who: 'chef', say: '112, your thali is ready!' },
+      pains: ['A lunch rush squeezed into one hour', 'Crowds around the pickup counter', 'Cash and UPI at the same counter', 'Long queues just to place an order'],
+      tabs: [
+        {
+          label: 'QR ordering',
+          h: 'Order from the table, skip the queue',
+          d: 'Guests scan, order and the ticket goes straight to the kitchen. The billing counter only handles the guests who want it.',
+          points: ['QR code per table', 'Same kitchen queue', 'Order status for the guest'],
+          mock: { kind: 'qr', outlet: 'Canteen · Block B', items: [{ n: 'Veg thali', p: 120 }, { n: 'Chaas', p: 30 }, { n: 'Gulab jamun', p: 40 }] },
+        },
+        {
+          label: 'Token display',
+          h: 'A token for every order',
+          d: 'Each order gets a daily token, and the display shows what is cooking and what is ready to collect.',
+          points: ['Daily tokens', 'Any TV or monitor', 'Menu slides between calls'],
+          mock: { kind: 'token', title: 'Token display', start: 112 },
+        },
+        {
+          label: 'Counter billing',
+          h: 'A counter that keeps pace',
+          d: 'Fast billing for the guests who order at the counter, with UPI and cash on the same screen.',
+          points: ['Busy items on the first screen', 'UPI, card or cash', 'KOT sent as you charge'],
+          mock: { kind: 'counter', title: 'Counter · Billing', items: [{ n: 'Rajma chawal', p: 90 }, { n: 'Veg thali', p: 120 }, { n: 'Masala chaas', p: 35 }] },
+        },
+        {
+          label: 'Hourly sales',
+          h: 'Know your peak to the minute',
+          d: 'Hourly sales show how sharp the lunch peak is, so prep and staff are ready before it arrives.',
+          points: ['Hourly item-wise sales', 'Payment mode split', 'Day-end in one page'],
+          mock: { kind: 'bars', title: 'Reports · Hourly sales', caption: 'Today, sales by hour', rows: [{ l: '12 PM', v: 9400 }, { l: '1 PM', v: 31800 }, { l: '2 PM', v: 22600 }, { l: '3 PM', v: 6100 }] },
+        },
+      ],
+      outcomes: [
+        { t: 'A shorter queue', d: 'QR orders skip the counter entirely.' },
+        { t: 'A quieter pickup point', d: 'The token screen calls orders, the staff keep cooking.' },
+        { t: 'Every payment counted', d: 'UPI and cash reconciled in one day-end report.' },
+        { t: 'Ready for the peak', d: 'Hourly sales show when to start prep.' },
+      ],
+    },
+    sections: [
       {
-        q: 'Can Omega track cocktail recipes with multiple spirits?',
-        a: 'Yes. A recipe can contain any number of components at millilitre precision, including garnishes and mixers, and each pour deducts its actual components from stock. That is what makes pour-cost variance meaningful rather than approximate.',
-      },
-      {
-        q: 'How does age verification work?',
-        a: 'Scanning an accepted ID at the point of sale records the check against the order and unblocks age-restricted SKUs. If the check fails or is skipped, those SKUs cannot be added. The check is recorded so it is auditable later, which is the part that matters if it is ever questioned.',
-      },
-      {
-        q: 'Does it handle happy-hour pricing?',
-        a: 'Yes. Price rules are defined by time and day and apply themselves, including different rules for different days of the week. Because the rule is applied by the system rather than by the bartender remembering, the reporting afterwards reflects what was actually charged.',
-      },
-      {
-        q: 'Can I run food and drink on the same bill?',
-        a: 'Yes, and the GST treatment on each line is handled correctly on a single invoice. For bars attached to a kitchen, food items route to the kitchen display while drinks route to the bar station, from the same order.',
+        kind: 'prose',
+        heading: 'A canteen has one hour to get it right',
+        body: [
+          'Most of a canteen\'s day happens between one and two in the afternoon. A slow counter or a crowd at the pickup window in that hour costs more than the rest of the day combined.',
+          'Omega spreads the load: guests order by QR from the table, the counter handles the rest, and the token display does the calling.',
+        ],
       },
     ],
-    related: ['for/fine-dining', 'features/inventory-and-forecasting', 'features/billing-and-kot', 'pricing'],
+    faq: [
+      { q: 'Can each stall in a food court run its own menu?', a: 'Yes. Each stall runs as its own outlet in Omega with its own menu, kitchen display and reports. One central counter that bills across several stalls is not built yet.' },
+      { q: 'What screen do I need for the token display?', a: 'Any TV or monitor with a browser. The display shows the token board and can show menu slides between calls.' },
+      OFFLINE_FAQ,
+      PRINTER_FAQ,
+    ],
+    related: ['for/qsr', 'features/billing-and-kot', 'integrations/upi-and-payments', 'pricing'],
+  },
+  {
+    slug: 'for/bakeries',
+    parent: INDUSTRIES,
+    crumb: 'Bakeries & desserts',
+    eyebrow: 'For bakeries, patisseries, ice cream and dessert shops',
+    h1: 'Bakery and dessert shop POS',
+    h1Tail: 'for every size, flavour and scoop.',
+    lede: 'Sizes and flavours as variations, toppings as add-ons, cakes ordered and paid ahead for pickup, and a stamp card that brings regulars back for the next pastry.',
+    metaTitle: 'Bakery, Ice Cream and Dessert Shop POS | Omega POS',
+    metaDescription: 'POS for bakeries, cake shops, ice cream and dessert parlours in India: variations and add-ons, prepaid pickup orders, stamp-card loyalty, recipe stock, wastage, GST billing.',
+    outlet: {
+      photos: { hero: { id: 'photo-1517433670267-08bbd4be890f', alt: 'Bakery counter with fresh bread and pastries' }, strip: [{ id: 'photo-1578985545062-69928b1d9587', alt: 'Chocolate drip cake' }, { id: 'photo-1567206563064-6f60f40a2b57', alt: 'Ice cream tubs in a gelato counter' }, { id: 'photo-1555507036-ab1f4038808a', alt: 'Croissants dusted with sugar' }] },
+      order: ['pains', 'tabs', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'Bakeries',
+      format: 'Bakery',
+      hero: {
+        kind: 'preorder',
+        title: 'Grabbit · Pickup orders',
+        orders: [
+          { t: '11:00', n: 'Chocolate truffle cake · 1 kg', who: 'Meera' },
+          { t: '12:30', n: '6× Red velvet jar', who: 'Kabir' },
+          { t: '4:00', n: 'Blueberry cheesecake · 500 g', who: 'Office order' },
+        ],
+      },
+      peek: { who: 'owner', say: 'Today\'s cakes. All paid ahead.' },
+      pains: ['Every cake in four sizes and two bases', 'Phone orders scribbled in a notebook', 'Unsold stock at closing time', 'Regulars who come for one pastry'],
+      tabs: [
+        {
+          label: 'Sizes and toppings',
+          h: 'Sizes, flavours and toppings, built in',
+          d: 'A cake in 500 g and 1 kg, eggless or not. A sundae with two scoops and a topping. Variations and add-on groups keep the menu short and the bill right.',
+          points: ['Variations per item', 'Add-on groups', 'Dietary tags on items'],
+          mock: { kind: 'counter', title: 'Counter · Billing', items: [{ n: 'Chocolate cake', p: 950, mod: '1 kg · Eggless' }, { n: 'Hot chocolate sundae', p: 180, mod: '2 scoops · Brownie' }, { n: 'Black forest pastry', p: 120 }] },
+        },
+        {
+          label: 'Pickup orders',
+          h: 'Orders paid ahead, ready on time',
+          d: 'Guests order and pay on Grabbit, our customer app, and pick up in a slot. No notebook, no unpaid cake left on the shelf.',
+          points: ['Pickup slots you control', 'Paid online up front', 'Lands in Omega like any order'],
+          mock: { kind: 'preorder', title: 'Grabbit · Pickup orders', orders: [{ t: '11:00', n: 'Chocolate truffle cake · 1 kg', who: 'Meera' }, { t: '12:30', n: '6× Red velvet jar', who: 'Kabir' }, { t: '4:00', n: 'Blueberry cheesecake · 500 g', who: 'Office order' }] },
+        },
+        {
+          label: 'Stamp cards',
+          h: 'A reason to come back for the next one',
+          d: 'Stamp cards and coins keyed to a phone number. The sixth pastry is on the house, and the counter sees it on the bill.',
+          points: ['Stamp cards', 'Coins on every bill', 'Win-back list'],
+          mock: { kind: 'loyalty', item: 'pastry', stamps: 6 },
+        },
+        {
+          label: 'Stock and wastage',
+          h: 'Stock by recipe, wastage by reason',
+          d: 'Recipes deduct chocolate, butter and cream as cakes sell. What does not sell is logged as wastage with a reason, so tomorrow\'s bake is smaller.',
+          points: ['Recipe-level deduction', 'Wastage reasons', 'Reorder suggestions in the app'],
+          mock: { kind: 'stock', sold: 'Chocolate cake · 1 kg', uses: [{ n: 'Dark chocolate', q: 300, unit: 'g', left: 3000, par: 1500 }, { n: 'Butter', q: 200, unit: 'g', left: 5000, par: 1000 }] },
+        },
+      ],
+      outcomes: [
+        { t: 'A shorter menu', d: 'One item with sizes and flavours instead of twelve near-duplicates.' },
+        { t: 'Paid cake orders', d: 'Pickup orders paid up front, no notebook.' },
+        { t: 'Regulars return', d: 'Stamp cards that the counter sees on every bill.' },
+        { t: 'A smarter bake', d: 'Wastage by reason shows what to bake less of.' },
+      ],
+    },
+    sections: [
+      {
+        kind: 'prose',
+        heading: 'Bakery menus multiply fast',
+        body: [
+          'A bakery or dessert shop sells few products in many shapes: the same cake in three sizes, eggless or not, the same ice cream in cups, cones and sundaes. Set each one up as a separate item and the menu becomes unusable.',
+          'Omega keeps one item with variations and add-on groups, so the menu stays short, the bill stays correct, and the recipe deducts the right amount for each size.',
+        ],
+      },
+    ],
+    faq: [
+      { q: 'Can I sell by weight?', a: 'Not from a weighing scale yet. Most bakeries set fixed sizes, such as 500 g and 1 kg, as variations of the item, each with its own price and recipe.' },
+      { q: 'Does Omega track batches and expiry dates?', a: 'Not yet. Stock is tracked by recipe and unsold items can be logged as wastage with a reason, but batch and expiry tracking is not built.' },
+      { q: 'Does it work for ice cream parlours?', a: 'Yes. Scoops, cups and cones work as variations, toppings as add-on groups, and stamp cards bring regulars back.' },
+      OFFLINE_FAQ,
+    ],
+    related: ['for/cafes', 'features/inventory-and-forecasting', 'features/billing-and-kot', 'pricing'],
+  },
+  {
+    slug: 'for/pizzerias',
+    parent: INDUSTRIES,
+    crumb: 'Pizzerias',
+    eyebrow: 'For pizzerias and pizza delivery',
+    h1: 'Pizzeria POS software',
+    h1Tail: 'for every size, crust and topping.',
+    lede: 'Sizes, crusts and toppings billed in a few taps, tickets on the oven station screen, Swiggy and Zomato in one queue, and your own riders tracked to the door.',
+    metaTitle: 'Pizzeria and Pizza Shop POS Software | Omega POS',
+    metaDescription: 'Pizzeria POS for India: sizes, crusts and toppings as variations and add-ons, kitchen display, Swiggy and Zomato orders, own delivery riders, GST billing, offline mode.',
+    outlet: {
+      photos: { hero: { id: 'photo-1574071318508-1cdbab80d002', alt: 'Margherita pizza with basil' }, strip: [{ id: 'photo-1513104890138-7c749659a591', alt: 'Sliced pizza on a board' }, { id: 'photo-1604382354936-07c5d9983bd3', alt: 'Pizza on a dark floured surface' }, { id: 'photo-1595854341625-f33ee10dbf94', alt: 'Pizza on an orange table' }] },
+      order: ['tabs', 'pains', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'Pizzerias',
+      format: 'Pizzeria',
+      hero: {
+        kind: 'counter',
+        title: 'Counter · Billing',
+        items: [
+          { n: 'Farmhouse pizza', p: 449, mod: 'Medium · Cheese burst' },
+          { n: 'Garlic bread', p: 179, mod: 'Stuffed' },
+          { n: 'Choco lava cake', p: 109 },
+        ],
+      },
+      peek: { who: 'chef', say: 'Medium, cheese burst. Got it.' },
+      pains: ['Three sizes, four crusts, twenty toppings', 'Delivery orders from every direction', 'Riders waiting at the oven', 'Toppings that never match the bill'],
+      tabs: [
+        {
+          label: 'Sizes and toppings',
+          h: 'Every combination, billed right',
+          d: 'Size and crust as variations, toppings as add-on groups with their own prices. The bill matches what goes in the oven.',
+          points: ['Variations and add-on groups', 'Recipes per size', 'Combos'],
+          mock: { kind: 'counter', title: 'Counter · Billing', items: [{ n: 'Margherita', p: 299, mod: 'Large · Thin crust' }, { n: 'Peppy paneer', p: 389, mod: 'Medium · Extra cheese' }, { n: 'Coke 500 ml', p: 60 }] },
+        },
+        {
+          label: 'Oven station',
+          h: 'The oven sees only pizzas',
+          d: 'Pizzas go to the oven station, sides and desserts to theirs. Every ticket is timed, so the delivery order that is running late stands out.',
+          points: ['Station routing per item', 'Ticket timers', 'Any screen with a browser'],
+          mock: { kind: 'kds', title: 'Kitchen · Oven', tickets: [{ id: '#0611', ch: 'swiggy', l: ['1× Farmhouse · M'] }, { id: '#0612', ch: 'take', l: ['2× Margherita · L'] }, { id: '#0613', ch: 'zomato', l: ['1× Peppy paneer · M'], f: 'Jain' }, { id: '#0614', ch: 'dine', l: ['1× Veggie supreme · L'] }] },
+        },
+        {
+          label: 'Own delivery',
+          h: 'Your own riders, tracked',
+          d: 'Assign a rider to every order you deliver yourself and follow it from accepted to delivered.',
+          points: ['Rider login', 'Assign and track', 'Delivered orders in reports'],
+          mock: { kind: 'delivery', order: '#0615 · 2 pizzas, garlic bread', area: 'Sector 18, Noida' },
+        },
+        {
+          label: 'Online orders',
+          h: 'Swiggy and Zomato with the counter',
+          d: 'Aggregator orders arrive in the same queue, accepted with a prep time and sent straight to the oven.',
+          points: ['Accept or reject in Omega', 'Prep time on every order', 'One kitchen queue'],
+          mock: { kind: 'orders', title: 'Online orders' },
+        },
+      ],
+      outcomes: [
+        { t: 'Bills that match the pizza', d: 'Sizes, crusts and toppings priced exactly.' },
+        { t: 'A calmer oven', d: 'Only oven tickets on the oven screen, all timed.' },
+        { t: 'Delivery under control', d: 'Own riders and aggregator orders in one place.' },
+        { t: 'Topping cost known', d: 'Recipes per size show what each pizza really costs.' },
+      ],
+    },
+    sections: [
+      {
+        kind: 'prose',
+        heading: 'A pizza menu is a matrix',
+        body: [
+          'Three sizes, a few crusts and twenty toppings make hundreds of combinations. Billing them as separate items is impossible, and billing them loosely means toppings go into the oven that never reached the bill.',
+          'Omega models the matrix directly: variations for size and crust, add-on groups for toppings, and a recipe per size so stock and food cost follow what was actually made.',
+        ],
+      },
+    ],
+    faq: [
+      { q: 'Can I do half-and-half pizzas?', a: 'Not as a split-pizza builder. Most pizzerias set it up as a variation or as an add-on group with the second half\'s toppings.' },
+      { q: 'Does Omega handle my own delivery riders?', a: 'Yes. Riders log in, get assigned orders, and each delivery is tracked from accepted to delivered.' },
+      PRINTER_FAQ,
+      OFFLINE_FAQ,
+    ],
+    related: ['for/cloud-kitchens', 'integrations/swiggy-zomato', 'features/kitchen-display', 'pricing'],
+  },
+  {
+    slug: 'for/chains',
+    parent: INDUSTRIES,
+    crumb: 'Multi-outlet chains',
+    eyebrow: 'For restaurant chains and growing brands',
+    h1: 'Restaurant chain POS',
+    h1Tail: 'with every outlet on one screen.',
+    lede: 'Sales, items and payments from every outlet in one report, offline billing on the Android app, and stock and purchases tracked outlet by outlet.',
+    metaTitle: 'Multi-Outlet Restaurant Chain POS | Omega POS',
+    metaDescription: 'POS for restaurant chains in India: reports across all outlets, offline billing on Android, recipe stock and purchases per outlet, staff attendance, Tally export, GST invoices.',
+    outlet: {
+      photos: { hero: { id: 'photo-1517248135467-4c7edcad34c4', alt: 'A large restaurant dining room with rows of tables and chairs' }, strip: [{ id: 'photo-1567157577867-05ccb1388e66', alt: 'Marine Drive, Mumbai' }, { id: 'photo-1477587458883-47145ed94245', alt: 'Hawa Mahal, Jaipur' }, { id: 'photo-1570168007204-dfb528c6958f', alt: 'Gateway of India, Mumbai' }] },
+      order: ['pains', 'tabs', 'outcomes', 'photos', 'prose', 'india', 'faq', 'switch'],
+      short: 'Chains',
+      format: 'Chain',
+      hero: { kind: 'bars', title: 'Reports · All outlets', caption: 'Today, sales by outlet', rows: [{ l: 'Cyber Hub', v: 112400 }, { l: 'Hauz Khas', v: 84200 }, { l: 'Rajouri', v: 73500 }, { l: 'Sector 18', v: 61900 }] },
+      peek: { who: 'owner', say: 'All four outlets. One report.' },
+      pains: ['A WhatsApp group of day-end photos', 'One outlet always on a bad connection', 'Stock that no one can compare', 'Attendance kept in paper registers'],
+      tabs: [
+        {
+          label: 'All-outlet reports',
+          h: 'Every outlet, one report',
+          d: 'Sales, items, payment modes and discounts across every outlet, side by side, without waiting for each manager\'s day-end message.',
+          points: ['All-outlet sales reports', 'Item and captain performance', 'Tally export for accounts'],
+          mock: { kind: 'bars', title: 'Reports · All outlets', caption: 'Today, sales by outlet', rows: [{ l: 'Cyber Hub', v: 112400 }, { l: 'Hauz Khas', v: 84200 }, { l: 'Rajouri', v: 73500 }, { l: 'Sector 18', v: 61900 }] },
+        },
+        {
+          label: 'Offline billing',
+          h: 'An outage does not stop the counter',
+          d: 'Outlets on the Omega Android app bill through an outage and sync when the line comes back, so head-office numbers fill in without gaps.',
+          points: ['Local order queue', 'Automatic sync', 'Nothing double counted'],
+          mock: { kind: 'offline' },
+        },
+        {
+          label: 'Stock by outlet',
+          h: 'Stock you can compare',
+          d: 'Recipe stock, purchases and wastage per outlet, so one kitchen\'s wastage is visible next to the others.',
+          points: ['Recipe-level deduction', 'Purchases and expenses', 'Wastage with a reason'],
+          mock: { kind: 'stock', sold: 'Paneer tikka', uses: [{ n: 'Paneer', q: 150, unit: 'g', left: 4000, par: 3200 }, { n: 'Tikka marinade', q: 60, unit: 'ml', left: 3000, par: 500 }] },
+        },
+      ],
+      outcomes: [
+        { t: 'One report, not ten', d: 'Every outlet\'s day in one place, on time.' },
+        { t: 'Fewer dark outlets', d: 'Offline billing on the Android app keeps the counter selling and syncing.' },
+        { t: 'Comparable kitchens', d: 'Stock, purchases and wastage side by side.' },
+        { t: 'Cleaner books', d: 'Tally export and GST invoices from the same bills.' },
+      ],
+    },
+    sections: [
+      {
+        kind: 'prose',
+        heading: 'Growth breaks the day-end',
+        body: [
+          'At one outlet the owner sees everything. At five, the day-end becomes a stream of photos and voice notes, and the numbers are a day late and never quite comparable.',
+          'Omega keeps every outlet on the same system and the same reports, so the chain is read from one screen and each outlet can still bill on its own when its connection drops.',
+        ],
+      },
+    ],
+    faq: [
+      { q: 'How is a chain priced?', a: 'The Growth plan covers up to ten outlets at Rs 3,499 per outlet per month. For more than ten, get in touch and we will quote against your store count.' },
+      { q: 'Can head office push one menu to every outlet?', a: 'Not yet. Menus are managed per outlet today. A head-office menu that pushes to all outlets is not built, and we would rather say so before the demo.' },
+      { q: 'Does it track staff attendance?', a: 'Yes. Staff tap an NFC tag at the outlet to clock in and out, and attendance is visible per outlet.' },
+      OFFLINE_FAQ,
+    ],
+    related: ['features/offline-mode', 'features/inventory-and-forecasting', 'pricing', 'for/qsr'],
   },
 ]

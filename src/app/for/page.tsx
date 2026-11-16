@@ -4,7 +4,7 @@ import { SEGMENTS } from '@/content/segments'
 
 export const metadata: Metadata = {
   title: { absolute: 'Restaurant POS by Industry | Omega POS' },
-  description: 'Omega point-of-sale software configured for the format you actually run: cafés and bakeries, QSR and food courts, chef-led dining, bars and breweries, and delivery-only cloud kitchens.',
+  description: 'Omega POS for the format you run: cafés, QSR, fine dining, cloud kitchens, bars and breweries, food courts and canteens, bakeries and dessert shops, pizzerias and multi-outlet chains.',
   alternates: { canonical: '/for' },
 }
 

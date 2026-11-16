@@ -3,7 +3,7 @@
    physics carousel (drag, glide, spring) and every ticket is a pendulum; the
    positions and swing angles are written each frame by Testimonials.tsx. */
 
-.tk-sec { overflow-x: clip; }
+.tk-sec { overflow-x: clip; padding-bottom: clamp(16px, 2.5vw, 32px); }   /* the rail's own 44px swing room is the rest */
 .tk-sec .sec-head { margin-bottom: clamp(92px, 8vw, 118px); }   /* room for the chef over the rail */
 .tk-dev {
   max-width: 640px; margin: calc(clamp(92px, 8vw, 118px) * -1 + 20px) auto clamp(92px, 8vw, 118px);
@@ -90,7 +90,7 @@
 a.tk-src { color: var(--link); }
 /* placeholder tickets are stamped so they can never pass for real ones */
 .tk-stamp {
-  position: absolute; right: 14px; bottom: 58px;
+  position: absolute; right: 14px; bottom: 32px;
   display: grid; justify-items: center; gap: 1px;
   padding: 4px 10px 5px; border: 2px solid var(--red-500); border-radius: 8px;
   color: var(--red-500); font-size: 13px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
@@ -109,27 +109,21 @@ a.tk-src { color: var(--link); }
   100% { transform: none; }
 }
 
-/* Controls: count, the dwell bar, a drag hint, back and next */
-.tk-ctl { display: flex; align-items: center; gap: 16px; }
-.tk-count { min-width: 56px; font-size: 12px; color: var(--fg-3); }
-.tk-progress { flex: 1; height: 2px; overflow: hidden; border-radius: 2px; background: var(--stroke-weak); }
-.tk-progress i { display: block; height: 100%; background: var(--blue-500); transform: scaleX(0); transform-origin: left center; }
-.tk-progress i.run { animation: tk-dwell var(--dwell, 6s) linear forwards; }
-@keyframes tk-dwell { to { transform: scaleX(1); } }
-.tk-hint { font-size: 12px; color: var(--fg-caption); white-space: nowrap; }
-@media (hover: none) { .tk-hint { display: none; } }
-.tk-btns { display: flex; gap: 8px; }
-.tk-back {
-  width: 34px; height: 34px; border-radius: 99px;
-  display: grid; place-items: center;
-  box-shadow: inset 0 0 0 1px var(--stroke); color: var(--fg-2);
-  transition: box-shadow .2s var(--ease-emph), color .2s var(--ease-emph), transform .2s var(--ease-out-cubic);
-}
-.tk-back:hover { box-shadow: inset 0 0 0 1px var(--black-700); color: var(--fg); }
-.tk-back:active { transform: scale(.94); }
-.tk-back .icon-arrow { transform: rotate(180deg); }
 
 @media (max-width: 640px) {
   .tk-rail { --tw: min(80vw, 300px); --gap: 16px; }
   .tk-q p { font-size: 15.5px; }
 }
+
+/* At the pass (Testimonials.tsx sets .is-pass on the ticket in the first slot): the
+   quote prints out line by line, like a thermal printer, and the stamp is thumped on. */
+.tk.is-pass .tk-q p { animation: tk-print 1.2s steps(5, end) both; }
+.tk.is-pass .tk-stamp { animation: tk-thump .5s cubic-bezier(.3, 1.6, .5, 1) 1.1s both; }
+.tk.is-pass .tk-paper { box-shadow: inset 0 0 0 1.5px color-mix(in oklab, var(--blue-500) 35%, transparent); }
+@keyframes tk-print { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes tk-thump {
+  0% { opacity: 0; transform: rotate(-30deg) scale(1.9); }
+  70% { opacity: .65; transform: rotate(-10deg) scale(.94); }
+  100% { opacity: .5; transform: rotate(-12deg); }
+}
+@media (prefers-reduced-motion: reduce) { .tk.is-pass .tk-q p, .tk.is-pass .tk-stamp { animation: none; } }

@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react'
 import { Icon } from './Icons'
 import { Peek } from './crew/Peek'
 
-/* Points condensed from src/content/features.ts → offline-mode ("What keeps working"). */
+/* Points condensed from src/content/features.ts → offline-mode. Offline billing is the Android app's. */
 const POINTS = [
-  { t: 'Order entry and bills', d: 'Full menu, modifiers, tables and tabs, with GST invoice numbering kept on the device.' },
-  { t: 'KOTs still print', d: 'Tickets reach the kitchen over the local network. The KDS and the terminal talk to each other, not through the cloud.' },
-  { t: 'Replays without duplicates', d: 'Every order gets its identifier on the device, so draining the queue twice gives the same result as once.' },
-  { t: 'Honest about payments', d: 'Card and UPI genuinely need a connection. Omega marks them unavailable instead of appearing to accept them.' },
+  { t: 'Order entry and bills', d: 'On the Omega Android app, the full menu and modifiers keep working, with every order saved on the tablet first.' },
+  { t: 'Cash keeps working', d: 'Cash bills complete on the device and fold into the day once the queue syncs.' },
+  { t: 'Replays without duplicates', d: 'Every order gets its reference on the device, so syncing the queue twice gives the same result as once.' },
+  { t: 'Honest about the rest', d: 'Card and UPI need a connection, and so do the web POS and the kitchen display. They catch up when the line returns.' },
 ]
 
 type Net = 'online' | 'offline' | 'syncing'
@@ -38,8 +38,8 @@ export function Offline() {
           <div className="eyebrow"><span className="dot" />Offline-first</div>
           <h2 className="h-section offline-h">The internet drops.<br /><span className="h-muted">Billing doesn’t.</span></h2>
           <p className="lede offline-lede">
-            Cloud POS has one failure mode, and it is the expensive one. Omega treats the device
-            in your restaurant as the source of truth and the cloud as the place it syncs to.
+            Cloud POS has one failure mode, and it is the expensive one. The Omega Android app treats
+            the tablet in your restaurant as the source of truth and the cloud as the place it syncs to.
           </p>
           <div className="offline-points">
             {POINTS.map(p => (

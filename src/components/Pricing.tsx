@@ -31,20 +31,20 @@ const PLANS: Plan[] = [
   {
     tier: 'Starter', name: 'Single outlet', monthly: 1499, annual: 1199,
     desc: 'For one location, getting started.',
-    features: ['Unlimited orders, staff and terminals', 'Billing, KOTs, kitchen display', 'Recipe-level inventory', 'UPI, card and cash payments', '1 aggregator integration', 'Offline mode', 'Email support'],
+    features: ['Unlimited orders, staff and terminals', 'Billing, KOTs, kitchen display', 'Recipe-level inventory', 'UPI, card and cash payments', '1 aggregator integration', 'Offline billing on the Android app', 'Email support'],
     cta: { label: 'Start free trial', href: 'https://cafe.posomega.com/onboard' },
   },
   {
     tier: 'Growth', name: 'Multi-outlet', monthly: 3499, annual: 2799,
     desc: 'For up to 10 outlets.',
-    features: ['Everything in Starter, plus:', 'Up to 10 outlets', 'All aggregator integrations', 'Demand prediction and par levels', 'Multi-outlet stock view', 'Priority support', 'Free hardware on a 12-month plan'],
+    features: ['Everything in Starter, plus:', 'Up to 10 outlets', 'All aggregator integrations', 'Reports across all outlets', 'Priority support', 'Free hardware on a 12-month plan'],
     cta: { label: 'Talk to sales', href: '/get-started' },
     featured: true,
   },
   {
     tier: 'Enterprise', name: 'Chains & franchises', monthly: null, annual: null,
     desc: 'For more than 10 outlets.',
-    features: ['Everything in Growth, plus:', 'Unlimited outlets', 'Multi-outlet command centre', 'Regional menu overrides', 'Per-brand reporting', 'Priced per chain, not per outlet'],
+    features: ['Everything in Growth, plus:', 'Unlimited outlets', 'All-outlet and per-outlet reports', 'Priced per chain, not per outlet'],
     cta: { label: 'Get a quote', href: '/get-started' },
   },
 ]

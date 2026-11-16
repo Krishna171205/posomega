@@ -29,58 +29,58 @@ type Outlet = {
 const OUTLETS: Outlet[] = [
   {
     id: 'cafes', name: 'Cafés', kind: 'Coffee shops and all-day cafés',
-    text: 'Tabs for the guest who stays all afternoon, fast order entry for the morning queue, and tips that split themselves.',
-    pills: ['Open tabs', 'Phone-number loyalty', 'Tip pools'],
+    text: 'Modifiers one tap from the item for the morning queue, regulars remembered by phone number, and stock that deducts itself cup by cup.',
+    pills: ['Fast billing', 'Phone-number loyalty', 'Recipe stock'],
     link: { href: '/for/cafes', label: 'Omega for cafés' },
     crew: { who: 'server', enter: 'walk', side: 'right' },
   },
   {
-    id: 'bakeries', name: 'Bakeries', kind: 'Bakeries and coffee roasters',
-    text: 'Quick counter billing with HSN codes on every invoice, and stock that flags what will run out before the next delivery.',
-    pills: ['Fast order entry', 'HSN codes on invoices', 'Low-stock alerts'],
-    link: { href: '/for/cafes', label: 'Omega for cafés and bakeries' },
+    id: 'bakeries', name: 'Bakeries', kind: 'Bakeries, ice cream and dessert shops',
+    text: 'Sizes and flavours as variations, cakes ordered and paid ahead for pickup, and a stamp card that brings regulars back.',
+    pills: ['Variations and add-ons', 'Prepaid pickup orders', 'Stamp cards'],
+    link: { href: '/for/bakeries', label: 'Omega for bakeries' },
     crew: { who: 'store', enter: 'pop', side: 'left' },
   },
   {
-    id: 'qsr', name: 'Quick service', kind: 'QSR counters and drive-thrus',
-    text: 'Self-order kiosks and QR, a drive-thru flow run from one terminal, and a kitchen display that sends each item to its station.',
-    pills: ['Self-order kiosks', 'Drive-thru flow', 'Multi-station KDS'],
+    id: 'qsr', name: 'Quick service', kind: 'QSR counters',
+    text: 'Combos billed in seconds, tickets split by kitchen station, and a token screen that answers "is mine ready?".',
+    pills: ['Combo billing', 'Station-wise KDS', 'Token display'],
     link: { href: '/for/qsr', label: 'Omega for QSR' },
     crew: { who: 'chef', enter: 'hat', side: 'right' },
   },
   {
-    id: 'food-courts', name: 'Food courts', kind: 'Food courts and transport hubs',
-    text: 'Kiosk and QR ordering in the language each guest reads, with every order landing in the same kitchen queue as the counter.',
-    pills: ['Multilingual kiosks', 'QR ordering', 'One kitchen queue'],
-    link: { href: '/for/qsr', label: 'Omega for QSR and food courts' },
+    id: 'food-courts', name: 'Food courts', kind: 'Food courts and canteens',
+    text: 'Guests order by QR from the table, every order gets a token, and the display calls it out when it is ready.',
+    pills: ['QR ordering', 'Token display', 'One kitchen queue'],
+    link: { href: '/for/food-courts', label: 'Omega for food courts' },
     crew: { who: 'manager', enter: 'phone', side: 'left' },
   },
   {
     id: 'fine-dining', name: 'Fine dining', kind: 'Chef-led dining rooms',
-    text: 'Courses fired on cue, allergy flags printed on every KOT, and a guestbook that remembers each regular.',
-    pills: ['Course pacing', 'Allergy flags', 'Reservations'],
+    text: 'The whole room on one floor plan, guests who can call a waiter or pay from the table, and allergies printed on every KOT.',
+    pills: ['Floor plan', 'Call waiter', 'Reservations'],
     link: { href: '/for/fine-dining', label: 'Omega for fine dining' },
     crew: { who: 'captain', enter: 'lean', side: 'right' },
   },
   {
-    id: 'cloud-kitchens', name: 'Cloud kitchens', kind: 'Delivery-only, many brands',
-    text: 'Several brands out of one kitchen, every aggregator in one queue, and profit and loss reported brand by brand.',
-    pills: ['Multi-brand menus', 'One aggregator queue', 'Per-brand P&L'],
+    id: 'cloud-kitchens', name: 'Cloud kitchens', kind: 'Delivery-first kitchens',
+    text: 'Swiggy and Zomato orders in one queue with a prep time on each, and your own riders tracked from accepted to delivered.',
+    pills: ['One aggregator queue', 'Own delivery riders', 'Recipe stock'],
     link: { href: '/for/cloud-kitchens', label: 'Omega for cloud kitchens' },
     crew: { who: 'chef', enter: 'pop', side: 'left' },
   },
   {
     id: 'bars', name: 'Bars & breweries', kind: 'Bars, pubs and lounges',
-    text: 'Pour cost to the millilitre, tabs pre-authorised on card, and happy-hour prices that switch themselves on and off.',
-    pills: ['Pour-cost tracking', 'Tab management', 'Happy-hour pricing'],
+    text: 'Happy-hour prices that switch themselves on and off, and drinks to the bar and food to the kitchen from one order.',
+    pills: ['Happy-hour pricing', 'Bar and kitchen stations', 'Floor plan'],
     link: { href: '/for/bars', label: 'Omega for bars' },
     crew: { who: 'owner', enter: 'walk', side: 'right' },
   },
   {
-    id: 'chains', name: 'Chains & franchises', kind: 'More than ten outlets',
-    text: 'Push a menu or price change to every outlet from one screen, keep regional overrides, and report per brand.',
-    pills: ['Multi-outlet menu control', 'Regional overrides', 'Per-brand reporting'],
-    link: { href: '/pricing', label: 'Plans for chains' },
+    id: 'chains', name: 'Chains', kind: 'Multi-outlet restaurants',
+    text: 'Every outlet in one report, each one billing through an internet outage, and stock compared outlet by outlet.',
+    pills: ['All-outlet reports', 'Offline per outlet', 'Stock by outlet'],
+    link: { href: '/for/chains', label: 'Omega for chains' },
     crew: { who: 'manager', enter: 'eyes', side: 'left' },
   },
 ]
@@ -226,7 +226,7 @@ function Scene({ id }: { id: string }) {
     case 'food-courts':
       return (
         <>
-          <div className="olt-row"><b>A45 · Kiosk 2</b><span className="tag tag-info">In kitchen queue</span></div>
+          <div className="olt-row"><b>A45 · QR · Table 8</b><span className="tag tag-info">In kitchen queue</span></div>
           <div className="olt-row olt-sub"><span>2× Paneer Tikka Roll · paid by UPI</span></div>
         </>
       )
@@ -234,13 +234,13 @@ function Scene({ id }: { id: string }) {
       return (
         <>
           <div className="olt-row"><b>Table 5 · Mains</b><span className="tag tag-warn">Fire at 20:40</span></div>
-          <div className="olt-row"><span className="fw-flag">Seat 3 · nut allergy</span></div>
+          <div className="olt-row"><span className="fw-flag">Nut allergy</span></div>
         </>
       )
     case 'cloud-kitchens':
       return (
         <div className="olt-brands">
-          {([['swiggy', 'Bowls', '₹1,940'], ['zomato', 'Wraps', '₹1,220'], ['swiggy', 'Desserts', '₹860']] as const).map(([ch, b, v]) => (
+          {([['swiggy', 'Swiggy', '₹1,940'], ['zomato', 'Zomato', '₹1,220'], ['take', 'Own riders', '₹860']] as const).map(([ch, b, v]) => (
             <span key={b} className="olt-brand"><ChannelBadge ch={ch as Channel} /><b>{b}</b><span className="ui-num">{v}</span></span>
           ))}
         </div>
@@ -248,15 +248,15 @@ function Scene({ id }: { id: string }) {
     case 'bars':
       return (
         <>
-          <div className="olt-row"><b>House rum · 30 ml pours</b><span className="ui-num olt-sub">72% left</span></div>
+          <div className="olt-row"><b>Happy hour · 6 to 8 PM</b><span className="ui-num olt-sub">20% off</span></div>
           <span className="olt-bar" aria-hidden="true"><i style={{ width: '72%' }} /></span>
         </>
       )
     case 'chains':
       return (
         <>
-          <div className="olt-row"><b>Cold Brew</b><span className="ui-num"><s>₹180</s> ₹190</span></div>
-          <div className="olt-row olt-sub"><span>Price pushed to 3 outlets</span><span className="tag tag-ok">Live</span></div>
+          <div className="olt-row"><b>All outlets · today</b><span className="ui-num">₹3,32,000</span></div>
+          <div className="olt-row olt-sub"><span>4 outlets reporting</span><span className="tag tag-ok">Live</span></div>
         </>
       )
   }

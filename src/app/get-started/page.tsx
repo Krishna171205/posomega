@@ -34,9 +34,11 @@ export default function GetStartedPage() {
   const [submitted, setSubmitted] = useState(false)
   const [fallbackHref, setFallbackHref] = useState<string | null>(null)
 
-  // The homepage "Send me a demo" field hands the number over as ?phone=.
+  // The homepage "Send me a demo" field hands the number over in sessionStorage
+  // (never the URL), read once and cleared.
   useEffect(() => {
-    const phone = new URLSearchParams(window.location.search).get('phone')
+    let phone: string | null = null
+    try { phone = sessionStorage.getItem('demo-phone'); sessionStorage.removeItem('demo-phone') } catch {}
     if (phone && /^[6-9]\d{9}$/.test(phone)) setForm((prev) => (prev.phone ? prev : { ...prev, phone }))
   }, [])
 

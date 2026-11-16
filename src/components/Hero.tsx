@@ -136,7 +136,9 @@ function DemoForm() {
     e.preventDefault()
     const digits = phone.replace(/\D/g, '').replace(/^91(?=\d{10}$)/, '')
     if (!/^[6-9]\d{9}$/.test(digits)) { setErr(true); return }
-    window.location.href = `/get-started?phone=${digits}`
+    // Kept out of the URL so the number never lands in logs, analytics or history.
+    try { sessionStorage.setItem('demo-phone', digits) } catch {}
+    window.location.href = '/get-started'
   }
   return (
     <form className={`demo-form ${err ? 'has-error' : ''}`} onSubmit={submit} noValidate>

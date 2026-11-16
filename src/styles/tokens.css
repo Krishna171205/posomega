@@ -29,13 +29,14 @@
   --black-800: #8f99a8;
   --black-900: #a4adba;
 
-  --blue-100: #e8f0ff;
-  --blue-200: #c8dcff;
-  --blue-300: #94b9ff;
-  --blue-400: #709ff5;
-  --blue-450: #538bf3;
-  --blue-500: #266df0;
-  --blue-600: #245bc2;
+  /* Apple system blue family: 500 = apple.com button blue, 400 = its dark-mode link blue. */
+  --blue-100: #e8f2fd;
+  --blue-200: #c6e0fb;
+  --blue-300: #8cc2f7;
+  --blue-400: #2997ff;
+  --blue-450: #1a84f0;
+  --blue-500: #0071e3;
+  --blue-600: #0062c4;
   --blue-800: #1a2233;
 
   --green-500: #0fc27b;

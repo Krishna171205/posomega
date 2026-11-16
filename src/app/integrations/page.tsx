@@ -4,7 +4,7 @@ import { INTEGRATION_PAGES } from '@/content/integrations'
 
 export const metadata: Metadata = {
   title: { absolute: 'Omega POS Integrations | Swiggy, Zomato, UPI' },
-  description: 'Omega connects to the platforms Indian restaurants already run: two-way Swiggy and Zomato sync for menu, price and stock, plus UPI, card and wallet payments collected against the order.',
+  description: 'Omega connects to what Indian restaurants already run: Swiggy and Zomato orders in the same queue as dine-in, UPI collected against the bill, and a Tally export for your accountant.',
   alternates: { canonical: '/integrations' },
 }
 
