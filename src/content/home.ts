@@ -18,7 +18,8 @@ export const HERO = {
   /** Facts carried over from the committed homepage copy. */
   meta: ['Same-day setup', 'No setup fee', 'Works offline'],
   sub: 'Omega bills, fires KOTs, syncs Swiggy and Zomato, and tracks stock, even when the internet doesn’t.',
-  primary: { label: 'Start free trial', href: 'https://cafe.posomega.com/onboard' },
+  /** Sign-up happens in the POS app; under `next dev` this opens the local preview of the redesigned page (app/signup). */
+  primary: { label: 'Start free trial', href: process.env.NODE_ENV === 'development' ? '/signup' : 'https://cafe.posomega.com/onboard' },
   secondary: { label: 'Talk to sales', href: '/get-started' },
 }
 

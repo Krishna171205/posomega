@@ -51,6 +51,12 @@ type Props = {
    * Leave undefined for the default, which is to come up once when scrolled to.
    */
   active?: boolean
+  /**
+   * Hands over the eyes, for while someone types a password:
+   *  shy   both hands up, eyes shut behind them
+   *  peek  one hand lowered, one eye peeking out (the password is shown)
+   */
+  cover?: 'shy' | 'peek'
 }
 
 /* Art box: 112 x 96, the card edge at y=86, the head centred at (56, 42). */
@@ -61,7 +67,7 @@ const W = 112, H = 96, EDGE = 86
  * `has-peek`). Hands land on the edge, the head comes up from behind it, the eyes
  * follow the cursor, and hovering the card makes it stand on tiptoe and wave.
  */
-export function Peek({ who, side = 'right', x = '10%', say, mood = 'happy', enter, active }: Props) {
+export function Peek({ who, side = 'right', x = '10%', say, mood = 'happy', enter, active, cover }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   const id = useId()
   const clip = `pk${id.replace(/[^a-zA-Z0-9_-]/g, '')}`
@@ -110,7 +116,7 @@ export function Peek({ who, side = 'right', x = '10%', say, mood = 'happy', ente
   return (
     <div
       ref={ref}
-      className={`peek at-${side} ${enter ? `enter-${enter}` : ''} ${up ? 'is-in' : ''} ${talk ? 'talk' : ''}`}
+      className={`peek at-${side} ${enter ? `enter-${enter}` : ''} ${up ? 'is-in' : ''} ${talk ? 'talk' : ''} ${cover ? `cover-${cover}` : ''}`}
       style={{ ['--peek-x' as string]: x, ['--blink-d' as string]: blink }}
       aria-hidden="true"
     >

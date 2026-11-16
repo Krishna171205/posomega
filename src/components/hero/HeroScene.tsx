@@ -9,45 +9,213 @@ export function ChannelBadge({ ch }: { ch: Channel }) {
   return <span className={`ch-badge ch-${ch}`} aria-label={CHANNEL_LABEL[ch]}>{CHANNEL_MARK[ch]}</span>
 }
 
+const TAG: Record<string, string> = {
+  New: 'tag-info', Accepted: 'tag-info', 'Picked up': 'tag-info',
+  Cooking: 'tag-warn', Preparing: 'tag-warn',
+  Ready: 'tag-ok', 'Food ready': 'tag-ok', Delivered: '',
+}
 function StatusTag({ s }: { s: string }) {
-  const cls = s === 'Ready' ? 'tag-ok' : s === 'New' ? 'tag-info' : s === 'Cooking' ? 'tag-warn' : ''
-  return <span className={`tag ${cls}`}><span className="d" />{s}</span>
+  return <span className={`tag ${TAG[s] ?? ''}`}><span className="d" />{s}</span>
 }
 
-const INCOMING_TOTAL = Math.round(HERO_INCOMING.items.reduce((s, i) => s + i.q * i.p, 0) * 1.05)
-const TABLE7 = { sub: 260, gst: 13, total: 273 }
+const SUBTOTAL = HERO_INCOMING.items.reduce((s, i) => s + i.q * i.p, 0)
+const GST = Math.round(SUBTOTAL * 0.05)
+const INCOMING_TOTAL = SUBTOTAL + GST
+const TABLE7 = { sub: 260, total: 273 }
+const RIDER = 'Ravi'
 
 /**
- * The Omega app inside the hero window shell. Pure markup: the stage toggles
- * .s1/.s2/.s3 on an ancestor and CSS reveals what each docked window "brought in".
+ * One Swiggy order's whole life in Omega, as one number Hero.tsx advances on a timer.
+ * The app window opens the section each moment belongs to, the way a cashier would
+ * move through it: the accepted order lands on the Online board, the kitchen card
+ * docks into Kitchen, the printed bill docks into the order in Orders, and the day's
+ * Reports tick up once it is delivered.
  */
-export function AppWindow() {
-  return (
-    <div className="app ui">
-      <aside className="app-side">
-        <div className="app-outlet">
-          <span className="app-outlet-mark">D</span>
-          <span className="app-outlet-name">
-            <b>Demo Café</b>
-            <span>HSR Layout</span>
-          </span>
-          <Icon.ChevronDown size={11} />
-        </div>
-        <div className="app-search"><Icon.Search /> Search <span className="kbd">⌘K</span></div>
-        <nav className="app-nav">
-          <span className="app-nav-item on"><Icon.Grid size={14} /> Orders <em className="ui-num">7</em></span>
-          <span className="app-nav-item"><Icon.Table size={14} /> Tables</span>
-          <span className="app-nav-item app-nav-kitchen">
-            <Icon.Flame size={14} /> Kitchen
-            <em className="ui-num"><span className="n0">4</span><span className="n1">5</span></em>
-          </span>
-          <span className="app-nav-item"><Icon.Box size={14} /> Inventory <i className="warn-dot" /></span>
-          <span className="app-nav-item"><Icon.Globe size={14} /> Online</span>
-          <span className="app-nav-item"><Icon.Chart size={14} /> Reports</span>
-        </nav>
-        <div className="app-sync"><span className="live" /> Online · synced</div>
-      </aside>
+export const FLOW = {
+  accept: 1,     // Accept is clicked on the order card
+  orderDock: 2,  // the card flies into the Online board, which opens
+  accepted: 3,   // #0419 lands in Preparing
+  kot: 4,        // KOTs go to the hot line and the bar; the kitchen card gets the ticket
+  rider: 5,      // Swiggy assigns a rider
+  bump: 6,       // Mark ready is clicked on the kitchen card
+  kdsDock: 7,    // the card flies into Kitchen, which opens
+  ready: 8,      // the ticket shows ready in the app
+  print: 9,      // the bill card prints the bill
+  billDock: 10,  // the bill flies into the order in Orders, which opens
+  billed: 11,    // the order shows its invoice, stamped
+  arrived: 12,   // the rider is at the counter
+  pickup: 13,    // handed over
+  delivered: 14, // delivered
+  reports: 15,   // Reports opens and the day's numbers tick up
+  end: 16,       // dim, reset, go again
+} as const
 
+export type View = 'orders' | 'online' | 'kitchen' | 'reports'
+export function viewOf(step: number): View {
+  if (step >= FLOW.reports) return 'reports'
+  if (step >= FLOW.billDock) return 'orders'
+  if (step >= FLOW.kdsDock) return 'kitchen'
+  if (step >= FLOW.orderDock) return 'online'
+  return 'orders'
+}
+
+const TOASTS: { from: number; to: number; text: string }[] = [
+  { from: FLOW.accepted, to: FLOW.kot, text: 'Accepted · prep 15 min' },
+  { from: FLOW.kot, to: FLOW.rider, text: 'KOT #31 → Hot line · KOT #32 → Bar' },
+  { from: FLOW.rider, to: FLOW.bump, text: `Swiggy assigned ${RIDER} · 9 min away` },
+  { from: FLOW.ready, to: FLOW.billDock, text: `${HERO_INCOMING.id} is ready for pickup` },
+  { from: FLOW.billed, to: FLOW.arrived, text: 'INV/0419 printed · packed' },
+  { from: FLOW.arrived, to: FLOW.pickup, text: `${RIDER} is at the counter` },
+  { from: FLOW.delivered, to: FLOW.reports, text: 'Delivered in 32 min' },
+]
+
+function orderStatus(step: number) {
+  if (step >= FLOW.delivered) return 'Delivered'
+  if (step >= FLOW.pickup) return 'Picked up'
+  if (step >= FLOW.ready) return 'Food ready'
+  return 'Preparing'
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+const NAV: { key: string; label: string; icon: React.ReactNode; view?: View }[] = [
+  { key: 'orders', label: 'Orders', icon: <Icon.Grid size={14} />, view: 'orders' },
+  { key: 'tables', label: 'Tables', icon: <Icon.Table size={14} /> },
+  { key: 'kitchen', label: 'Kitchen', icon: <Icon.Flame size={14} />, view: 'kitchen' },
+  { key: 'inventory', label: 'Inventory', icon: <Icon.Box size={14} /> },
+  { key: 'online', label: 'Online', icon: <Icon.Globe size={14} />, view: 'online' },
+  { key: 'reports', label: 'Reports', icon: <Icon.Chart size={14} />, view: 'reports' },
+]
+
+function Sidebar({ step, view }: { step: number; view: View }) {
+  const at = NAV.findIndex(n => n.view === view)
+  const counts: Record<string, number | null> = {
+    orders: step >= FLOW.accepted ? 8 : 7,
+    kitchen: step >= FLOW.kot && step < FLOW.ready ? 5 : 3,
+    online: step >= FLOW.accepted && step < FLOW.pickup ? 3 : 2,
+  }
+  const bumped: Record<string, boolean> = {
+    orders: step === FLOW.accepted || step === FLOW.billDock,
+    kitchen: step === FLOW.kot,
+    online: step === FLOW.accepted,
+  }
+  return (
+    <aside className="app-side">
+      <div className="app-outlet">
+        <span className="app-outlet-mark">D</span>
+        <span className="app-outlet-name">
+          <b>Demo Café</b>
+          <span>HSR Layout</span>
+        </span>
+        <Icon.ChevronDown size={11} />
+      </div>
+      <div className="app-search"><Icon.Search /> Search <span className="kbd">⌘K</span></div>
+      <nav className="app-nav" style={{ ['--i' as string]: at }}>
+        <span className="app-nav-ind" aria-hidden="true" />
+        {NAV.map(n => (
+          <span key={n.key} className={`app-nav-item app-nav-${n.key} ${n.view === view ? 'on' : ''}`}>
+            {n.icon} {n.label}
+            {n.key === 'inventory' && <i className="warn-dot" />}
+            {counts[n.key] != null && (
+              <em key={`${n.key}${counts[n.key]}`} className={`ui-num ${bumped[n.key] ? 'bump' : ''}`}>{counts[n.key]}</em>
+            )}
+          </span>
+        ))}
+      </nav>
+      <div className="app-sync"><span className="live" /> Online · synced</div>
+    </aside>
+  )
+}
+
+/* ── Orders ──────────────────────────────────────────────── */
+
+/** Table 7's bill: what the side panel shows before the Swiggy order is opened there */
+function Table7Panel() {
+  return (
+    <>
+      <div className="ui-head">Table 7 <span className="sp" /><span className="tag">#0418</span></div>
+      <div className="app-detail-body">
+        <div className="app-meta"><span>2 covers · Captain Arjun</span><span className="muted">Dine-in</span></div>
+        <ul className="app-lines">
+          <li><span>2× Masala Chai</span><span className="ui-num">₹120</span></li>
+          <li><span>1× Aloo Paratha <em>no onion</em></span><span className="ui-num">₹140</span></li>
+        </ul>
+        <div className="app-sum">
+          <div><span>Subtotal</span><span className="ui-num">{inr(TABLE7.sub)}</span></div>
+          <div><span>CGST 2.5%</span><span className="ui-num">₹6.50</span></div>
+          <div><span>SGST 2.5%</span><span className="ui-num">₹6.50</span></div>
+          <div className="tot"><span>Total</span><span className="ui-num">{inr(TABLE7.total)}</span></div>
+        </div>
+        <div className="app-pay">
+          <div className="app-pay-methods">
+            <span className="ui-chip on">UPI</span><span className="ui-chip">Card</span><span className="ui-chip">Cash</span><span className="ui-chip">Split</span>
+          </div>
+          <span className="ui-btn app-charge"><Icon.Lightning size={13} /> Charge {inr(TABLE7.total)}</span>
+        </div>
+      </div>
+    </>
+  )
+}
+
+/** The Swiggy order with its invoice: the bill card lands in `.inv`, then the hand-over */
+function InvoicePanel({ step }: { step: number }) {
+  const status = orderStatus(step)
+  const stamped = step >= FLOW.billed
+  return (
+    <>
+      <div className="ui-head">
+        {HERO_INCOMING.id} <span className="sp" />
+        <span className="tag app-ch-tag"><ChannelBadge ch={HERO_INCOMING.ch} /> {CHANNEL_LABEL[HERO_INCOMING.ch]}</span>
+      </div>
+      <div className="app-detail-body">
+        <div className="app-meta">
+          <span>{HERO_INCOMING.ref} · Delivery</span>
+          <span key={status} className={`app-state is-${status.split(' ')[0].toLowerCase()}`}>{status}</span>
+        </div>
+        <div className={`inv ${stamped ? 'is-stamped' : 'is-landing'}`}>
+          <div className="inv-h">
+            <span><Icon.Receipt size={12} /> Tax invoice</span>
+            <b className="ui-num">INV/0419</b>
+          </div>
+          <ul className="inv-lines">
+            {HERO_INCOMING.items.map(i => (
+              <li key={i.n}><span>{i.q}× {i.n}</span><span className="ui-num">{inr(i.q * i.p)}</span></li>
+            ))}
+          </ul>
+          <div className="inv-sum">
+            <div><span>CGST 2.5% + SGST 2.5%</span><span className="ui-num">{inr(GST)}</span></div>
+            <div className="tot"><span>Total</span><span className="ui-num">{inr(INCOMING_TOTAL)}</span></div>
+            {stamped && <span className="inv-stamp" aria-hidden="true">PAID</span>}
+          </div>
+          <div className="inv-foot">
+            <span className="inv-paid"><Icon.Check size={11} /> Paid online · Swiggy</span>
+            <span className="inv-print"><Icon.Printer size={11} /> Printed</span>
+          </div>
+        </div>
+        <div className="app-act-wrap">
+          {step < FLOW.arrived && (
+            <span className="app-rider on">
+              <span className="app-rider-av">{RIDER[0]}</span>
+              {RIDER} · Swiggy rider <em>2 min away</em>
+            </span>
+          )}
+          {step >= FLOW.arrived && step < FLOW.pickup && (
+            <span className="ui-btn app-act"><Icon.Check size={13} /> Hand over to {RIDER}</span>
+          )}
+          {step >= FLOW.pickup && (
+            <span key={status} className={`app-done ${step >= FLOW.delivered ? 'is-final' : ''}`}>
+              <Icon.Check size={13} /> {step >= FLOW.delivered ? 'Delivered · 32 min' : `Out for delivery with ${RIDER}`}
+            </span>
+          )}
+        </div>
+      </div>
+    </>
+  )
+}
+
+function OrdersView({ step }: { step: number }) {
+  const hasNew = step >= FLOW.billDock
+  return (
+    <>
       <main className="app-main">
         <div className="ui-head">
           Orders
@@ -69,27 +237,25 @@ export function AppWindow() {
               </tr>
             </thead>
             <tbody>
-              <tr className="row-new">
-                <td className="ui-num">{HERO_INCOMING.id}</td>
-                <td><span className="app-ch"><ChannelBadge ch={HERO_INCOMING.ch} /> {CHANNEL_LABEL[HERO_INCOMING.ch]}</span></td>
-                <td className="app-hide-sm ui-num">{HERO_INCOMING.ref}</td>
-                <td className="app-hide-md app-items">{HERO_INCOMING.items.map(i => `${i.q}× ${i.n}`).join(', ')}</td>
-                <td className="r ui-num">{inr(INCOMING_TOTAL)}</td>
-                <td><span className="st-a"><StatusTag s="New" /></span><span className="st-b"><StatusTag s="Cooking" /></span></td>
-                <td className="app-hide-lg r muted">now</td>
-              </tr>
+              {hasNew && (
+                <tr className="row-new is-focus">
+                  <td className="ui-num">{HERO_INCOMING.id}</td>
+                  <td><span className="app-ch"><ChannelBadge ch={HERO_INCOMING.ch} /> {CHANNEL_LABEL[HERO_INCOMING.ch]}</span></td>
+                  <td className="app-hide-sm ui-num">{HERO_INCOMING.ref}</td>
+                  <td className="app-hide-md app-items">{HERO_INCOMING.items.map(i => `${i.q}× ${i.n}`).join(', ')}</td>
+                  <td className="r ui-num">{inr(INCOMING_TOTAL)}</td>
+                  <td><StatusTag key={orderStatus(step)} s={orderStatus(step)} /></td>
+                  <td className="app-hide-lg r muted">13m</td>
+                </tr>
+              )}
               {HERO_ORDERS.map(o => (
-                <tr key={o.id} className={o.id === '#0418' ? 'row-t7' : undefined}>
+                <tr key={o.id}>
                   <td className="ui-num">{o.id}</td>
                   <td><span className="app-ch"><ChannelBadge ch={o.ch} /> {CHANNEL_LABEL[o.ch]}</span></td>
                   <td className="app-hide-sm">{o.where}</td>
                   <td className="app-hide-md app-items">{o.items}</td>
                   <td className="r ui-num">{inr(o.amount)}</td>
-                  <td>
-                    {o.id === '#0418'
-                      ? <><span className="st-a"><StatusTag s={o.status} /></span><span className="st-b"><StatusTag s="Paid" /></span></>
-                      : <StatusTag s={o.status} />}
-                  </td>
+                  <td><StatusTag s={o.status} /></td>
                   <td className="app-hide-lg r muted">{o.age}</td>
                 </tr>
               ))}
@@ -97,32 +263,260 @@ export function AppWindow() {
           </table>
         </div>
       </main>
+      <aside className="app-detail" key={hasNew ? 'inv' : 't7'}>
+        {hasNew ? <InvoicePanel step={step} /> : <Table7Panel />}
+      </aside>
+    </>
+  )
+}
 
-      <aside className="app-detail">
-        <div className="ui-head">Table 7 <span className="sp" /><span className="tag">#0418</span></div>
-        <div className="app-detail-body">
-          <div className="app-meta"><span>2 covers · Captain Arjun</span><span className="muted">Dine-in</span></div>
-          <ul className="app-lines">
-            <li><span>2× Masala Chai</span><span className="ui-num">₹120</span></li>
-            <li><span>1× Aloo Paratha <em>no onion</em></span><span className="ui-num">₹140</span></li>
-          </ul>
-          <div className="app-sum">
-            <div><span>Subtotal</span><span className="ui-num">{inr(TABLE7.sub)}</span></div>
-            <div><span>CGST 2.5%</span><span className="ui-num">₹6.50</span></div>
-            <div><span>SGST 2.5%</span><span className="ui-num">₹6.50</span></div>
-            <div className="tot"><span>Total</span><span className="ui-num">{inr(TABLE7.total)}</span></div>
-          </div>
-          {/* Shown from the bill step (.s3): the docked bill prints out right here */}
-          <div className="app-print" aria-hidden="true"><ReceiptWindow docked /></div>
-          <div className="app-pay">
-            <div className="app-pay-methods">
-              <span className="ui-chip on">UPI</span><span className="ui-chip">Card</span><span className="ui-chip">Cash</span><span className="ui-chip">Split</span>
+/* ── Online: the aggregator board ─────────────────────────── */
+type Card = { id: string; ch: Channel; items: string; amount: number; meta: string; late?: boolean }
+const BOARD: { key: string; label: string; cards: Card[] }[] = [
+  { key: 'new', label: 'New', cards: [] },
+  { key: 'prep', label: 'Preparing', cards: [{ id: '#0417', ch: 'zomato', items: '1× Veg Biryani, 1× Raita', amount: 399, meta: '6m · rider 4m', late: true }] },
+  { key: 'ready', label: 'Ready', cards: [{ id: '#0412', ch: 'zomato', items: '2× Cold Brew', amount: 378, meta: 'rider at door' }] },
+  { key: 'out', label: 'Picked up', cards: [{ id: '#0413', ch: 'swiggy', items: '1× Paneer Tikka Roll', amount: 231, meta: '21m' }] },
+]
+
+function BoardCard({ c, className = '', extra }: { c: Card; className?: string; extra?: React.ReactNode }) {
+  return (
+    <div className={`ob-card ${className}`}>
+      <div className="ob-card-h">
+        <ChannelBadge ch={c.ch} />
+        <span className="ui-num">{c.id}</span>
+        <span className={`ob-meta ${c.late ? 'is-late' : ''}`}>{c.meta}</span>
+      </div>
+      <div className="ob-items">{c.items}</div>
+      <div className="ob-card-f"><span className="ui-num">{inr(c.amount)}</span>{extra}</div>
+    </div>
+  )
+}
+
+function OnlineView({ step }: { step: number }) {
+  const landed = step >= FLOW.accepted
+  const rider = step >= FLOW.rider
+  const mine: Card = {
+    id: HERO_INCOMING.id, ch: 'swiggy', amount: INCOMING_TOTAL,
+    items: HERO_INCOMING.items.map(i => `${i.q}× ${i.n}`).join(', '),
+    meta: rider ? `${RIDER} · 9m` : 'prep 15m',
+  }
+  return (
+    <>
+      <main className="app-main">
+        <div className="ui-head">
+          Online orders
+          <span className="sp" />
+          <span className="ob-live"><i /> Swiggy</span>
+          <span className="ob-live app-hide-sm"><i /> Zomato</span>
+        </div>
+        <div className="app-filters">
+          <span className="ui-chip on">All {landed ? 4 : 3}</span>
+          <span className="ui-chip">Swiggy {landed ? 2 : 1}</span>
+          <span className="ui-chip">Zomato 2</span>
+        </div>
+        <div className="ob">
+          {BOARD.map(col => (
+            <div key={col.key} className={`ob-col ob-col-${col.key}`}>
+              <div className="ob-col-h">{col.label} <em className="ui-num">{col.cards.length + (col.key === 'prep' && landed ? 1 : 0)}</em></div>
+              {col.key === 'prep' && (
+                landed
+                  ? <BoardCard c={mine} className="ob-slot is-landed" extra={<span className="ob-prep"><span style={{ ['--t' as string]: rider ? 0.62 : 0.94 }} /></span>} />
+                  : <div className="ob-slot is-waiting" />
+              )}
+              {col.cards.map(c => <BoardCard key={c.id} c={c} />)}
+              {col.key === 'new' && <div className="ob-empty">No new orders</div>}
             </div>
-            <span className="ui-btn app-charge"><Icon.Lightning size={13} /> Charge {inr(TABLE7.total)}</span>
-            <span className="app-paid"><Icon.Check size={13} /> Paid via UPI · bill printed</span>
+          ))}
+        </div>
+      </main>
+      <aside className="app-detail" key="online">
+        <div className="ui-head">
+          {HERO_INCOMING.id} <span className="sp" />
+          <span className="tag app-ch-tag"><ChannelBadge ch="swiggy" /> Swiggy</span>
+        </div>
+        <div className="app-detail-body">
+          <div className="app-meta"><span>{HERO_INCOMING.ref} · Delivery</span><span className="app-state is-preparing">Preparing</span></div>
+          <ul className="app-lines app-lines-o">
+            {HERO_INCOMING.items.map(i => (
+              <li key={i.n}><span>{i.q}× {i.n}</span><span className="ui-num">{inr(i.q * i.p)}</span></li>
+            ))}
+          </ul>
+          <div className="ob-prepline">
+            <span>Prep time</span>
+            <b className="ui-num">{rider ? '9:20' : '15:00'} left</b>
+          </div>
+          <div className={`ob-route ${rider ? 'on' : ''}`}>
+            <div className="ob-route-h">
+              <span className="app-rider-av">{rider ? RIDER[0] : '?'}</span>
+              <span key={rider ? 'r' : 'f'} className="ob-route-who">{rider ? <><b>{RIDER}</b> · Swiggy rider</> : 'Finding a rider…'}</span>
+              {rider && <em className="ui-num">9 min</em>}
+            </div>
+            <div className="ob-route-line" aria-hidden="true">
+              <span className="ob-route-dot" />
+              <span className="ob-route-store"><Icon.Store size={10} /></span>
+            </div>
           </div>
         </div>
       </aside>
+    </>
+  )
+}
+
+/* ── Kitchen: the display, inside the app ─────────────────── */
+const KD_MORE: { id: string; ch: Channel; where: string; t: string; s: string; l: string[]; hide?: string }[] = [
+  { id: '#0420', ch: 'dine', where: 'Table 4', t: '2:05', s: 'is-cook', l: ['1× Masala Dosa', '1× Filter Coffee'] },
+  { id: '#0421', ch: 'qr', where: 'Table 9', t: '0:40', s: '', l: ['2× Veg Momos'] },
+  { id: '#0422', ch: 'zomato', where: 'KOT #33', t: '0:12', s: '', l: ['1× Chole Bhature', '1× Lassi'], hide: 'app-hide-sm' },
+  { id: '#0423', ch: 'take', where: 'Counter', t: '0:05', s: '', l: ['1× Paneer Tikka Roll'], hide: 'app-hide-sm' },
+]
+function KitchenView({ step }: { step: number }) {
+  const ready = step >= FLOW.ready
+  return (
+    <main className="app-main app-wide">
+      <div className="ui-head">
+        Kitchen
+        <span className="sp" />
+        <span className="kd-avg">Avg ticket <b className="ui-num">8m 40s</b></span>
+      </div>
+      <div className="app-filters">
+        <span className="ui-chip on">Hot line 3</span>
+        <span className="ui-chip">Bar 1</span>
+        <span className="ui-chip app-hide-sm">Tandoor 1</span>
+      </div>
+      <div className="kd">
+        <div className={`kd-ticket kd-slot ${ready ? 'is-ready' : 'is-landing'}`}>
+          <div className="kd-h"><ChannelBadge ch="swiggy" /><span className="ui-num">{HERO_INCOMING.id}</span><span className="kd-kot">KOT #31</span><span className="kd-t ui-num">{ready ? 'Ready' : '11:52'}</span></div>
+          <div className="kd-l">2× Paneer Tikka Roll</div>
+          <div className="kd-l">1× Masala Fries</div>
+          <div className="kd-f">{ready ? <span className="kd-done"><Icon.Check size={10} /> Ready · {RIDER} 2m away</span> : <span className="kd-rider">Rider 2m</span>}</div>
+        </div>
+        <div className={`kd-ticket ${ready ? 'is-ready' : ''}`}>
+          <div className="kd-h"><ChannelBadge ch="swiggy" /><span className="ui-num">{HERO_INCOMING.id}</span><span className="kd-kot">KOT #32 · Bar</span></div>
+          <div className="kd-l">1× Cold Coffee</div>
+          <div className="kd-f">{ready ? <span className="kd-done"><Icon.Check size={10} /> Ready</span> : <span className="muted">Bar</span>}</div>
+        </div>
+        <div className="kd-ticket is-cook">
+          <div className="kd-h"><ChannelBadge ch="dine" /><span className="ui-num">#0418</span><span className="kd-kot">Table 7</span><span className="kd-t ui-num">4:12</span></div>
+          <div className="kd-l">1× Aloo Paratha</div>
+          <div className="kd-f"><span className="fw-flag">No onion</span></div>
+        </div>
+        <div className="kd-ticket is-late app-hide-sm">
+          <div className="kd-h"><ChannelBadge ch="zomato" /><span className="ui-num">#0417</span><span className="kd-kot">KOT #29</span><span className="kd-t ui-num">6:30</span></div>
+          <div className="kd-l">1× Veg Biryani</div>
+          <div className="kd-l">1× Raita</div>
+        </div>
+        {KD_MORE.map(k => (
+          <div key={k.id} className={`kd-ticket ${k.s} ${k.hide ?? ''}`}>
+            <div className="kd-h"><ChannelBadge ch={k.ch} /><span className="ui-num">{k.id}</span><span className="kd-kot">{k.where}</span><span className="kd-t ui-num">{k.t}</span></div>
+            {k.l.map(x => <div key={x} className="kd-l">{x}</div>)}
+          </div>
+        ))}
+      </div>
+    </main>
+  )
+}
+
+/* ── Reports: the day, ticking up ─────────────────────────── */
+function useCount(from: number, to: number, ms = 900, delay = 250) {
+  const [v, setV] = useState(from)
+  useEffect(() => {
+    let raf = 0
+    const t0 = performance.now() + delay
+    const tick = (now: number) => {
+      const k = Math.min(1, Math.max(0, (now - t0) / ms))
+      setV(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3))))
+      if (k < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [from, to, ms, delay])
+  return v
+}
+
+const HOURS = [
+  { h: '10a', v: 0.32 }, { h: '11a', v: 0.46 }, { h: '12p', v: 0.78 }, { h: '1p', v: 0.94 }, { h: '2p', v: 0.7 }, { h: '3p', v: 0.42 },
+]
+function ReportsView() {
+  const sales = useCount(48210, 48210 + INCOMING_TOTAL)
+  const orders = useCount(86, 87, 500, 400)
+  const rolls = useCount(22, 24, 500, 700)
+  return (
+    <main className="app-main app-wide">
+      <div className="ui-head">
+        Reports
+        <span className="sp" />
+        <span className="ui-chip on">Today</span>
+        <span className="ui-chip app-hide-sm">This week</span>
+      </div>
+      <div className="rp">
+        <div className="rp-kpis">
+          <div className="rp-kpi"><span>Sales</span><b className="ui-num">{inr(sales)}</b><em className="up">+{inr(INCOMING_TOTAL)}</em></div>
+          <div className="rp-kpi"><span>Orders</span><b className="ui-num">{orders}</b><em className="up">+1</em></div>
+          <div className="rp-kpi app-hide-sm"><span>Avg ticket</span><b className="ui-num">₹563</b><em>today</em></div>
+          <div className="rp-kpi app-hide-md"><span>Online share</span><b className="ui-num">38%</b><em>Swiggy · Zomato</em></div>
+        </div>
+        <div className="rp-grid">
+          <div className="rp-card">
+            <div className="rp-card-h">Sales by hour</div>
+            <div className="rp-bars">
+              {HOURS.map((b, i) => (
+                <div key={b.h} className={`rp-bar ${i === 4 ? 'is-now' : ''}`}>
+                  <span style={{ ['--v' as string]: b.v, ['--i' as string]: i }} />
+                  <em>{b.h}</em>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rp-card app-hide-sm">
+            <div className="rp-card-h">By channel</div>
+            <div className="rp-split" aria-hidden="true">
+              <span className="s-dine" style={{ ['--w' as string]: '44%' }} />
+              <span className="s-swiggy" style={{ ['--w' as string]: '22%' }} />
+              <span className="s-zomato" style={{ ['--w' as string]: '16%' }} />
+              <span className="s-take" style={{ ['--w' as string]: '18%' }} />
+            </div>
+            <ul className="rp-legend">
+              <li><i className="s-dine" />Dine-in <b className="ui-num">44%</b></li>
+              <li><i className="s-swiggy" />Swiggy <b className="ui-num">22%</b></li>
+              <li><i className="s-zomato" />Zomato <b className="ui-num">16%</b></li>
+              <li><i className="s-take" />Takeaway <b className="ui-num">18%</b></li>
+            </ul>
+            <div className="rp-card-h rp-sub">Top sellers</div>
+            <ul className="rp-top">
+              <li><span>Masala Chai</span><b className="ui-num">41</b></li>
+              <li><span>Filter Coffee</span><b className="ui-num">33</b></li>
+              <li className="is-now"><span>Paneer Tikka Roll</span><b key={rolls} className="ui-num">{rolls}</b></li>
+              <li><span>Cold Coffee</span><b className="ui-num">19</b></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </main>
+  )
+}
+
+/**
+ * The Omega app inside the hero window shell, drawn for one step of the order's life.
+ * Each section mounts fresh when it opens (keyed by view), so its entrance plays.
+ */
+export function AppWindow({ step }: { step: number }) {
+  const view = viewOf(step)
+  const toast = TOASTS.find(t => step >= t.from && step < t.to)
+  return (
+    <div className={`app ui v-${view}`}>
+      <Sidebar step={step} view={view} />
+      <div className="app-view" key={view}>
+        {view === 'orders' && <OrdersView step={step} />}
+        {view === 'online' && <OnlineView step={step} />}
+        {view === 'kitchen' && <KitchenView step={step} />}
+        {view === 'reports' && <ReportsView />}
+      </div>
+      {toast && (
+        <div key={toast.text} className="app-toast" role="status">
+          <Icon.Check size={12} /> {toast.text}
+        </div>
+      )}
     </div>
   )
 }
@@ -137,7 +531,7 @@ function Bar({ title }: { title: string }) {
 }
 
 /** Stand-in for Attio's "call" window: a new aggregator order waiting to be accepted. */
-export function OrderWindow() {
+export function OrderWindow({ pressed = false }: { pressed?: boolean }) {
   const [secs, setSecs] = useState(42)
   useEffect(() => {
     const id = window.setInterval(() => setSecs(s => (s <= 8 ? 42 : s - 1)), 1000)
@@ -166,17 +560,21 @@ export function OrderWindow() {
         </div>
         <div className="fw-actions">
           <span className="ui-btn ghost">Reject</span>
-          <span className="ui-btn ok">Accept · prep 15m</span>
+          <span className={`ui-btn ok fw-accept ${pressed ? 'is-pressed' : ''}`}>{pressed ? <><Icon.Check size={12} /> Accepted</> : 'Accept · prep 15m'}</span>
         </div>
       </div>
     </div>
   )
 }
 
-/** Stand-in for Attio's "Slack" window: the hot line's kitchen display. */
-export function KitchenWindow() {
+/**
+ * Stand-in for Attio's "Slack" window: the hot line's kitchen display. The Swiggy
+ * order's ticket drops in at the top when its KOT fires, first in line because a
+ * rider is already on the way.
+ */
+export function KitchenWindow({ fired = false, bumped = false }: { fired?: boolean; bumped?: boolean }) {
   const tickets = [
-    { id: '#0419', ch: 'swiggy' as Channel, l: ['2× Paneer Tikka Roll', '1× Masala Fries'], t: '0:48', s: 'new' },
+    ...(fired ? [{ id: '#0419', ch: 'swiggy' as Channel, l: ['2× Paneer Tikka Roll', '1× Masala Fries'], t: '0:12', s: 'new', rider: true }] : []),
     { id: '#0418', ch: 'dine' as Channel, l: ['1× Aloo Paratha'], t: '4:12', s: 'cook', f: 'No onion' },
     { id: '#0417', ch: 'zomato' as Channel, l: ['1× Veg Biryani'], t: '6:30', s: 'late' },
   ]
@@ -184,62 +582,67 @@ export function KitchenWindow() {
     <div className="win sm fw-card">
       <Bar title="Kitchen · Hot line" />
       <div className="win-pane ui fw-kds">
-        {tickets.map(k => (
-          <div key={k.id} className={`fw-ticket ${k.s}`}>
-            <div className="fw-ticket-h">
-              <ChannelBadge ch={k.ch} />
-              <span className="ui-num">{k.id}</span>
-              <span className="ui-num fw-ticket-t"><Icon.Clock size={11} /> {k.t}</span>
+        {tickets.map(k => {
+          const done = k.id === HERO_INCOMING.id && bumped
+          return (
+            <div key={k.id} className={`fw-ticket ${done ? 'ready' : k.s} ${k.id === HERO_INCOMING.id ? 'is-fresh' : ''}`}>
+              <div className="fw-ticket-h">
+                <ChannelBadge ch={k.ch} />
+                <span className="ui-num">{k.id}</span>
+                {'rider' in k && k.rider && <span className="fw-rider">Rider 2m</span>}
+                <span className="ui-num fw-ticket-t"><Icon.Clock size={11} /> {k.t}</span>
+              </div>
+              {k.l.map(x => <div key={x} className={`fw-ticket-l ${done ? 'is-done' : ''}`}>{x}</div>)}
+              {'f' in k && k.f && <div className="fw-flag">{k.f}</div>}
+              {'rider' in k && k.rider && (
+                <span className={`fw-bump ${done ? 'is-done' : ''}`}>{done ? <><Icon.Check size={10} /> Ready</> : 'Mark ready'}</span>
+              )}
             </div>
-            {k.l.map(x => <div key={x} className="fw-ticket-l">{x}</div>)}
-            {k.f && <div className="fw-flag">{k.f}</div>}
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
 }
 
 /**
- * Stand-in for Attio's terminal window: the GST bill for Table 7.
- *  floating  the bill on its way to the app: static, already printed, not yet stamped
- *  docked    the same bill inside the app's Table 7 panel. It is displayed from the
- *            bill step (.hs.s3), and that is the only place it animates: the paper
- *            feeds out of the print slot in short jerks, then a PAID stamp lands.
- * Same table, items and total as the app window.
+ * Stand-in for Attio's terminal window: the counter's bill printer. It waits empty;
+ * once the food is ready it prints the GST bill for the Swiggy order (the paper feeds
+ * out in short jerks and a PAID stamp lands), then the bill flies into the order.
  */
-export function ReceiptWindow({ docked = false }: { docked?: boolean }) {
+export function ReceiptWindow({ printing = false }: { printing?: boolean }) {
   return (
     <div
-      className={`pr ${docked ? 'pr-docked' : 'pr-float'}`}
-      role={docked ? undefined : 'img'}
-      aria-label={docked ? undefined : 'GST bill for Table 7, ₹273 paid by UPI'}
+      className={`pr pr-float ${printing ? 'is-printing' : 'is-idle'}`}
+      role="img"
+      aria-label={`Bill printer: GST bill for Swiggy order ${HERO_INCOMING.ref}, ${inr(INCOMING_TOTAL)} paid online`}
     >
       <div className="pr-frame">
         <div className="pr-head">
           <span className="pr-mark">D</span>
           <span className="pr-where">
             <b>Demo Café</b>
-            <span>HSR Layout, Bengaluru</span>
+            <span>{printing ? 'Printing INV/0419…' : 'Counter printer · ready'}</span>
           </span>
           <span className="pr-led" aria-hidden="true" />
         </div>
         <div className="pr-slot" aria-hidden="true" />
         <div className="pr-out">
+          <div className="pr-tray" aria-hidden="true"><Icon.Printer size={14} /> Prints when the food is ready</div>
           <div className="pr-paper">
-            {!docked && <div className="pr-sec pr-ids">
+            <div className="pr-sec pr-ids">
               <div><span>GSTIN</span><b className="ui-num">29XXXXXXXXXX1Z5</b></div>
-              <div className="r"><span>Table</span><b>T7 · 2 pax</b></div>
-            </div>}
-            <div className="pr-sec pr-hi"><b>Table 7, here’s your bill</b><Icon.Download size={12} /></div>
+              <div className="r"><span>Swiggy</span><b className="ui-num">{HERO_INCOMING.ref}</b></div>
+            </div>
+            <div className="pr-sec pr-hi"><b>Order {HERO_INCOMING.id}, packed</b><Icon.Download size={12} /></div>
             <div className="pr-sec pr-amt">
-              <div><span>Amount</span><b className="ui-num">₹273.00 <em>(UPI)</em></b></div>
-              <div className="r"><b>12 Nov, 1:42pm</b><b>3 items</b></div>
+              <div><span>Amount</span><b className="ui-num">{inr(INCOMING_TOTAL)}.00 <em>(online)</em></b></div>
+              <div className="r"><b>12 Nov, 1:55pm</b><b>{HERO_INCOMING.items.length} items</b></div>
             </div>
             <div className="pr-sec pr-tail">
-              <div><span>Bill no.</span><b className="ui-num">INV/0418</b></div>
+              <div><span>Bill no.</span><b className="ui-num">INV/0419</b></div>
               <div className="pr-stamp" aria-hidden="true"><span>PAID</span></div>
-              <div className="r"><span>CGST + SGST</span><b className="ui-num">₹13.00</b></div>
+              <div className="r"><span>CGST + SGST</span><b className="ui-num">{inr(GST)}.00</b></div>
             </div>
             <span className="pr-pill">See full bill</span>
           </div>

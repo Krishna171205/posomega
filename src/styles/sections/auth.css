@@ -1,0 +1,146 @@
+/*
+ * Omega POS · sign in and sign up. The form after ElevenLabs (one centred column,
+ * labels over plain fields, a button that stays grey until the form can be sent),
+ * the frame after CofounderOS (warm off-white, a back arrow, the mark over the
+ * heading, a soft black pill, a band along the bottom for something playful).
+ * Classes are prefixed `au-` and colours are variables on `.au`, so this drops into
+ * the POS app without touching its other styles. Text uses the app's font; the
+ * heading uses --font-display if the app defines one.
+ */
+.au {
+  --au-ink: #101010;
+  --au-fg: #1c1d1f;
+  --au-fg-2: #505967;
+  --au-fg-3: #6f7988;
+  --au-page: #fbfbfa;
+  --au-band: #f2f2ef;
+  --au-line: #e3e3df;
+  --au-line-strong: #b5bdc9;
+  --au-idle: #d3d6db;
+  --au-red: #e5484d;
+  --au-ease: cubic-bezier(.2, 0, 0, 1);
+
+  position: relative;
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+  background: var(--au-page); color: var(--au-fg);
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+}
+.au *, .au *::before, .au *::after { box-sizing: border-box; }
+
+/* Back to the site, top left */
+.au-back {
+  position: absolute; left: 20px; top: 20px;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center;
+  color: var(--au-fg-3); text-decoration: none;
+  transition: background-color .15s, color .15s;
+}
+.au-back:hover { background: rgb(16 16 16 / .05); color: var(--au-fg); }
+.au-back:focus-visible { outline: 2px solid var(--au-ink); outline-offset: 2px; }
+
+/* Spacing shrinks with the window's height, so the form and the band fit on a laptop
+   screen; the bottom padding keeps clear of the characters standing on the band. */
+.au-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: clamp(32px, 10svh, 88px) 20px clamp(84px, 13svh, 112px); }
+.au-col { width: 100%; max-width: 360px; animation: au-in .5s var(--au-ease) both; }
+@keyframes au-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* The mark over the heading, where CofounderOS has its sunflower */
+.au-mark {
+  width: 44px; height: 44px; margin: 0 auto 18px; border-radius: 12px;
+  display: grid; place-items: center;
+  background: radial-gradient(120% 120% at 50% -10%, #383e47, var(--au-ink) 70%);
+  box-shadow: 0 10px 22px -10px rgb(16 16 16 / .55), inset 0 1px 0 rgb(255 255 255 / .14);
+  color: #fff; font-size: 22px; font-weight: 700; line-height: 1;
+}
+.au-h {
+  margin: 0; text-align: center;
+  font-family: var(--font-display, inherit);
+  font-size: 28px; font-weight: 700; line-height: 1.15; letter-spacing: -.025em;
+}
+.au-sub { margin: 6px 0 clamp(20px, 3.4svh, 28px); text-align: center; font-size: 14.5px; color: var(--au-fg-3); }
+
+.au-form { display: grid; gap: 16px; }
+.au-field { display: grid; gap: 8px; }
+.au-label-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.au-label { font-size: 14px; font-weight: 500; color: var(--au-fg); }
+.au-link-sm { font-size: 12.5px; color: var(--au-fg-3); text-decoration: none; }
+.au-link-sm:hover { color: var(--au-fg); text-decoration: underline; text-underline-offset: 2px; }
+
+.au-input {
+  width: 100%; height: 46px; padding: 0 14px;
+  border: 1px solid var(--au-line); border-radius: 12px; outline: 0;
+  background: #fff; color: var(--au-fg);
+  font: inherit; font-size: 15px;
+  transition: border-color .15s var(--au-ease), box-shadow .15s var(--au-ease);
+}
+.au-input:hover { border-color: var(--au-line-strong); }
+.au-input:focus { border-color: var(--au-ink); box-shadow: 0 0 0 3px rgb(16 16 16 / .07); }
+.au-field.has-error .au-input { border-color: var(--au-red); box-shadow: 0 0 0 3px color-mix(in oklab, var(--au-red) 12%, transparent); }
+.au-pass { position: relative; display: block; }
+.au-pass .au-input { padding-right: 46px; }
+.au-eye {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  width: 36px; height: 36px; border: 0; border-radius: 9px;
+  display: grid; place-items: center;
+  background: transparent; color: var(--au-fg-3); cursor: pointer;
+  transition: background-color .15s, color .15s;
+}
+.au-eye:hover { background: rgb(16 16 16 / .05); color: var(--au-fg); }
+.au-eye:focus-visible { outline: 2px solid var(--au-ink); outline-offset: 1px; }
+.au-hint { font-size: 12.5px; color: var(--au-fg-3); }
+.au-caps { font-size: 12.5px; color: #ad7c00; }
+.au-error { margin: 0; font-size: 13px; color: var(--au-red); }
+
+/* One soft black pill: grey until the form can be sent */
+.au-btn {
+  position: relative;
+  height: 46px; margin-top: 6px; border: 0; border-radius: 999px;
+  background: linear-gradient(180deg, #2e3238, var(--au-ink));
+  color: #fff; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .16), 0 0 0 1px var(--au-ink), 0 8px 18px -8px rgb(16 16 16 / .5);
+  transition: transform .2s var(--au-ease), box-shadow .2s var(--au-ease), background .2s;
+}
+.au-btn:hover:not(:disabled) { transform: translateY(-1px); box-shadow: inset 0 1px 0 rgb(255 255 255 / .16), 0 0 0 1px var(--au-ink), 0 12px 24px -10px rgb(16 16 16 / .55); }
+.au-btn:active:not(:disabled) { transform: none; }
+.au-btn:disabled { background: var(--au-idle); box-shadow: none; cursor: not-allowed; }
+.au-btn:focus-visible { outline: 2px solid var(--au-ink); outline-offset: 3px; }
+.au-form.is-busy .au-btn { background: linear-gradient(180deg, #2e3238, var(--au-ink)); color: transparent; cursor: progress; }
+.au-form.is-busy .au-btn::after {
+  content: ''; position: absolute; left: 50%; top: 50%;
+  width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%;
+  border: 2px solid rgb(255 255 255 / .35); border-top-color: #fff;
+  animation: au-spin .7s linear infinite;
+}
+@keyframes au-spin { to { transform: rotate(360deg); } }
+
+.au-alt { margin: 22px 0 0; text-align: center; font-size: 14px; color: var(--au-fg-2); }
+.au-alt a { color: var(--au-fg); font-weight: 500; text-decoration: underline; text-decoration-color: var(--au-line-strong); text-underline-offset: 3px; }
+.au-alt a:hover { text-decoration-color: currentColor; }
+.au-terms { margin: 14px auto 0; max-width: 260px; text-align: center; font-size: 12px; line-height: 1.5; color: var(--au-fg-3); }
+.au-terms a { color: var(--au-fg-2); text-decoration: underline; text-underline-offset: 2px; }
+
+/* The band along the bottom: room for characters to peek over its top edge */
+/* Sticky: when the page is taller than the window, the band (and whoever is standing
+   on it) stays in view at the bottom instead of waiting below the fold. */
+.au .au-foot {
+  position: sticky; bottom: 0; z-index: 5;
+  padding: 18px 20px;
+  background: var(--au-band); border-top: 1px solid var(--au-line);
+  text-align: center;
+}
+.au-foot p { margin: 0; font-size: 12.5px; color: var(--au-fg-3); }
+
+@media (max-width: 520px) {
+  .au-main { align-items: flex-start; padding: clamp(56px, 9svh, 80px) 20px 100px; }
+  /* on a phone the band stays at the end of the page, so it never sits over the form */
+  .au .au-foot { position: relative; }
+}
+/* Very short windows (a phone on its side): the band goes back to the end of the page */
+@media (max-height: 520px) {
+  .au .au-foot { position: relative; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .au *, .au *::before, .au *::after { animation: none !important; transition: none !important; }
+}
