@@ -1,85 +1,93 @@
-export function Footer() {
+import { Peek } from './crew/Peek'
+
+const COLS: { h: string; links: { href: string; t: string; ext?: boolean }[] }[] = [
+  {
+    h: 'Platform',
+    links: [
+      { href: '/features/billing-and-kot', t: 'Billing & KOT' },
+      { href: '/features/kitchen-display', t: 'Kitchen display' },
+      { href: '/features/inventory-and-forecasting', t: 'Inventory' },
+      { href: '/features/offline-mode', t: 'Offline mode' },
+      { href: '/app', t: 'Android app' },
+    ],
+  },
+  {
+    h: 'Solutions',
+    links: [
+      { href: '/for/cafes', t: 'Cafés' },
+      { href: '/for/qsr', t: 'QSR' },
+      { href: '/for/fine-dining', t: 'Fine dining' },
+      { href: '/for/cloud-kitchens', t: 'Cloud kitchens' },
+      { href: '/for/bars', t: 'Bars & lounges' },
+    ],
+  },
+  {
+    h: 'Integrations',
+    links: [
+      { href: '/integrations', t: 'All integrations' },
+      { href: '/integrations/swiggy-zomato', t: 'Swiggy & Zomato' },
+      { href: '/integrations/upi-and-payments', t: 'UPI & payments' },
+      { href: 'https://play.google.com/store/apps/details?id=com.unifiednexgrade.omega', t: 'Google Play', ext: true },
+    ],
+  },
+  {
+    h: 'Resources',
+    links: [
+      { href: '/restaurant-billing-software', t: 'Restaurant billing software' },
+      { href: '/gst-billing-software-for-restaurants', t: 'GST billing' },
+      { href: '/#faq', t: 'FAQ' },
+      { href: 'mailto:security@unifiednexgrade.com', t: 'Security' },
+    ],
+  },
+  {
+    h: 'Company',
+    links: [
+      { href: '/pricing', t: 'Pricing' },
+      { href: '/get-started', t: 'Contact' },
+      { href: 'mailto:careers@unifiednexgrade.com', t: 'Careers' },
+      { href: 'mailto:hello@unifiednexgrade.com', t: 'Press' },
+    ],
+  },
+]
+
+/** `crew` adds the ink characters waving over the top edge (homepage only). */
+export function Footer({ crew = false }: { crew?: boolean }) {
   return (
-    <footer className="footer">
+    <footer className={`footer ${crew ? 'has-peek' : ''}`}>
+      {crew && (
+        <>
+          <Peek who="chef" say="Kitchen’s closing!" side="left" x="7%" enter="hat" />
+          <Peek who="server" say="Thanks for stopping by." side="left" x="calc(50% - 56px)" />
+          <Peek who="captain" say="See you at service!" side="right" x="7%" enter="lean" />
+        </>
+      )}
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <a href="/" className="nav-logo">
-              <span className="glyph">Ω</span>
-              <span>Omega</span>
-            </a>
-            <p className="desc">
-              The point of sale, perfected for restaurants. Built in India, for Indian kitchens.
-            </p>
-            <div style={{ display: 'flex', gap: 8 }}>
-              {['Twitter', 'LinkedIn', 'Instagram', 'YouTube'].map(s => (
-                <a key={s} href="#" style={{
-                  width: 32, height: 32, borderRadius: 8, background: 'var(--card-2)',
-                  border: '1px solid var(--line)', display: 'grid', placeItems: 'center',
-                  fontSize: 11, fontFamily: 'var(--font-mono)',
-                }}>{s.charAt(0)}</a>
-              ))}
+            <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>Omega</span></a>
+            <p>Restaurant point of sale, built in India for Indian kitchens.</p>
+          </div>
+          {COLS.map(c => (
+            <div key={c.h} className="footer-col">
+              <h2>{c.h}</h2>
+              <ul>
+                {c.links.map(l => (
+                  <li key={l.href}>
+                    <a href={l.href} {...(l.ext ? { target: '_blank', rel: 'noopener' } : {})}>{l.t}</a>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
-          <div className="footer-col">
-            <h5>Product</h5>
-            <ul>
-              <li><a href="/features/billing-and-kot">Billing & KOT</a></li>
-              <li><a href="/features/kitchen-display">Kitchen display</a></li>
-              <li><a href="/features/inventory-and-forecasting">Inventory</a></li>
-              <li><a href="/features/offline-mode">Offline mode</a></li>
-              <li><a href="/integrations/upi-and-payments">Payments</a></li>
-              <li><a href="/#hardware">Hardware</a></li>
-              <li><a href="https://play.google.com/store/apps/details?id=com.unifiednexgrade.omega" target="_blank" rel="noopener">Get it on Google Play</a></li>
-            </ul>
-          </div>
-          <div className="footer-col">
-            <h5>Industries</h5>
-            <ul>
-              <li><a href="/for/cafes">Cafés</a></li>
-              <li><a href="/for/qsr">QSR</a></li>
-              <li><a href="/for/fine-dining">Fine dining</a></li>
-              <li><a href="/for/cloud-kitchens">Cloud kitchens</a></li>
-              <li><a href="/for/bars">Bars & lounges</a></li>
-            </ul>
-          </div>
-          <div className="footer-col">
-            <h5>Company</h5>
-            <ul>
-              <li><a href="/pricing">Pricing</a></li>
-              <li><a href="mailto:careers@unifiednexgrade.com">Careers <span style={{ fontSize: 10, color: 'var(--accent)', background: 'var(--accent-soft)', padding: '2px 6px', borderRadius: 4, marginLeft: 6 }}>14 OPEN</span></a></li>
-              <li><a href="mailto:hello@unifiednexgrade.com">Press</a></li>
-              <li><a href="/get-started">Contact</a></li>
-            </ul>
-          </div>
-          <div className="footer-col">
-            <h5>Resources</h5>
-            <ul>
-              <li><a href="/app">Android app</a></li>
-              <li><a href="/restaurant-billing-software">Restaurant billing software</a></li>
-              <li><a href="/gst-billing-software-for-restaurants">GST billing</a></li>
-              <li><a href="/integrations/swiggy-zomato">Swiggy & Zomato sync</a></li>
-              <li><a href="/#faq">FAQ</a></li>
-              <li><a href="mailto:security@unifiednexgrade.com">Security</a></li>
-            </ul>
-          </div>
+          ))}
         </div>
-
-        <div className="footer-outro">
-          <div className="footer-wordmark-huge">omega</div>
-
-          <div className="footer-bottom">
-            <span>© 2026 Unified Nexgrade Pvt. Ltd. · Delhi NCR</span>
-            <div className="footer-legal">
-              <a href="/privacy">Privacy</a>
-              <a href="/terms">Terms</a>
-              <a href="/cookies">Cookies</a>
-              <a href="/dpdp">DPDP</a>
-            </div>
-            <span className="footer-status">
-              <span className="pulse" /> v 0.1.0 · all systems normal
-            </span>
-          </div>
+        <div className="footer-bottom">
+          <span>© 2026 Unified Nexgrade Pvt. Ltd. · Delhi NCR</span>
+          <nav className="footer-legal" aria-label="Legal">
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/cookies">Cookies</a>
+            <a href="/dpdp">DPDP</a>
+          </nav>
         </div>
       </div>
     </footer>

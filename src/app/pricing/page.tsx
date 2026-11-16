@@ -81,7 +81,7 @@ export default function PricingPage() {
           <header className="mk-hero">
             <div className="eyebrow"><span className="dot" />Pricing</div>
             <h1 className="h-display mk-h1">
-              What Omega costs<br /><span className="h-italic">and what it does not.</span>
+              What Omega costs<br /><span className="h-muted">and what it does not.</span>
             </h1>
             <p className="lede mk-lede">
               Rs 1,499 per outlet per month for a single location, Rs 3,499 per outlet for up to ten,
@@ -137,11 +137,11 @@ export default function PricingPage() {
           </section>
 
           <section className="mk-endcap">
-            <h2 className="h-section">Stop wrestling <span className="h-italic">your POS.</span></h2>
+            <h2 className="h-section">Stop wrestling <span className="h-muted">your POS.</span></h2>
             <p className="lede">
               Tell us about your outlet and we will show you the system running on your own menu.
             </p>
-            <Link href="/get-started" className="btn btn-primary btn-lg">
+            <Link href="/get-started" className="btn btn-blue btn-lg">
               Book a demo <Icon.Arrow size={13} />
             </Link>
           </section>

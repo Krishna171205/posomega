@@ -1,0 +1,320 @@
+/* ══ Ink characters ═══════════════════════════════════════════
+   Line-art people used across the homepage: the "How it works" story
+   (.crew) and the small figures that peek over cards (.peek). */
+
+.char, .pk-art { overflow: visible; color: var(--black-100); }
+.char .eye, .pk-art .eye { transform-box: fill-box; transform-origin: center; animation: ink-blink 4.2s infinite; }
+.pk-art .eye { animation-delay: var(--blink-d, -1.3s); }
+@keyframes ink-blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+.look { transition: transform .18s linear; }
+
+.head .brows > * { transform-box: fill-box; transform-origin: center; transition: transform .3s var(--ease-out-cubic); }
+.head.mood-wow .brows > * { transform: translateY(-3px); }
+.head.mood-worried .brows > :first-child { transform: rotate(-12deg); }
+.head.mood-worried .brows > :last-child { transform: rotate(12deg); }
+.head.mood-think .brows > :last-child { transform: translateY(-3px); }
+
+/* ── Crew: the scroll story ─────────────────────────────────── */
+.crew { background: var(--white-200); border-block: 1px solid var(--stroke-weak); }
+.crew-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 96px); }
+
+.crew-stage-wrap { position: relative; }
+.crew-stage {
+  position: sticky; top: calc(var(--nav-h) + 48px);
+  width: min(100%, 62svh, 520px); aspect-ratio: 1; margin-inline: auto;
+  border-radius: var(--r-3xl); overflow: hidden;
+  background-color: var(--white-100);
+  background-image: radial-gradient(var(--white-600) 1px, transparent 1px);
+  background-size: 16px 16px;
+  box-shadow: inset 0 0 0 1px var(--stroke-weak), var(--sh-2);
+}
+/* A soft shape behind the figure that turns with each step */
+.crew-blob {
+  position: absolute; left: 50%; top: 58%; width: 64%;
+  translate: -50% -50%;
+  fill: var(--white-400);
+  rotate: calc(var(--step, 0) * 47deg);
+  transition: rotate 1.5s var(--ease-emph);
+}
+.crew-figure { position: absolute; inset: 25% 19% 7%; cursor: pointer; border-radius: var(--r-2xl); }
+.crew-char { position: absolute; inset: 0; display: block; opacity: 0; transform: translateY(10px) scale(.97); transition: opacity .7s var(--ease-emph), transform .95s var(--ease-out-cubic); pointer-events: none; }
+.crew-char.on { opacity: 1; transform: none; }
+.char { width: 100%; height: 100%; }
+
+/* Line draw: every stroke carries pathLength=1 */
+.crew-char .ink { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.1s var(--ease-out-cubic); }
+.crew-char .fill { opacity: 0; transition: opacity .5s var(--ease-emph) .5s; }
+.crew-char.on .ink { stroke-dashoffset: 0; }
+.crew-char.on .fill { opacity: 1; }
+
+/* Idle breathing and props */
+.crew-char.on .char { animation: crew-bob 3.6s ease-in-out infinite; transform-origin: 50% 100%; }
+@keyframes crew-bob { 50% { transform: translateY(-2px) rotate(-.4deg); } }
+.char :is(.prop, .file, .flipper, .steam, .ping) { transform-box: fill-box; transform-origin: center; }
+.char .marks { animation: crew-marks 1.6s steps(2, jump-none) infinite; }
+@keyframes crew-marks { from { opacity: 1; } to { opacity: .2; } }
+
+.char-captain .prop-pen { animation: crew-scribble 1.4s ease-in-out infinite; transform-origin: 30% 70%; }
+@keyframes crew-scribble { 0%, 100% { transform: none; } 25% { transform: rotate(-4deg) translate(2px, -1px); } 50% { transform: rotate(2deg) translate(4px, 1px); } 75% { transform: rotate(-2deg) translate(1px, 2px); } }
+
+.char-manager .note { animation: crew-float 3.2s ease-in-out infinite; }
+.char-manager .note-b { animation-delay: -1.4s; }
+@keyframes crew-float { 50% { transform: translateY(-5px) rotate(4deg); } }
+.char-manager .prop-arm { transform-origin: 30% 100%; animation: crew-raise 3.2s ease-in-out infinite; }
+@keyframes crew-raise { 0%, 100% { transform: none; } 50% { transform: rotate(3deg); } }
+.char-manager .ping { animation: crew-ping 1.6s var(--ease-out-cubic) infinite; }
+@keyframes crew-ping { from { transform: scale(.6); opacity: 1; } to { transform: scale(2.8); opacity: 0; } }
+
+.char-owner .page { transform-box: view-box; transform-origin: 110px 190px; animation: crew-flip 5s var(--ease-emph) infinite; }
+@keyframes crew-flip { 0%, 70%, 100% { transform: scaleX(1); } 80%, 90% { transform: scaleX(-1); } }
+
+.char-store .f1 { animation: crew-pop 3s ease-in-out infinite; }
+.char-store .f2 { animation: crew-pop 3s ease-in-out infinite -1s; }
+.char-store .f3 { animation: crew-pop 3s ease-in-out infinite -2s; }
+@keyframes crew-pop { 0%, 60%, 100% { transform: none; } 75% { transform: translateY(-10px) rotate(-3deg); } }
+
+.char-chef .flipper { animation: crew-toss 2.2s cubic-bezier(.45, 0, .55, 1) infinite; }
+@keyframes crew-toss { 0%, 30%, 100% { transform: none; } 55% { transform: translateY(-34px) scaleY(-1) rotate(8deg); } 80% { transform: none; } }
+.char-chef .prop-pan { animation: crew-pan 2.2s ease-in-out infinite; transform-origin: 85% 60%; }
+@keyframes crew-pan { 0%, 22%, 100% { transform: none; } 30% { transform: rotate(-6deg); } 40% { transform: none; } 80% { transform: rotate(2deg); } }
+.char-chef .steam { animation: crew-steam 2.4s ease-in-out infinite; }
+@keyframes crew-steam { 0% { opacity: 0; transform: translateY(6px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(-10px); } }
+
+/* Hover: a livelier take on the same motion */
+.crew-figure:hover .crew-char.on .char { animation-duration: 1.2s; }
+.crew-figure:hover .char-manager .note { animation-duration: 1.1s; }
+.crew-figure:hover .char-owner .page { animation-duration: 1.6s; }
+.crew-figure:hover .char-store .file { animation-duration: 1s; }
+.crew-figure:hover .char-chef :is(.flipper, .prop-pan) { animation-duration: 1.3s; }
+.crew-figure:active .crew-char.on { transform: scale(.97); transition-duration: .1s; }
+
+/* Speech bubble */
+.crew-bubble {
+  position: absolute; top: 6%; left: 50%; translate: -50% 0; z-index: 2;
+  max-width: 74%; padding: 8px 13px;
+  font-family: var(--font-sans); font-weight: 500; letter-spacing: -0.01em; font-size: clamp(14px, 1.15vw, 16px); line-height: 1.3;
+  color: var(--black-100); background: var(--white-100);
+  border: 1.5px solid var(--black-100); border-radius: 14px 14px 14px 4px;
+  box-shadow: 2px 2px 0 var(--black-100);
+  text-align: center; text-wrap: balance;
+  animation: crew-say .5s var(--ease-out-cubic) both;
+}
+.crew-bubble::after {
+  content: ''; position: absolute; left: 22%; bottom: -7px; width: 10px; height: 10px;
+  background: var(--white-100); border-right: 1.5px solid var(--black-100); border-bottom: 1.5px solid var(--black-100);
+  transform: rotate(45deg) skew(10deg, 10deg);
+}
+@keyframes crew-say { from { opacity: 0; transform: translateY(6px) scale(.92); filter: blur(2px); } to { opacity: 1; transform: none; filter: none; } }
+
+.crew-role { position: absolute; left: 18px; bottom: 16px; display: flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 500; color: var(--fg-2); }
+.crew-role .ui-num { font-family: var(--font-mono); font-size: 11px; color: var(--fg-3); }
+.crew-dots { position: absolute; right: 18px; bottom: 20px; display: flex; gap: 6px; }
+.crew-dots span { width: 6px; height: 6px; border-radius: 99px; background: var(--white-800); transition: width .4s var(--ease-emph), background .3s; }
+.crew-dots span.on { width: 18px; background: var(--black-100); }
+.crew-hint { position: absolute; right: 18px; top: 16px; font-size: 11px; font-weight: 500; color: var(--fg-3); letter-spacing: .02em; text-transform: uppercase; }
+
+/* Steps */
+.crew-steps { display: grid; }
+.crew-step { min-height: 72svh; display: flex; flex-direction: column; justify-content: center; gap: 10px; padding-block: 24px; opacity: .3; transition: opacity .75s var(--ease-emph), transform .9s var(--ease-out-cubic); transform: translateX(8px); }
+.crew-step.on { opacity: 1; transform: none; }
+.crew-step:first-child { min-height: 46svh; justify-content: flex-start; padding-top: 12svh; }
+.crew-step:last-child { min-height: 50svh; }
+.crew-step-role { font-size: 13px; font-weight: 500; color: var(--fg-3); }
+.crew-step p { color: var(--fg-2); font-size: 16px; line-height: 1.55; max-width: 30em; }
+.crew-step-fig { display: none; }
+
+@media (max-width: 860px) {
+  .crew-grid { grid-template-columns: 1fr; }
+  .crew-stage-wrap { display: none; }
+  .crew-step, .crew-step:first-child, .crew-step:last-child { min-height: 0; padding: 0 0 40px; opacity: 1; transform: none; }
+  .crew-step-fig { display: block; position: relative; width: min(180px, 52%); aspect-ratio: 1; margin-bottom: 8px; opacity: 1; transform: none; }
+}
+
+/* ── Peek: Notion-style figure over a card's top edge ───────── */
+/* min-width: a grid item with visible overflow would otherwise grow to its widest table */
+.has-peek { position: relative; overflow: visible !important; min-width: 0; }
+.has-peek > .peek {
+  --peek-w: 80px;
+  position: absolute; z-index: 4;
+  width: var(--peek-w); height: calc(var(--peek-w) * 96 / 112);
+  bottom: calc(100% - var(--peek-w) * 10 / 112);   /* art's ledge line sits on the card edge */
+  pointer-events: none;
+}
+.peek.at-right { right: var(--peek-x); }
+.peek.at-left { left: var(--peek-x); }
+.pk-art { display: block; width: 100%; height: 100%; }
+
+/* Three nested groups keep the motions from fighting over one transform:
+   .pk-lift  hover tiptoe · .pk-rise  up or down · .pk-bob  the entrance's own move */
+.pk-lift { transition: transform .5s var(--ease-out-cubic); }
+.pk-rise { transform: translateY(112px); transition: transform .3s cubic-bezier(.5, 0, .75, 0); }                      /* ducks out */
+.peek.is-in .pk-rise { transform: none; transition: transform .8s cubic-bezier(.34, 1.5, .64, 1) .16s; }               /* springs up */
+.pk-bob { transform-box: view-box; transform-origin: 56px 86px; }                                                       /* pivots on the ledge */
+
+.pk-hand { transform-box: fill-box; transform-origin: 50% 100%; transform: translateY(6px) scale(.4); opacity: 0; transition: transform .45s cubic-bezier(.34, 1.56, .64, 1), opacity .2s; }
+.peek.is-in .pk-hand { transform: none; opacity: 1; }
+.peek.is-in .pk-hand-r { transition-delay: .06s; }
+
+.pk-burst { opacity: 0; transform-box: view-box; transform-origin: 56px 30px; }
+.peek.is-in .pk-burst { animation: pk-burst .7s var(--ease-out-cubic) .6s both; }
+@keyframes pk-burst { 0% { opacity: 0; transform: scale(.7); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15); } }
+
+/* Hover on the card: up on tiptoe, wave */
+.has-peek:hover > .peek.is-in .pk-lift { transform: translateY(-5px); }
+.has-peek:hover > .peek.is-in .pk-hand-r { animation: pk-wave .8s ease-in-out infinite; }
+@keyframes pk-wave { 0%, 100% { transform: translateY(-12px) rotate(-14deg); } 50% { transform: translateY(-13px) rotate(14deg); } }
+
+/* ── Entrances (Peek's `enter` prop). Keyframed ones play on .pk-bob while
+   .pk-rise snaps up underneath; every one ends at rest, so ducking out is the
+   same quick drop for all of them. ── */
+
+/* pop: springs up, then nods twice */
+.peek.is-in.enter-pop .pk-bob { animation: pk-nod .42s ease-in-out 1.05s 2; }
+@keyframes pk-nod { 50% { transform: translateY(3.5px); } }
+
+/* walk: strolls in along the edge from its own side */
+.peek.at-left.enter-walk { --walk: -58px; }
+.peek.at-right.enter-walk { --walk: 58px; }
+.peek.is-in.enter-walk .pk-rise { transition-duration: .4s; transition-delay: 0s; }
+.peek.is-in.enter-walk .pk-art { animation: pk-walk 1.1s cubic-bezier(.3, .7, .3, 1) both; }
+.peek.is-in.enter-walk .pk-bob { animation: pk-step .275s ease-in-out 4; }
+.peek.is-in.enter-walk .pk-burst { animation-delay: 1s; }
+@keyframes pk-walk { from { transform: translateX(var(--walk)); } to { transform: none; } }
+@keyframes pk-step { 50% { transform: translateY(-3.5px) rotate(2deg); } }
+
+.peek.is-in:is(.enter-hat, .enter-eyes, .enter-lean) .pk-rise { transition-duration: 0s; transition-delay: 0s; }
+
+/* hat: the top of the head comes up alone, wobbles, then the face follows */
+.peek.is-in.enter-hat .pk-bob { animation: pk-hat 1.5s both; }
+.peek.is-in.enter-hat .pk-burst { animation-delay: 1.3s; }
+@keyframes pk-hat {
+  0% { transform: translateY(112px); animation-timing-function: cubic-bezier(.2, .8, .3, 1); }
+  26% { transform: translateY(50px); }
+  34% { transform: translateY(50px) rotate(-4deg); }
+  42% { transform: translateY(50px) rotate(4deg); }
+  50% { transform: translateY(50px) rotate(-2deg); }
+  58% { transform: translateY(54px); animation-timing-function: cubic-bezier(.34, 1.5, .64, 1); }
+  100% { transform: none; }
+}
+
+/* eyes: up to eye level, a look left and right, then all the way */
+.peek.is-in.enter-eyes .pk-bob { animation: pk-eyes 1.9s both; }
+.peek.is-in.enter-eyes .look { animation: pk-scan 1.9s; }
+.peek.is-in.enter-eyes .pk-burst { animation-delay: 1.7s; }
+@keyframes pk-eyes {
+  0% { transform: translateY(112px); animation-timing-function: cubic-bezier(.2, .8, .3, 1); }
+  20%, 66% { transform: translateY(33px); }
+  74% { transform: translateY(37px); animation-timing-function: cubic-bezier(.34, 1.5, .64, 1); }
+  100% { transform: none; }
+}
+@keyframes pk-scan { 0%, 24%, 70%, 100% { transform: none; } 32%, 44% { transform: translateX(-3px); } 52%, 64% { transform: translateX(3px); } }
+
+/* phone: a phone is held up first and buzzes; the head follows it */
+.pk-prop { transform-box: view-box; transform-origin: 97px 86px; transform: translateY(64px); transition: transform .3s cubic-bezier(.5, 0, .75, 0); }
+.peek.is-in .pk-prop { transform: none; transition: transform .6s cubic-bezier(.34, 1.5, .64, 1) .05s; }
+.peek.is-in.enter-phone .pk-prop { animation: pk-buzz .12s linear .7s 6; }
+.has-peek:hover > .peek.is-in.enter-phone .pk-prop { animation: pk-buzz-again .12s linear 6; }
+.peek.is-in.enter-phone .pk-rise { transition-delay: 1s; }
+.peek.is-in.enter-phone .pk-burst { animation-delay: 1.6s; }
+.pk-ping { transform-box: fill-box; transform-origin: center; animation: crew-ping 1.6s var(--ease-out-cubic) infinite; }
+@keyframes pk-buzz { 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+@keyframes pk-buzz-again { 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+
+/* lean: tips in from the corner and stays tilted toward the card */
+.peek.at-right.enter-lean { --lean: -11deg; --lean-x: 30px; }
+.peek.at-left.enter-lean { --lean: 11deg; --lean-x: -30px; }
+.peek.is-in.enter-lean .pk-bob { transform: rotate(var(--lean)); animation: pk-lean 1.05s cubic-bezier(.22, 1, .36, 1) both; }
+.peek.is-in.enter-lean .pk-burst { animation-delay: .9s; }
+@keyframes pk-lean {
+  from { transform: translate(var(--lean-x), 100px) rotate(calc(var(--lean) * -1.6)); }
+  70% { transform: rotate(calc(var(--lean) * 1.3)); }
+  to { transform: rotate(var(--lean)); }
+}
+
+/* ── Gestures: one per entrance, after it has arrived, repeating while up.
+   Hands pivot on the ledge (bottom centre); hover on the card still waves. ── */
+.pk-thumb { transform-box: fill-box; transform-origin: 0% 80%; }
+
+/* pop: a proper wave, hand lifted off the edge */
+.peek.is-in.enter-pop .pk-hand-r { animation: g-wave 6s ease-in-out 1.9s infinite; }
+@keyframes g-wave {
+  0%, 30%, 100% { transform: none; }
+  5% { transform: translateY(-15px) rotate(-12deg); }
+  9% { transform: translateY(-16px) rotate(16deg); }
+  13% { transform: translateY(-16px) rotate(-14deg); }
+  17% { transform: translateY(-16px) rotate(14deg); }
+  22% { transform: translateY(-15px) rotate(-6deg); }
+}
+
+/* walk: drums the fingers on the edge, left then right */
+.peek.is-in.enter-walk .pk-hand-l { animation: g-tap 4.8s ease-in-out 1.2s infinite; }
+.peek.is-in.enter-walk .pk-hand-r { animation: g-tap 4.8s ease-in-out 1.32s infinite; }
+@keyframes g-tap { 0%, 24%, 100% { transform: none; } 4%, 12% { transform: translateY(-4px) rotate(-3deg); } 8%, 16% { transform: none; } }
+
+/* hat: the right hand comes up to the brim in a salute, holds, drops */
+.peek.is-in.enter-hat .pk-hand-r { animation: g-salute 7s cubic-bezier(.34, 1.3, .64, 1) 1.8s infinite; }
+@keyframes g-salute {
+  0%, 34%, 100% { transform: none; }
+  7%, 24% { transform: translate(-12px, -54px) rotate(-38deg); }
+  12% { transform: translate(-12px, -56px) rotate(-30deg); }
+}
+
+/* eyes: points down at the dashboard with two quick taps */
+.peek.is-in.enter-eyes .pk-hand-r { animation: g-point 6s ease-in-out 2.2s infinite; }
+@keyframes g-point {
+  0%, 26%, 100% { transform: none; }
+  5% { transform: translate(-8px, -10px) rotate(-18deg); }
+  9%, 17% { transform: translate(-8px, -2px) rotate(-18deg); }
+  13%, 21% { transform: translate(-8px, -9px) rotate(-18deg); }
+}
+
+/* phone: waves with the free hand while the phone buzzes */
+.peek.is-in.enter-phone .pk-hand-l { animation: g-wave-l 6.4s ease-in-out 2s infinite; }
+@keyframes g-wave-l {
+  0%, 28%, 100% { transform: none; }
+  5% { transform: translateY(-14px) rotate(12deg); }
+  9% { transform: translateY(-15px) rotate(-16deg); }
+  13% { transform: translateY(-15px) rotate(14deg); }
+  17% { transform: translateY(-15px) rotate(-12deg); }
+  22% { transform: translateY(-14px) rotate(4deg); }
+}
+
+/* lean: the hand rises and the thumb goes up */
+.peek.is-in.enter-lean .pk-hand-r { animation: g-thumb-hand 6.6s cubic-bezier(.34, 1.4, .64, 1) 1.5s infinite; }
+.peek.is-in.enter-lean .pk-hand-r .pk-thumb { animation: g-thumb 6.6s cubic-bezier(.34, 1.4, .64, 1) 1.5s infinite; }
+@keyframes g-thumb-hand { 0%, 30%, 100% { transform: none; } 6%, 22% { transform: translateY(-17px) rotate(8deg); } }
+@keyframes g-thumb { 0%, 4%, 26%, 100% { transform: none; } 9%, 22% { transform: translate(-3px, -5px) rotate(-78deg); } }
+
+/* Hover takes over from whatever gesture is running */
+.has-peek:hover > .peek.is-in .pk-hand-r { animation: pk-wave .8s ease-in-out infinite; }
+.has-peek:hover > .peek.is-in.enter-phone .pk-hand-l { animation: g-wave-l 1.6s ease-in-out infinite; }
+
+.peek-say {
+  position: absolute; top: -6px; z-index: 1;
+  padding: 4px 9px; white-space: nowrap;
+  font-family: var(--font-sans); font-weight: 500; letter-spacing: -0.005em; font-size: 12.5px; line-height: 1.25; color: var(--black-100);
+  background: var(--white-100); border: 1.5px solid var(--black-100); border-radius: 10px;
+  box-shadow: 1.5px 1.5px 0 var(--black-100);
+  opacity: 0; transform: translateY(4px) scale(.94);
+  transition: opacity .2s var(--ease-emph), transform .35s cubic-bezier(.34, 1.56, .64, 1);
+}
+.peek.at-right .peek-say { right: 84%; border-bottom-right-radius: 3px; transform-origin: 100% 100%; }
+.peek.at-left .peek-say { left: 84%; border-bottom-left-radius: 3px; transform-origin: 0 100%; }
+.peek.talk .peek-say, .has-peek:hover > .peek.is-in .peek-say { opacity: 1; transform: none; }
+
+@media (max-width: 640px) {
+  .has-peek > .peek { --peek-w: 64px; }
+  .peek-say { font-size: 12px; padding: 3px 8px; }
+}
+
+/* Room above cards that carry a peek */
+.price-grid.peeks { margin-top: 84px; }
+.proof-grid.peeks { margin-top: clamp(84px, 8vw, 104px); }
+.int-grid.peeks { margin-top: 96px; }   /* collapses with .int-head's margin, so this is the whole gap */
+.price-grid.peeks, .proof-grid.peeks, .int-grid.peeks { row-gap: 76px; }
+.price-card.has-peek .price-feat { border-radius: 0 0 var(--r-2xl) var(--r-2xl); }
+
+@media (prefers-reduced-motion: reduce) {
+  .crew-char .ink { stroke-dashoffset: 0; }
+  .crew-char .fill { opacity: 1; }
+}

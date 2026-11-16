@@ -25,7 +25,7 @@ export default function Page() {
         {
           heading: '3. Your subscription',
           body: [
-            'Subscriptions are billed monthly or annually per outlet, in advance. Fees are listed at posomega.com/#pricing and may be revised with 30 days\' notice.',
+            'Subscriptions are billed monthly or annually per outlet, in advance. Fees are listed at posomega.com/pricing and may be revised with 30 days\' notice.',
             'You can cancel any time. Pre-paid annual subscriptions are non-refundable after 14 days from the start of a new billing cycle, except where required by law.',
           ],
         },

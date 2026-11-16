@@ -1,81 +1,50 @@
-'use client'
-import { useState } from 'react'
 import { Icon } from './Icons'
+import { INTEGRATION_GROUPS } from '@/content/home'
+import { Peek } from './crew/Peek'
+import type { Enter } from './crew/Peek'
+import type { Who } from './crew/parts'
 
-function LogoSlot({ name, slug, color, fallback }: any) {
-  const [err, setErr] = useState(!slug)
-  const url = slug ? `https://cdn.simpleicons.org/${slug}/${color.slice(1)}` : null
-  if (err || !slug) return <span className="wordmark-fb" style={{ color }}>{fallback}</span>
-  // Named alt, not alt="": these logos are the entities we want Omega associated
-  // with in search, and alt="" makes Swiggy/Zomato/Razorpay invisible to crawlers.
-  // ponytail: no width/height — .logo-slot is a fixed 40x40 box, so there is no CLS to fix.
-  return <img src={url!} alt={`${name} integration`} loading="lazy" onError={() => setErr(true)} />
+const PEEKS: Record<string, { who: Who; say: string; side: 'left' | 'right'; x?: string; enter?: Enter }> = {
+  Delivery: { who: 'manager', say: 'Same menu on every app.', side: 'right', x: '12%', enter: 'pop' },
+  Hardware: { who: 'chef', say: 'KOT printed. Nice.', side: 'left', x: '12%', enter: 'hat' },
 }
 
+/** attio.com "Your whole stack, connected." Only integrations documented in src/content. */
 export function Integrations() {
-  const cats: any[] = [
-    { tag: 'Delivery', items: [
-      { n: 'Swiggy',    c: '#FC8019', slug: 'swiggy' },
-      { n: 'Zomato',    c: '#E23744', slug: 'zomato' },
-      { n: 'Magicpin',  c: '#E91E63', slug: null },
-      { n: 'EazyDiner', c: '#1A1A1A', slug: null },
-      { n: 'Dineout',   c: '#FF6B35', slug: null },
-    ]},
-    { tag: 'Payments', items: [
-      { n: 'Razorpay',  c: '#2D85F7', slug: 'razorpay' },
-      { n: 'Paytm',     c: '#00BAF2', slug: 'paytm' },
-      { n: 'PhonePe',   c: '#5F259F', slug: 'phonepe' },
-      { n: 'GPay',      c: '#4285F4', slug: 'googlepay' },
-      { n: 'Pine Labs', c: '#1A4FBA', slug: null },
-      { n: 'Stripe',    c: '#635BFF', slug: 'stripe' },
-    ]},
-    { tag: 'Accounting', items: [
-      { n: 'Tally',      c: '#1B4F8A', slug: null },
-      { n: 'Zoho Books', c: '#E42527', slug: 'zoho' },
-      { n: 'QuickBooks', c: '#2CA01C', slug: 'quickbooks' },
-    ]},
-    { tag: 'Marketing', items: [
-      { n: 'WhatsApp Business', c: '#25D366', slug: 'whatsapp' },
-      { n: 'Klaviyo',           c: '#FF5C2B', slug: null },
-      { n: 'Mailchimp',         c: '#FFE01B', slug: 'mailchimp' },
-    ]},
-    { tag: 'Operations', items: [
-      { n: 'Shopify',       c: '#7AB55C', slug: 'shopify' },
-      { n: 'Slack',         c: '#4A154B', slug: null },
-      { n: 'Google Sheets', c: '#0F9D58', slug: 'googlesheets' },
-    ]},
-  ]
-  const allItems = cats.flatMap((c: any) => c.items)
-
   return (
     <section className="section" id="integrations">
       <div className="container">
-        <div className="sec-head center">
-          <div className="eyebrow" style={{ justifyContent: 'center' }}><span className="dot" />120+ integrations</div>
-          <h2 className="h-section" style={{ marginTop: 16, textAlign: 'center' }}>
-            Plays well with <span className="h-italic">everything else</span> you already pay for.
-          </h2>
+        <div className="int-head" data-rv>
+          <div className="sec-head">
+            <div className="eyebrow"><span className="dot" />Integrations</div>
+            <h2 className="h-section">Your whole counter, <span className="h-muted">connected.</span></h2>
+            <p className="lede">
+              The aggregators, payment rails and hardware Indian restaurants already pay for.
+              The list is short because every item on it works.
+            </p>
+          </div>
+          <a href="/integrations" className="btn btn-outline int-all">All integrations <Icon.Arrow size={12} /></a>
         </div>
 
-        <div className="int-grid">
-          {allItems.map((it: any, i: number) => (
-            <div key={i} className="int-tile">
-              <div className="logo-slot">
-                <LogoSlot name={it.n} slug={it.slug} color={it.c} fallback={it.n.charAt(0)} />
+        <div className="int-grid peeks">
+          {INTEGRATION_GROUPS.map((g, i) => (
+            <div key={g.tag} className={`int-group ${PEEKS[g.tag] ? 'has-peek' : ''}`} data-rv style={{ ['--rv-i' as string]: i }}>
+              {PEEKS[g.tag] && <Peek {...PEEKS[g.tag]} />}
+              <div className="int-group-h">
+                <h3>{g.tag}</h3>
+                <p>{g.blurb}</p>
               </div>
-              <div className="name">{it.n}</div>
+              <ul>
+                {g.items.map(it => (
+                  <li key={it.n} className="int-item">
+                    <span className="int-mark" aria-hidden="true">{it.n.charAt(0)}</span>
+                    <span className="int-txt"><b>{it.n}</b><span>{it.d}</span></span>
+                  </li>
+                ))}
+              </ul>
+              {g.href && <a href={g.href} className="text-link int-more">Learn more <Icon.Arrow size={11} /></a>}
             </div>
           ))}
-          <div className="int-tile" style={{ background: 'var(--ink)', color: 'var(--bg)', borderColor: 'var(--ink)' }}>
-            <div className="logo-slot">
-              <span style={{ fontSize: 26, fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: 'var(--bg)' }}>+92</span>
-            </div>
-            <div className="name" style={{ color: 'color-mix(in oklab, var(--bg) 65%, transparent)' }}>more</div>
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 32 }}>
-          <a href="#" className="btn btn-secondary">View all integrations <Icon.Arrow size={12} /></a>
         </div>
       </div>
     </section>

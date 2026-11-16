@@ -27,7 +27,7 @@ export function LegalPage({ title, italicTail, updated, intro, sections }: Legal
           </div>
           <h1 className="h-display legal-title">
             {title}<br />
-            <span className="h-italic">{italicTail}</span>
+            <span className="h-muted">{italicTail}</span>
           </h1>
           {intro && <p className="lede legal-intro">{intro}</p>}
           <div className="legal-content">

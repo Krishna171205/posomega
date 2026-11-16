@@ -1,33 +1,189 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Icon } from './Icons'
+import { HERO } from '@/content/home'
+
+type MenuItem = { href: string; t: string; d: string }
+type Menu = { id: string; label: string; items: MenuItem[]; foot?: MenuItem }
+
+const MENUS: Menu[] = [
+  {
+    id: 'platform',
+    label: 'Platform',
+    items: [
+      { href: '/features/billing-and-kot', t: 'Billing & KOT', d: 'GST invoices, station routing, split bills.' },
+      { href: '/features/kitchen-display', t: 'Kitchen display', d: 'One queue for every channel, bump and recall.' },
+      { href: '/features/inventory-and-forecasting', t: 'Inventory', d: 'Recipe-level stock and demand prediction.' },
+      { href: '/features/offline-mode', t: 'Offline mode', d: 'Billing and KOTs keep running without internet.' },
+    ],
+    foot: { href: '/app', t: 'Android app', d: 'Early access' },
+  },
+  {
+    id: 'solutions',
+    label: 'Solutions',
+    items: [
+      { href: '/for/cafes', t: 'Cafés & bakeries', d: 'Open tabs, fast entry, loyalty by phone.' },
+      { href: '/for/qsr', t: 'QSR & food courts', d: 'Kiosks, QR ordering, multi-station KDS.' },
+      { href: '/for/fine-dining', t: 'Fine dining', d: 'Course pacing, allergy flags, guestbook.' },
+      { href: '/for/cloud-kitchens', t: 'Cloud kitchens', d: 'Many brands, one kitchen, per-brand P&L.' },
+      { href: '/for/bars', t: 'Bars & lounges', d: 'Pour cost by the ml, tabs, age checks.' },
+    ],
+  },
+  {
+    id: 'resources',
+    label: 'Resources',
+    items: [
+      { href: '/integrations/swiggy-zomato', t: 'Swiggy & Zomato sync', d: 'One menu, one queue, one inventory.' },
+      { href: '/integrations/upi-and-payments', t: 'UPI & payments', d: 'Collected and reconciled in one step.' },
+      { href: '/gst-billing-software-for-restaurants', t: 'GST billing', d: 'CGST/SGST splits, GSTR-ready exports.' },
+      { href: '/restaurant-billing-software', t: 'Restaurant billing software', d: 'What to look for, honestly.' },
+    ],
+  },
+]
+
+const BANNER_KEY = 'omega-banner-dismissed'
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
+  const [open, setOpen] = useState<string | null>(null)
+  const [drawer, setDrawer] = useState(false)
+  const [banner, setBanner] = useState(true)
+  const closeTimer = useRef<number | null>(null)
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
+    try { if (sessionStorage.getItem(BANNER_KEY)) setBanner(false) } catch { /* storage blocked */ }
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    const onResize = () => { if (window.innerWidth >= 960) setDrawer(false) }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setOpen(null); setDrawer(false) } }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+      window.removeEventListener('keydown', onKey)
+    }
   }, [])
+
+  useEffect(() => {
+    document.documentElement.style.overflow = drawer ? 'hidden' : ''
+  }, [drawer])
+
+  function dismissBanner() {
+    setBanner(false)
+    try { sessionStorage.setItem(BANNER_KEY, '1') } catch { /* storage blocked */ }
+  }
+  function enter(id: string) {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current)
+    setOpen(id)
+  }
+  function leave() {
+    closeTimer.current = window.setTimeout(() => setOpen(null), 120)
+  }
+
   return (
-    <nav className={`nav ${scrolled ? 'nav-scrolled' : ''}`}>
-      <a href="/" className="nav-logo">
-        <span className="glyph">Ω</span>
-        <span>Omega</span>
-      </a>
-      <div className="nav-links">
-        <a href="/features" className="nav-link">Product</a>
-        <a href="/for" className="nav-link">Industries</a>
-        <a href="/integrations" className="nav-link">Integrations</a>
-        <a href="/#hardware" className="nav-link">Hardware</a>
-        <a href="/pricing" className="nav-link">Pricing</a>
-      </div>
-      <div className="nav-cta">
-        <a href="https://cafe.posomega.com/login" className="btn btn-ghost btn-sm">Sign in</a>
-        <a href="/get-started" className="btn btn-primary btn-sm">
-          Book a demo <Icon.Arrow size={12} />
-        </a>
-      </div>
-    </nav>
+    <>
+      {banner && (
+        <div className="banner">
+          <a href={HERO.banner.href} className="banner-link">
+            <span className="banner-new">New</span>
+            {HERO.banner.label}
+            <Icon.Arrow size={12} />
+          </a>
+          <button className="banner-x" onClick={dismissBanner} aria-label="Dismiss announcement">
+            <Icon.Close size={14} />
+          </button>
+        </div>
+      )}
+
+      <header className={`nav ${scrolled ? 'is-scrolled' : ''} ${open ? 'is-open' : ''}`}>
+        <div className="nav-inner">
+          <a href="/" className="nav-logo" aria-label="Omega home">
+            <span className="glyph" aria-hidden="true">Ω</span>
+            <span>Omega</span>
+          </a>
+
+          <nav className="nav-links" aria-label="Main">
+            {MENUS.map(m => (
+              <div
+                key={m.id}
+                className="nav-item"
+                onMouseEnter={() => enter(m.id)}
+                onMouseLeave={leave}
+              >
+                <button
+                  className="nav-link"
+                  aria-expanded={open === m.id}
+                  onClick={() => setOpen(open === m.id ? null : m.id)}
+                >
+                  {m.label} <Icon.ChevronDown size={11} />
+                </button>
+                {open === m.id && (
+                  <div className="nav-pop" onMouseEnter={() => enter(m.id)} onMouseLeave={leave}>
+                    <ul>
+                      {m.items.map(it => (
+                        <li key={it.href}>
+                          <a href={it.href} className="nav-pop-item" onClick={() => setOpen(null)}>
+                            <span className="t">{it.t}</span>
+                            <span className="d">{it.d}</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                    {m.foot && (
+                      <a href={m.foot.href} className="nav-pop-foot">
+                        <span>{m.foot.t}</span>
+                        <span className="tag tag-info">{m.foot.d}</span>
+                        <Icon.Arrow size={12} />
+                      </a>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+            <a href="/integrations" className="nav-link">Integrations</a>
+            <a href="/pricing" className="nav-link">Pricing</a>
+          </nav>
+
+          <div className="nav-cta">
+            <a href="https://cafe.posomega.com/login" className="btn btn-ghost btn-sm nav-hide-sm">Sign in</a>
+            <a href={HERO.secondary.href} className="btn btn-outline btn-sm nav-hide-md">{HERO.secondary.label}</a>
+            <a href={HERO.primary.href} className="btn btn-blue btn-sm">{HERO.primary.label}</a>
+            <button className="nav-burger" aria-label="Open menu" aria-expanded={drawer} onClick={() => setDrawer(true)}>
+              <Icon.Menu />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {drawer && (
+        <div className="drawer" role="dialog" aria-modal="true" aria-label="Menu">
+          <div className="drawer-head">
+            <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>Omega</span></a>
+            <button className="nav-burger" aria-label="Close menu" onClick={() => setDrawer(false)}><Icon.Close size={18} /></button>
+          </div>
+          <div className="drawer-body">
+            {MENUS.map(m => (
+              <div key={m.id} className="drawer-group">
+                <div className="drawer-label">{m.label}</div>
+                {[...m.items, ...(m.foot ? [m.foot] : [])].map(it => (
+                  <a key={it.href} href={it.href} className="drawer-link" onClick={() => setDrawer(false)}>{it.t}</a>
+                ))}
+              </div>
+            ))}
+            <div className="drawer-group">
+              <a href="/integrations" className="drawer-link" onClick={() => setDrawer(false)}>Integrations</a>
+              <a href="/pricing" className="drawer-link" onClick={() => setDrawer(false)}>Pricing</a>
+              <a href="https://cafe.posomega.com/login" className="drawer-link">Sign in</a>
+            </div>
+          </div>
+          <div className="drawer-foot">
+            <a href={HERO.secondary.href} className="btn btn-outline btn-lg">{HERO.secondary.label}</a>
+            <a href={HERO.primary.href} className="btn btn-blue btn-lg">{HERO.primary.label}</a>
+          </div>
+        </div>
+      )}
+    </>
   )
 }

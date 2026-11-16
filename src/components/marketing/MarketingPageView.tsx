@@ -85,7 +85,7 @@ export function MarketingPageView({ page }: { page: MarketingPage }) {
             <div className="eyebrow"><span className="dot" />{page.eyebrow}</div>
             <h1 className="h-display mk-h1">
               {page.h1}
-              {page.h1Tail && <><br /><span className="h-italic">{page.h1Tail}</span></>}
+              {page.h1Tail && <><br /><span className="h-muted">{page.h1Tail}</span></>}
             </h1>
             <p className="lede mk-lede">{page.lede}</p>
             <div className="mk-cta-row">
@@ -93,19 +93,19 @@ export function MarketingPageView({ page }: { page: MarketingPage }) {
                 page.primaryCta.external ? (
                   <a
                     href={page.primaryCta.href}
-                    className="btn btn-primary"
+                    className="btn btn-blue"
                     target="_blank"
                     rel="noopener"
                   >
                     {page.primaryCta.label} <Icon.ArrowUpRight size={12} />
                   </a>
                 ) : (
-                  <Link href={page.primaryCta.href} className="btn btn-primary">
+                  <Link href={page.primaryCta.href} className="btn btn-blue">
                     {page.primaryCta.label} <Icon.Arrow size={12} />
                   </Link>
                 )
               ) : (
-                <Link href="/get-started" className="btn btn-primary">
+                <Link href="/get-started" className="btn btn-blue">
                   Book a demo <Icon.Arrow size={12} />
                 </Link>
               )}
@@ -142,11 +142,11 @@ export function MarketingPageView({ page }: { page: MarketingPage }) {
           )}
 
           <section className="mk-endcap">
-            <h2 className="h-section">Stop wrestling <span className="h-italic">your POS.</span></h2>
+            <h2 className="h-section">Stop wrestling <span className="h-muted">your POS.</span></h2>
             <p className="lede">
               Tell us about your outlet and we will show you the system running on your own menu.
             </p>
-            <Link href="/get-started" className="btn btn-primary btn-lg">
+            <Link href="/get-started" className="btn btn-blue btn-lg">
               Book a demo <Icon.Arrow size={13} />
             </Link>
           </section>
@@ -191,7 +191,7 @@ export function HubPageView({
           <header className="mk-hero">
             <div className="eyebrow"><span className="dot" />{eyebrow}</div>
             <h1 className="h-display mk-h1">
-              {h1}<br /><span className="h-italic">{h1Tail}</span>
+              {h1}<br /><span className="h-muted">{h1Tail}</span>
             </h1>
             <p className="lede mk-lede">{lede}</p>
           </header>
@@ -206,11 +206,11 @@ export function HubPageView({
           </div>
 
           <section className="mk-endcap">
-            <h2 className="h-section">Stop wrestling <span className="h-italic">your POS.</span></h2>
+            <h2 className="h-section">Stop wrestling <span className="h-muted">your POS.</span></h2>
             <p className="lede">
               Tell us about your outlet and we will show you the system running on your own menu.
             </p>
-            <Link href="/get-started" className="btn btn-primary btn-lg">
+            <Link href="/get-started" className="btn btn-blue btn-lg">
               Book a demo <Icon.Arrow size={13} />
             </Link>
           </section>

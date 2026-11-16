@@ -1,0 +1,193 @@
+/* ══ Outlet types ══════════════════════════════════════════════
+   A grid of tiles that share hairline borders (petpooja.com's outlet grid,
+   drawn the attio.com way), each with an ink icon that moves on hover, and a
+   preview card that rises over the tile after a short hover. Outlets.tsx. */
+
+.ol-head { margin-bottom: clamp(76px, 7vw, 100px); }          /* room for the chef peeking over the grid */
+
+.ol-grid {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px; padding: 1px;
+  background: var(--stroke-weak);
+  border-radius: var(--r-3xl);
+}
+.ol-cell { position: relative; display: flex; min-width: 0; }
+.ol-cell.is-open { z-index: 6; }
+
+.ol-card {
+  position: relative; isolation: isolate; flex: 1;
+  display: grid; justify-items: center; align-content: center; gap: 3px;
+  padding: clamp(30px, 3.4vw, 46px) 14px clamp(24px, 3vw, 36px);
+  background: var(--white-100); color: var(--black-100); text-align: center;
+  transition: background-color .3s var(--ease-emph);
+}
+/* A soft spotlight that follows the pointer (--x/--y set in Outlets.tsx) */
+.ol-card::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: radial-gradient(220px circle at var(--x, 50%) var(--y, 50%), var(--blue-100), transparent 72%);
+  opacity: 0; transition: opacity .4s var(--ease-emph);
+}
+.ol-card:hover::before, .ol-cell.is-open .ol-card::before { opacity: 1; }
+.ol-card:focus-visible { box-shadow: inset 0 0 0 2px var(--blue-500); border-radius: 0; }
+
+/* Outer corners follow the grid's radius, per layout */
+@media (min-width: 761px) {
+  .ol-cell:nth-child(1) .ol-card { border-top-left-radius: calc(var(--r-3xl) - 1px); }
+  .ol-cell:nth-child(4) .ol-card { border-top-right-radius: calc(var(--r-3xl) - 1px); }
+  .ol-cell:nth-child(5) .ol-card { border-bottom-left-radius: calc(var(--r-3xl) - 1px); }
+  .ol-cell:nth-child(8) .ol-card { border-bottom-right-radius: calc(var(--r-3xl) - 1px); }
+}
+
+.ol-ic { display: block; width: clamp(60px, 5.4vw, 76px); aspect-ratio: 1; margin-bottom: 14px; transition: transform .55s cubic-bezier(.34, 1.5, .64, 1); }
+.ol-ic svg, .ol-ghost svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.ol-ic .acc, .ol-ghost .acc { fill: var(--blue-100); transition: fill .3s var(--ease-emph); }
+.ol-name { font-family: var(--font-display); font-variation-settings: 'opsz' 32; font-size: clamp(16px, 1.35vw, 18px); font-weight: 600; letter-spacing: -0.015em; line-height: 1.2; }
+.ol-kind { font-size: 13px; color: var(--fg-3); line-height: 1.35; }
+
+/* ── Hover: every icon has its own small move ── */
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-ic { transform: translateY(-4px) scale(1.06); }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .acc { fill: var(--blue-200); }
+
+.ol-ic g { transform-box: fill-box; }
+.ol-steam { opacity: .55; transform-origin: 50% 100%; }
+.ol-steam-low { opacity: 0; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-steam { animation: ol-steam 1.3s ease-in-out infinite; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-steam-low { animation-delay: .35s; }
+@keyframes ol-steam { 0% { opacity: 0; transform: translateY(4px) scaleY(.8); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(-6px) scaleY(1.1); } }
+
+/* café cup: steam only (above) · bakery: the loaf hops out of the oven */
+.ol-loaf { transform-origin: 50% 100%; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-loaf { animation: ol-hop 1.1s cubic-bezier(.34, 1.4, .64, 1) infinite; }
+@keyframes ol-hop { 0%, 62%, 100% { transform: none; } 24% { transform: translateY(-6px); } 42% { transform: scale(1.05, .94); } }
+
+/* burger: the top bun lifts and settles */
+.ol-bun { transform-origin: 50% 100%; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-bun { animation: ol-bun 1.2s cubic-bezier(.34, 1.4, .64, 1) infinite; }
+@keyframes ol-bun { 0%, 60%, 100% { transform: none; } 20% { transform: translateY(-7px) rotate(-7deg); } 38% { transform: translateY(-5px) rotate(5deg); } }
+
+/* food court: the hanging sign swings */
+.ol-sign { transform-box: view-box; transform-origin: 32px 10px; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-sign { animation: ol-swing 1.5s ease-in-out infinite; }
+@keyframes ol-swing { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(7deg); } 75% { transform: rotate(-6deg); } }
+
+/* fine dining: the cloche tips open and lets the steam out */
+.ol-dome { transform-box: view-box; transform-origin: 51px 46px; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-dome { animation: ol-lid 1.8s cubic-bezier(.34, 1.3, .64, 1) infinite; }
+@keyframes ol-lid { 0%, 12%, 88%, 100% { transform: none; } 32%, 68% { transform: translateY(-3px) rotate(-26deg); } }
+
+/* cloud kitchen: the bag zips off, speed lines behind it */
+.ol-bag { transform-origin: 50% 100%; }
+.ol-speed { opacity: 0; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-bag { animation: ol-zip .9s ease-in-out infinite; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-speed { animation: ol-speed .9s ease-in-out infinite; }
+@keyframes ol-zip { 0%, 100% { transform: none; } 45% { transform: translate(3px, -3px) rotate(5deg); } }
+@keyframes ol-speed { 0% { opacity: 0; transform: translateX(5px); } 45% { opacity: 1; } 100% { opacity: 0; transform: translateX(-5px); } }
+
+/* bar: the foam swells and bubbles rise */
+.ol-foam { transform-origin: 50% 100%; }
+.ol-bubbles circle { transform-box: fill-box; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-foam { animation: ol-foam 1.5s ease-in-out infinite; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-bubbles circle { animation: ol-bubble 1.2s ease-in infinite; }
+.ol-bubbles circle:nth-child(2) { animation-delay: .35s !important; }
+.ol-bubbles circle:nth-child(3) { animation-delay: .7s !important; }
+@keyframes ol-foam { 0%, 100% { transform: none; } 50% { transform: scale(1.06, 1.12); } }
+@keyframes ol-bubble { from { transform: none; opacity: 1; } to { transform: translateY(-14px); opacity: 0; } }
+
+/* chains: the storefronts bob one after the other */
+.ol-store { transform-origin: 50% 100%; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-store { animation: ol-store 1.3s cubic-bezier(.34, 1.4, .64, 1) infinite; }
+:is(.ol-card:hover, .ol-card:focus-visible, .ol-cell.is-open .ol-card) .ol-store-b { animation-delay: .16s; }
+@keyframes ol-store { 0%, 55%, 100% { transform: none; } 20% { transform: translateY(-5px) scaleY(1.04); } }
+
+/* ── The preview card ──────────────────────────────────────── */
+.ol-pop {
+  position: absolute; left: 50%; top: 50%; z-index: 2;
+  width: min(340px, calc(100vw - 24px));
+  translate: calc(-50% + var(--dx, 0px)) -50%;
+  overflow: hidden; border-radius: 20px;
+  background: var(--white-100); text-align: left;
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--black-0) 8%, transparent),
+    0 28px 56px -16px color-mix(in oklab, var(--black-0) 26%, transparent),
+    0 10px 20px -10px color-mix(in oklab, var(--black-0) 14%, transparent);
+  opacity: 0; visibility: hidden; transform: scale(.86);       /* grows out of its tile */
+  transition: opacity .16s var(--ease-emph), transform .22s var(--ease-emph), visibility 0s linear .22s;
+}
+.ol-cell.is-open .ol-pop {
+  opacity: 1; visibility: visible; transform: none;
+  transition: opacity .2s var(--ease-emph), transform .5s cubic-bezier(.34, 1.45, .64, 1), visibility 0s;
+}
+
+.ol-vis {
+  position: relative; overflow: hidden;
+  padding: 78px 20px 16px;
+  background: radial-gradient(120% 100% at 50% 0%, var(--blue-100), var(--white-200) 72%);
+  border-bottom: 1px solid var(--stroke-weak);
+}
+/* the outlet's icon again, large and faint, as a backdrop */
+.ol-ghost { position: absolute; right: -16px; top: -12px; width: 128px; opacity: .1; transform: rotate(-9deg); color: var(--black-100); pointer-events: none; }
+
+.ol-scene {
+  position: relative; z-index: 1;
+  display: grid; gap: 6px; padding: 10px 12px;
+  border-radius: 12px; background: var(--white-100);
+  box-shadow: var(--sh-ring), var(--sh-2);
+  font-size: 11.5px; color: var(--fg);
+}
+.ol-scene.has-peek > .peek { --peek-w: 72px; }
+.ol-cell.is-open .ol-scene { animation: ol-scene .55s cubic-bezier(.34, 1.4, .64, 1) .04s both; }
+@keyframes ol-scene { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+
+.olt-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
+.olt-row b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 600; }
+.olt-row .ui-num { flex: none; font-size: 11px; }
+.olt-row s { margin-right: 4px; color: var(--fg-caption); }
+.olt-sub { font-size: 11px; color: var(--fg-3); }
+.ol-scene .tag { flex: none; height: 20px; font-size: 10.5px; }
+.olt-tokens { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.olt-token { display: grid; gap: 1px; padding: 6px 8px; border-radius: 8px; font-size: 10.5px; background: var(--white-200); color: var(--fg-3); }
+.olt-token b { font-size: 13px; color: inherit; }
+.olt-token.ok { background: var(--ok-soft); color: var(--ok); }
+.olt-token.warn { background: var(--warn-soft); color: var(--warn); }
+.olt-brands { display: grid; gap: 4px; }
+.olt-brand { display: flex; align-items: center; gap: 6px; font-size: 11.5px; }
+.olt-brand b { font-weight: 600; }
+.olt-brand .ui-num { margin-left: auto; color: var(--fg-2); }
+.olt-bar { display: block; height: 6px; overflow: hidden; border-radius: 99px; background: var(--white-400); }
+.olt-bar i { display: block; height: 100%; border-radius: inherit; background: var(--green-500); transform-origin: left center; }
+.ol-cell.is-open .olt-bar i { animation: ol-fill .9s var(--ease-out-cubic) .3s both; }
+@keyframes ol-fill { from { transform: scaleX(0); } }
+
+.ol-pop-body { display: grid; gap: 10px; padding: 16px 20px 18px; }
+.ol-pop-h { display: grid; gap: 1px; }
+.ol-pop-h b { font-family: var(--font-display); font-variation-settings: 'opsz' 32; font-size: 18px; font-weight: 600; letter-spacing: -0.02em; }
+.ol-pop-h span { font-size: 12.5px; color: var(--fg-3); }
+.ol-pop-body p { font-size: 14px; line-height: 1.5; color: var(--fg-2); }
+.ol-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.ol-pills li { padding: 4px 10px; border-radius: 99px; background: var(--white-300); font-size: 12.5px; font-weight: 500; color: var(--fg-2); }
+.ol-link { font-size: 13.5px; }
+/* the copy settles in just after the card */
+.ol-cell.is-open .ol-pop-body > :not(.ol-pills), .ol-cell.is-open .ol-pills li { animation: ol-up .45s var(--ease-out-cubic) both; }
+.ol-cell.is-open .ol-pop-body > :nth-child(1) { animation-delay: .08s; }
+.ol-cell.is-open .ol-pop-body > :nth-child(2) { animation-delay: .13s; }
+.ol-cell.is-open .ol-pills li { animation-delay: calc(.18s + var(--k, 0) * .05s); }
+.ol-cell.is-open .ol-pop-body > :nth-child(4) { animation-delay: .32s; }
+@keyframes ol-up { from { opacity: 0; transform: translateY(6px); } }
+
+/* Close button for touch screens, where there is no hover to leave */
+.ol-x { position: absolute; top: 10px; right: 10px; z-index: 2; display: none; place-items: center; width: 28px; height: 28px; border-radius: 99px; background: var(--white-100); box-shadow: var(--sh-ring), var(--sh-1); color: var(--fg-2); }
+@media (hover: none) { .ol-x { display: grid; } }
+
+/* The chef over the grid waves while you browse, but keeps quiet so the previews have the stage */
+.ol-grid.has-peek:hover > .peek.is-in:not(.talk) .peek-say { opacity: 0; transform: translateY(4px) scale(.94); }
+
+@media (max-width: 760px) {
+  .ol-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ol-cell:nth-child(1) .ol-card { border-top-left-radius: calc(var(--r-3xl) - 1px); }
+  .ol-cell:nth-child(2) .ol-card { border-top-right-radius: calc(var(--r-3xl) - 1px); }
+  .ol-cell:nth-child(7) .ol-card { border-bottom-left-radius: calc(var(--r-3xl) - 1px); }
+  .ol-cell:nth-child(8) .ol-card { border-bottom-right-radius: calc(var(--r-3xl) - 1px); }
+  .ol-card { padding: 24px 10px 20px; }
+  .ol-ic { width: 54px; margin-bottom: 10px; }
+  .ol-kind { display: none; }
+}
