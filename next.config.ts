@@ -22,7 +22,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
   "img-src 'self' data: https:",
-  "connect-src 'self'",
+  `connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL ?? 'https://api.posomega.com'}`,
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",

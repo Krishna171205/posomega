@@ -65,24 +65,134 @@
 .faq-a p { font-size: 15px; line-height: 1.6; color: var(--fg-3); animation: blur-in .3s var(--ease-out-cubic); }
 @media (max-width: 860px) { .faq-grid { grid-template-columns: 1fr; } .faq-side { position: static; } .faq-a { padding-right: 0; } }
 
-/* ── Closing CTA ────────────────────────────────────────── */
-.cta { overflow: hidden; }
-.cta::before {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background-image: radial-gradient(color-mix(in oklab, var(--black-0) 8%, transparent) 1px, transparent 1px);
-  background-size: 16px 16px;
-  -webkit-mask-image: radial-gradient(60% 70% at 50% 50%, #000, transparent);
-  mask-image: radial-gradient(60% 70% at 50% 50%, #000, transparent);
+/* ── Closing CTA: the demo form on the left, the call inside a black Ω on the right ── */
+.cta { padding-top: clamp(24px, 4vw, 56px); }
+.cta-wrap {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center; gap: clamp(32px, 6vw, 96px);
 }
-.cta-inner { position: relative; display: grid; justify-items: center; text-align: center; gap: 16px; }
+@media (max-width: 900px) { .cta-wrap { grid-template-columns: 1fr; } }
+
+/* The form */
+.cta-form-side { display: grid; gap: 14px; max-width: 560px; }
 .cta-h {
   font-family: var(--font-display); font-variation-settings: 'opsz' 32; font-weight: 600;
-  font-size: clamp(40px, 6.4vw, 76px); line-height: .95; letter-spacing: -0.04em; text-wrap: balance;
-  padding-bottom: .1em;
+  font-size: clamp(32px, 3.6vw, 46px); line-height: 1; letter-spacing: -0.03em; text-wrap: balance;
 }
-.cta .lede { margin-inline: auto; }
-.cta .hero-ctas { margin-top: 12px; }
-.cta-meta { margin-top: 8px; font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--fg-caption); }
+.cta-lede { font-size: 16px; line-height: 1.5; color: var(--fg-3); max-width: 32em; }
+.cta-lede a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
+.cta-form { display: grid; gap: 22px; margin-top: 8px; }
+.cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 14px; }
+@media (max-width: 520px) { .cta-grid { grid-template-columns: 1fr; } }
+
+/* Boxed fields with the label above, as on Petpooja's demo form, in the site's own tokens */
+.cta-field { display: grid; gap: 6px; }
+.cta-label { font-size: 13px; font-weight: 500; color: var(--fg-2); }
+.cta-label span { color: var(--fg-caption); font-weight: 400; }
+.cta-input {
+  display: flex; align-items: stretch; height: 46px; border-radius: 10px; overflow: hidden;
+  background: var(--white-300); box-shadow: inset 0 0 0 1px var(--stroke), var(--sh-1);
+  transition: box-shadow .2s var(--ease-emph), background-color .2s var(--ease-emph);
+}
+.cta-field:focus-within .cta-input { background: var(--white-100); box-shadow: inset 0 0 0 1.5px var(--blue-500), 0 0 0 4px var(--blue-100); }
+.cta-field.has-error .cta-input { box-shadow: inset 0 0 0 1.5px var(--bad); }
+.cta-input input {
+  flex: 1; min-width: 0; padding: 0 14px;
+  border: 0; outline: 0; background: transparent;
+  font: inherit; font-size: 15px; color: var(--fg);
+}
+.cta-cc { display: flex; align-items: center; padding: 0 12px; border-right: 1px solid var(--stroke); font-size: 14px; color: var(--fg-2); }
+.cta-err { font-size: 11.5px; color: var(--bad); }
+.cta-wide { grid-column: 1 / -1; }
+.cta-roles { display: grid; gap: 8px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.cta-roles legend { padding: 0; margin-bottom: 8px; }
+.cta-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.cta-chip { position: relative; cursor: pointer; }
+.cta-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.cta-chip span {
+  display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 99px;
+  font-size: 13.5px; color: var(--fg-2); background: var(--white-100); box-shadow: inset 0 0 0 1px var(--stroke);
+  transition: background-color .2s var(--ease-emph), box-shadow .2s var(--ease-emph), color .2s var(--ease-emph);
+}
+.cta-chip:hover span { background: var(--white-300); }
+.cta-chip input:checked + span { background: var(--blue-100); color: var(--blue-600); box-shadow: inset 0 0 0 1.5px var(--blue-500); }
+.cta-chip input:focus-visible + span { box-shadow: inset 0 0 0 1.5px var(--blue-500), 0 0 0 4px var(--blue-100); }
+.cta-roles.has-error .cta-chip span { box-shadow: inset 0 0 0 1px var(--bad); }
+
+
+
+.cta-submit-row { display: grid; gap: 10px; }
+.cta-submit { gap: 8px; width: 100%; height: 48px; justify-content: center; font-size: 15px; }
+.cta-submit[disabled] { opacity: .7; }
+.cta-fine { font-size: 12px; color: var(--fg-caption); }
+.cta-fine a { color: var(--fg-3); text-decoration: underline; text-underline-offset: 2px; }
+
+.cta-done { display: grid; gap: 12px; justify-items: start; animation: blur-in .45s var(--ease-out-cubic); }
+.cta-done-mark { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--ok-soft); color: var(--ok); }
+
+/* The illustration */
+.cta-art { position: relative; width: 100%; max-width: 600px; justify-self: center; }
+@media (max-width: 900px) { .cta-art { max-width: 400px; } }
+.cs-art { display: block; width: 100%; height: auto; overflow: visible; color: var(--black-100); }
+.cs-art .eye { transform-box: fill-box; transform-origin: center; animation: ink-blink 4.2s infinite; }
+.cs-agent .eye { animation-delay: -2.1s; }
+/* Finer ink than the crew elsewhere: the parts' outline and detail weights, thinned */
+.cs-art .ink[stroke-width="2.2"] { stroke-width: 1.7; }
+.cs-art .ink[stroke-width="1.6"] { stroke-width: 1.25; }
+.cs-art .ink[stroke-width="1.8"] { stroke-width: 1.4; }
+.cs-omega { filter: drop-shadow(0 18px 28px rgb(16 16 16 / .18)); }
+.cs-art .pk-hand { transform: none; opacity: 1; }   /* the shared hand starts hidden for the peek entrance */
+.cs-lidbox { fill: var(--white-200); stroke: currentColor; stroke-width: 1.4; }
+.cs-lid { font-family: var(--font-display); font-variation-settings: 'opsz' 32; font-weight: 600; font-size: 26px; fill: currentColor; }
+
+/* Every moving part turns about its own box */
+.cs-art :is(.cs-phone, .cs-waves path, .cs-caller, .cs-agent-head, .cs-type-a, .cs-type-b, .cs-mic) {
+  transform-box: fill-box; transform-origin: center;
+}
+/* All of it only moves while the section is on screen */
+.cta-art:not(.is-live) .cs-art * { animation-play-state: paused !important; }
+/* Backdrop disc and the small floating things around the call */
+.cs-backdrop { fill: var(--blue-100); }
+.cs-obj { fill: #fff; stroke: currentColor; stroke-width: 1.4; stroke-linejoin: round; }
+.cs-tick { fill: var(--blue-500); }
+.cs-float { animation: cs-bob 4.2s ease-in-out infinite; }
+@keyframes cs-bob { 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .cs-float { animation: none; } }
+
+/* The call line: blue dots that travel from the caller to the agent, a ping where it lands */
+.cs-link { fill: none; stroke: var(--blue-500); stroke-width: 4.5; stroke-linecap: round; stroke-dasharray: .1 11; animation: cs-link-flow .9s linear infinite; }
+@keyframes cs-link-flow { to { stroke-dashoffset: -11.1; } }
+.cs-link-ping { fill: none; stroke: var(--blue-500); stroke-width: 2; transform-box: fill-box; transform-origin: center; animation: cs-ping 1.8s var(--ease-out-cubic) infinite; }
+@keyframes cs-ping { from { opacity: .9; transform: scale(.5); } to { opacity: 0; transform: scale(2.2); } }
+@media (prefers-reduced-motion: reduce) { .cs-link, .cs-link-ping { animation: none; } }
+
+.cs-phone { transform-origin: 50% 70%; animation: cs-shake 2.4s linear infinite; }
+@keyframes cs-shake {
+  0%, 34%, 100% { transform: rotate(0); }
+  4%, 12%, 20%, 28% { transform: rotate(-9deg); }
+  8%, 16%, 24%, 32% { transform: rotate(9deg); }
+}
+.cs-waves path { opacity: 0; animation: cs-wave 2.4s ease-out infinite; }
+.cs-waves path:nth-child(2) { animation-delay: .2s; }
+@keyframes cs-wave { 0%, 40%, 100% { opacity: 0; } 8%, 30% { opacity: 1; } }
+
+.cs-caller { transform-origin: 50% 100%; animation: cs-nod 4.8s ease-in-out infinite; }
+@keyframes cs-nod { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(-2.5deg); } }
+.cs-agent-head { transform-origin: 50% 90%; animation: cs-talk 3.2s ease-in-out infinite; }
+@keyframes cs-talk { 0%, 100% { transform: rotate(0) translateY(0); } 30% { transform: rotate(2deg) translateY(-1px); } 60% { transform: rotate(-1.5deg); } }
+.cs-mic { animation: cs-mic 1.2s ease-in-out infinite; }
+@keyframes cs-mic { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+.cs-type-a { animation: cs-type .5s ease-in-out infinite; }
+.cs-wave-hand { transform-box: fill-box; transform-origin: 50% 100%; animation: cs-wave-hi 3.6s ease-in-out infinite; }
+@keyframes cs-wave-hi { 0%, 55%, 100% { transform: rotate(0); } 62%, 76% { transform: rotate(-12deg); } 69%, 83% { transform: rotate(8deg); } }
+.cs-type-b { animation: cs-type .5s ease-in-out infinite .25s; }
+@keyframes cs-type { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-art * { animation: none !important; }
+  .cs-waves path { opacity: 1; }
+}
 
 /* ── Footer ─────────────────────────────────────────────── */
 .footer { border-top: 1px solid var(--stroke-weak); background: var(--bg-2); padding-block: clamp(48px, 6vw, 72px) 28px; }

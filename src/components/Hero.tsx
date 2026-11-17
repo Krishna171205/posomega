@@ -3,42 +3,85 @@ import { useEffect, useRef, useState } from 'react'
 import { Icon } from './Icons'
 import { HERO } from '@/content/home'
 import DotGrid from './ui/DotGrid'
-import { AppWindow, KitchenWindow, OrderWindow, OfflineWindow } from './hero/HeroScene'
+import { AppWindow, FLOW, KitchenWindow, OrderWindow, ReceiptWindow } from './hero/HeroScene'
 
 /**
- * The hero scene, after attio.com's (values read from its markup): the app window
- * starts big (75% of the viewport, its pane min(40.35vw, 775px) tall) and shrinks
- * to about 87% as the page scrolls down to it, as attio.com's does. Once it
- * has settled, the three small windows grow out from the corner nearest it, each
- * sized and placed like Attio's (30% of the window box, up to 268–300px, hanging
- * 96–160px past its edges). They stay out, each playing its own loop (HeroScene.tsx),
- * while the app window cycles its own scene (the .s1/.s2/.s3 steps below).
+ * The hero scene, after attio.com's: an app window with three small windows around it.
  *
- *  show    slice of the timeline in which it appears
- *  origin  the corner it grows from, as fractions of its own box
- *  to      where it docks, as fractions of the window (before the window's scale)
- *  span    slice of the timeline in which it docks
+ *  1. Scrolling down to it pulls the window back from full size to 87% (the pull-back).
+ *  2. The story starts as soon as the window is in sight, like the product video under
+ *     attio.com's headline: the three small windows (the new Swiggy order, the kitchen
+ *     display, the bill printer) drift in by themselves and stay in while it plays.
+ *  3. The story plays by itself (FLOW in HeroScene): the order is
+ *     accepted and flies into the Online board, which opens; its KOT drops onto the
+ *     kitchen display, is marked ready, and the display flies into Kitchen; the printer
+ *     prints the bill, which flies into the order in Orders; the rider takes it, it is
+ *     delivered, and Reports opens with the day's numbers ticking up. Then it loops.
  *
- * While shown and not yet docking, each can be dragged about and thrown; docking
- * then flies it in from wherever it was left.
+ * While a small window waits it can be picked up, dragged and thrown. The story waits
+ * while one is held, and docking then flies it in from wherever it was left.
+ * A demo cursor does the clicking. `at` is ms from the start of a loop.
+ */
+type Beat = { at: number; step?: number; cursor?: string; click?: boolean; hide?: boolean; restart?: boolean }
+const TIMELINE: Beat[] = [
+  { at: 450, cursor: '.hs-float-order .fw-accept' },
+  { at: 1000, step: FLOW.accept, click: true },
+  { at: 1450, step: FLOW.orderDock, hide: true },
+  { at: 2100, step: FLOW.accepted },
+  { at: 3050, step: FLOW.kot },
+  { at: 3950, step: FLOW.rider },
+  { at: 4650, cursor: '.hs-float-kds .fw-bump' },
+  { at: 5250, step: FLOW.bump, click: true },
+  { at: 5700, step: FLOW.kdsDock, hide: true },
+  { at: 6400, step: FLOW.ready },
+  { at: 7200, step: FLOW.print },
+  { at: 9100, step: FLOW.billDock },
+  { at: 9800, step: FLOW.billed },
+  { at: 10950, step: FLOW.arrived },
+  { at: 11350, cursor: '.app-act' },
+  { at: 11950, step: FLOW.pickup, click: true },
+  { at: 12400, hide: true },
+  { at: 13300, step: FLOW.delivered },
+  { at: 14200, cursor: '.app-nav-reports' },
+  { at: 14800, step: FLOW.reports, click: true },
+  { at: 15250, hide: true },
+  { at: 18900, cursor: '.app-nav-customers' },
+  { at: 19500, step: FLOW.customers, click: true },
+  { at: 19950, hide: true },
+  { at: 23300, cursor: '.app-nav-inventory' },
+  { at: 23900, step: FLOW.inventory, click: true },
+  { at: 24350, hide: true },
+  { at: 27600, step: FLOW.end },
+  { at: 28200, restart: true },          // one loop: 28 seconds
+]
+
+/**
+ * Each small window: the slice of the pinned scroll it comes in over, the step it docks
+ * at, and what it docks into (the first of these that is on screen). `from` is the step
+ * its part starts: from then until it docks it sits in front of the dashboard; the rest
+ * of the time it waits behind it (hovering or dragging brings it forward).
  */
 const FLOATS = [
-  { key: 'order', show: [0.02, 0.12], origin: [1, 1], to: [0.34, 0.2], span: [0.24, 0.46] },
-  { key: 'kds', show: [0.05, 0.15], origin: [0, 1], to: [0.03, 0.27], span: [0.46, 0.68] },
-  { key: 'bill', show: [0.08, 0.18], origin: [1, 0], to: [0.8, 0.42], span: [0.68, 0.9] },
+  { key: 'order', show: [0.03, 0.27], from: 0, dock: FLOW.orderDock, into: ['.ob-slot', '.app-nav-online'] },
+  { key: 'kds', show: [0.2, 0.44], from: FLOW.kot, dock: FLOW.kdsDock, into: ['.kd-slot', '.app-nav-kitchen'] },
+  { key: 'bill', show: [0.37, 0.61], from: FLOW.print, dock: FLOW.billDock, into: ['.inv', '.app-detail'] },
 ] as const
-/** How far the window shrinks before the small windows appear */
-const SHRINK = 0.872   // attio.com settles its window at scale(0.872275)
-/* The app window's own scene (.s1/.s2/.s3: new order, KOT, paid) plays on a clock
-   once the hero is in view, over PLAY ms, holds, and loops. The window's size and the
-   small windows follow the scroll instead (see readTargets). */
-const SETTLE_DELAY = 600, SETTLE = 1800, PLAY = 9000, HOLD = 3000
 
-const STEPS = ['Swiggy order accepted', 'KOT fired to the hot line', 'Table 7 paid, bill printed']
+const STEPS = [
+  { label: 'Order accepted', at: FLOW.accepted },
+  { label: 'Fired to kitchen', at: FLOW.kot },
+  { label: 'Food ready', at: FLOW.ready },
+  { label: 'Bill printed', at: FLOW.billed },
+  { label: 'Delivered', at: FLOW.delivered },
+]
 
+const shown = (el: Element | null): el is HTMLElement => !!el && el.getClientRects().length > 0
+
+/** How far the window pulls back as the page scrolls down to it (attio.com settles at scale(0.872275)) */
+const SHRINK = 0.872
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
-const ease = (t: number) => 1 - Math.pow(1 - t, 3)
 const smooth = (t: number) => t * t * (3 - 2 * t)
+const ease = (t: number) => 1 - Math.pow(1 - t, 3)
 
 /**
  * attio.com's mechanical letter flip:
@@ -81,7 +124,7 @@ function Rotator({ words }: { words: readonly string[] }) {
                       </span>
                     )
                   })}
-                  {k < w.split(' ').length - 1 ? '\u00A0' : null}
+                  {k < w.split(' ').length - 1 ? ' ' : null}
                 </span>
               ))
             })()}
@@ -123,253 +166,335 @@ function DemoForm() {
   )
 }
 
+type Drag = { x: number; y: number; vx: number; vy: number; tilt: number; lift: number; held: boolean }
+
 export function Hero() {
   const stageRef = useRef<HTMLDivElement>(null)
+  const stickyRef = useRef<HTMLDivElement>(null)
   const frameRef = useRef<HTMLDivElement>(null)
+  const cursorRef = useRef<HTMLDivElement>(null)
   const winRef = useRef<HTMLDivElement>(null)
   const stepsRef = useRef<HTMLOListElement>(null)
   const floatRefs = useRef<(HTMLDivElement | null)[]>([])
-  const [active, setActive] = useState(-1)
+  const dragRefs = useRef<(HTMLDivElement | null)[]>([])
+  const drags = useRef<Drag[]>(FLOATS.map(() => ({ x: 0, y: 0, vx: 0, vy: 0, tilt: 0, lift: 0, held: false })))
+  const held = useRef(false)
+  /** How far each small window has come in (0 to 1), from the scroll */
+  const showRef = useRef<number[]>(FLOATS.map(() => 1))
+  /** The story may play. From first sight, like attio.com's hero video (no scroll gate) */
+  const armedRef = useRef(true)
+  /** The story has started: the windows stay in even if the page scrolls back a little */
+  const latchRef = useRef(false)
+  const syncRef = useRef<() => void>(() => {})
+  const paintRef = useRef<() => void>(() => {})
+  const loopsRef = useRef(0)
+  const [step, setStep] = useState(0)
+  const stepRef = useRef(0)
+  stepRef.current = step
 
+  /* The scroll: the pull-back on the way down to the stage, then, while it is pinned,
+     the three small windows coming in. Both trail the scroll a little, so they glide
+     rather than stepping with each notch of the wheel. Wide screens that allow motion
+     only; elsewhere the windows simply show and the story plays when on screen. */
   useEffect(() => {
     const stage = stageRef.current
+    const sticky = stickyRef.current
     const frame = frameRef.current
     const win = winRef.current
-    if (!stage || !frame || !win) return
+    if (!stage || !sticky || !frame || !win) return
     const steps = stepsRef.current
     const mqWide = window.matchMedia('(min-width: 900px)')
     const mqCalm = window.matchMedia('(prefers-reduced-motion: reduce)')
-    stage.classList.add('has-js')
-
     let size = { w: 0, h: 0 }
-    let navH = 68
-    let animated = false
-    let lastStep = -2
-    let winScale = 1
-    let stickyH = 0, frameTop = 0, stepsH = 0     // layout, for centring the shrunk window
-    /* Scroll position: targets read from the page (aT: the approach before the pin,
-       pT: progress while pinned) and the smoothed values the scene is drawn with, so
-       it glides after the wheel instead of jumping a notch at a time. */
-    let aT = 0, pT = 0, aS = 0, pS = 0
-    let elapsed = 0                                       // ms of timeline played while in view
-    let visible = true
-
-    /* Dragging: an offset per window, with momentum, a tilt into the motion and a lift */
-    type Drag = { x: number; y: number; vx: number; vy: number; tilt: number; lift: number; held: boolean }
-    const drag: Drag[] = FLOATS.map(() => ({ x: 0, y: 0, vx: 0, vy: 0, tilt: 0, lift: 0, held: false }))
-    const home = FLOATS.map(() => ({ x: 0, y: 0 }))       // where CSS puts it, inside the frame
-    const nudge = FLOATS.map(() => 0)                      // sideways shift that keeps it on screen
-    const dims = FLOATS.map(() => ({ w: 0, h: 0 }))
-    const bounds = FLOATS.map(() => ({ minX: 0, maxX: 0, minY: 0, maxY: 0 }))
-    const free = FLOATS.map(() => false)
-    let grab: { i: number; id: number; sx: number; sy: number; x0: number; y0: number; samples: { t: number; x: number; y: number }[] } | null = null
-    let zTop = 4
-    let tick = 0
-    let last = 0
+    let navH = 68, stickyH = 0, frameTop = 0, stepsH = 0
+    let aT = 0, aS = 0, pT = 0, pS = 0, raf = 0, last = 0
+    const on = () => mqWide.matches && !mqCalm.matches
 
     function measure() {
       size = { w: frame!.offsetWidth, h: frame!.offsetHeight }
       navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 68
-      stickyH = (frame!.offsetParent as HTMLElement | null)?.clientHeight ?? window.innerHeight
+      stickyH = sticky!.clientHeight || window.innerHeight
       frameTop = frame!.offsetTop
       stepsH = steps?.offsetHeight ?? 0
-      const vw = document.documentElement.clientWidth
-      const r = frame!.getBoundingClientRect()
-      FLOATS.forEach((_, i) => {
-        const el = floatRefs.current[i]
-        if (!el) return
-        const fw = el.offsetWidth
-        const fh = el.offsetHeight
-        dims[i] = { w: fw, h: fh }
-        home[i] = { x: el.offsetLeft, y: el.offsetTop }
-        const vx = r.left + el.offsetLeft
-        nudge[i] = Math.min(vw - 12 - fw, Math.max(12, vx)) - vx
-        const left = vx + nudge[i]
-        bounds[i] = {
-          minX: 12 - left, maxX: vw - 12 - fw - left,
-          minY: 6 - frame!.offsetTop - el.offsetTop, maxY: size.h + 40 - fh * 0.5 - el.offsetTop,
-        }
-        clampDrag(i)
-      })
     }
-    function clampDrag(i: number) {
-      const d = drag[i]
-      const b = bounds[i]
-      let hx = false
-      let hy = false
-      if (d.x < b.minX) { d.x = b.minX; hx = true } else if (d.x > b.maxX) { d.x = b.maxX; hx = true }
-      if (d.y < b.minY) { d.y = b.minY; hy = true } else if (d.y > b.maxY) { d.y = b.maxY; hy = true }
-      return { hx, hy }
-    }
-
-    function readTargets() {
-      animated = mqWide.matches && !mqCalm.matches
-      if (!animated) { aT = 0; pT = 0; return }
-      // As on attio.com: at the top of the page the app window is full size and alone;
-      // scrolling down to it pulls it back and brings the small windows out, and
-      // scrolling up reverses that. What plays inside the windows runs on its own clock.
+    function targets() {
+      if (!on()) { aT = 0; pT = 1; return }
       const r = stage!.getBoundingClientRect()
       const startTop = r.top + window.scrollY - navH
       aT = clamp01(startTop > 0 ? window.scrollY / startTop : 1)
-      const loop = elapsed - SETTLE_DELAY - SETTLE
-      pT = loop <= 0 ? 0 : clamp01((loop % (PLAY + HOLD)) / PLAY)
+      const range = stage!.offsetHeight - sticky!.offsetHeight
+      pT = range > 0 ? clamp01((navH - r.top) / range) : 1
     }
-
-    /** Momentum, tilt and lift for the windows; returns whether anything still moves */
-    function stepDrag(dt: number) {
-      let busy = !!grab
-      const calm = mqCalm.matches
-      drag.forEach((d, i) => {
-        if (d.held) {
-          const lean = calm ? 0 : Math.max(-7, Math.min(7, d.vx * 0.005))
-          d.tilt += (lean - d.tilt) * Math.min(1, dt * 14)
-          d.lift += (1 - d.lift) * Math.min(1, dt * 14)
-          return
-        }
-        if (Math.abs(d.vx) > 3 || Math.abs(d.vy) > 3) {
-          d.x += d.vx * dt
-          d.y += d.vy * dt
-          const f = Math.exp(-dt * 4.5)                    // friction
-          d.vx *= f
-          d.vy *= f
-          const { hx, hy } = clampDrag(i)
-          if (hx) d.vx *= -0.35                            // a soft bounce off the screen edge
-          if (hy) d.vy *= -0.35
-          busy = true
-        } else {
-          d.vx = 0
-          d.vy = 0
-        }
-        d.tilt += -d.tilt * Math.min(1, dt * 9)
-        d.lift += -d.lift * Math.min(1, dt * 10)
-        if (Math.abs(d.tilt) > 0.03 || d.lift > 0.003) busy = true
-      })
-      return busy
-    }
-
     function paint() {
-      stage!.classList.toggle('is-pinned', animated)
-      // 1. The window settles (shrinks) into place
-      winScale = animated ? 1 - (1 - SHRINK) * smooth(aS) : 1
-      win!.style.transform = animated ? `scale(${winScale.toFixed(4)})` : ''
-      // The layout box stays full size while the window is drawn smaller, so as it
-      // shrinks the window and the steps under it are lifted together: the steps follow
-      // the window's visible bottom edge, and the pair ends up centred in the pinned view.
-      if (animated) {
-        const visH = winScale * size.h
-        const want = Math.max(8, (stickyH - (visH + 24 + stepsH)) / 2)
-        const shift = (want - (frameTop + (size.h - visH) / 2)) * smooth(aS)
-        frame!.style.transform = `translate3d(0, ${shift.toFixed(1)}px, 0)`
-        if (steps) steps.style.transform = `translate3d(0, ${(shift - (size.h - visH) / 2 + 4).toFixed(1)}px, 0)`
-      } else {
+      const wide = on()
+      stage!.classList.toggle('is-pinned', wide)
+      if (!wide) {
+        win!.style.transform = ''
         frame!.style.transform = ''
         if (steps) steps.style.transform = ''
+      } else {
+        const k = smooth(aS)
+        const sc = 1 - (1 - SHRINK) * k
+        win!.style.transform = `scale(${sc.toFixed(4)})`
+        // The layout box stays full size while the window is drawn smaller, so the frame
+        // and the steps are lifted together until the pair sits centred in the view.
+        const visH = sc * size.h
+        const want = Math.max(8, (stickyH - (visH + 24 + stepsH)) / 2)
+        const shift = (want - (frameTop + (size.h - visH) / 2)) * k
+        frame!.style.transform = `translate3d(0, ${shift.toFixed(1)}px, 0)`
+        if (steps) steps.style.transform = `translate3d(0, ${(shift - (size.h - visH) / 2 + 4).toFixed(1)}px, 0)`
       }
-      // 2. Then the small windows grow out of their corners, and 3. dock one by one
-      const cx = size.w / 2
-      const cy = size.h / 2
+      // The small windows, each over its own slice of the pinned scroll
       FLOATS.forEach((f, i) => {
         const el = floatRefs.current[i]
+        const v = !wide || latchRef.current ? 1 : ease(clamp01((pS - f.show[0]) / (f.show[1] - f.show[0])))
+        showRef.current[i] = v
         if (!el) return
-        const d = drag[i]
-        // Grow in once, after the window settles, then stay out and draggable for good
-        // (they no longer dock: each plays its own loop, as on attio.com)
-        // they grow out once the window has mostly pulled back, one after another
-        const show = animated ? ease(clamp01((aS - 0.45 - i * 0.12) / 0.3)) : 1
-        const t = 0
-        const isFree = show > 0.98 && t < 0.001
-        if (isFree !== free[i]) {
-          free[i] = isFree
-          el.classList.toggle('is-free', isFree)
-          if (!isFree && grab?.i === i) release(null)      // the timeline takes over mid-drag
-        }
-        const sc = (0.72 + 0.28 * show) * (1 - 0.55 * t)
-        const ox = f.origin[0] * dims[i].w
-        const oy = f.origin[1] * dims[i].h
-        // where it rests (on screen, plus any drag) and where it docks (through the window's scale)
-        const fx = nudge[i] + d.x
-        const fy = d.y
-        const tx = cx + winScale * (f.to[0] * size.w - cx) - home[i].x - ox * (1 - sc)
-        const ty = cy + winScale * (f.to[1] * size.h - cy) - home[i].y - oy * (1 - sc)
-        const X = fx + (tx - fx) * t
-        const Y = fy + (ty - fy) * t
-        const k = 1 - t
-        const mx = dims[i].w / 2
-        const my = dims[i].h / 2
-        // tilt and lift turn about the centre; growing and docking scale about its corner
-        el.style.transform =
-          `translate3d(${X.toFixed(1)}px, ${Y.toFixed(1)}px, 0) ` +
-          `translate(${mx}px, ${my}px) rotate(${(d.tilt * k).toFixed(2)}deg) scale(${(1 + 0.035 * d.lift).toFixed(4)}) translate(${-mx}px, ${-my}px) ` +
-          `translate(${ox}px, ${oy}px) scale(${sc.toFixed(4)}) translate(${-ox}px, ${-oy}px)`
-        el.style.opacity = (show * (t > 0.82 ? Math.max(0, 1 - (t - 0.82) / 0.18) : 1)).toFixed(3)
-        const blur = (1 - show) * 3 + (t > 0.6 ? (t - 0.6) * 5 : 0)
-        el.style.filter = blur > 0.02 ? `blur(${blur.toFixed(2)}px)` : ''
+        el.style.setProperty('--show', v.toFixed(4))
+        el.classList.toggle('is-out', v < 0.98)
       })
-      stage!.classList.toggle('is-scrolling', animated && aS > 0.02)
-      // Docking order: each window "lands" just before its slice ends.
-      const step = !animated ? -1 : pS >= 0.86 ? 2 : pS >= 0.64 ? 1 : pS >= 0.42 ? 0 : -1
-      if (step !== lastStep) {
-        lastStep = step
-        stage!.classList.toggle('s1', step >= 0)
-        stage!.classList.toggle('s2', step >= 1)
-        stage!.classList.toggle('s3', step >= 2)
-        setActive(step)
-      }
     }
-
-    function frameTick(now: number) {
-      tick = 0
-      const raw = (now - last) / 1000
+    paintRef.current = paint
+    function tick(now: number) {
+      raf = 0
+      const dt = Math.min(0.25, (now - last) / 1000)
       last = now
-      const dt = Math.min(0.05, raw)                       // physics steps stay small and stable
-      // the timeline pauses while a window is held, and while the hero is off screen
-      if (animated && visible && !grab) elapsed += Math.min(0.25, raw) * 1000
-      readTargets()
-      // about 170ms behind the timeline (a slow, soft follow), on the real frame time, so a slow machine
-      // catches up as quickly as a fast one
-      const k = 1 - Math.exp(-Math.min(0.25, raw) * 6)
+      targets()
+      const k = 1 - Math.exp(-dt * 6)
       aS += (aT - aS) * k
       pS += (pT - pS) * k
       if (Math.abs(aT - aS) < 0.0004) aS = aT
       if (Math.abs(pT - pS) < 0.0004) pS = pT
-      if (pT < pS - 0.5) pS = pT                           // the loop restarts: jump back, don't rewind
-      const moving = stepDrag(dt)
       paint()
-      if (moving || aS !== aT || pS !== pT || (animated && visible)) tick = requestAnimationFrame(frameTick)
+      if (aS !== aT || pS !== pT) raf = requestAnimationFrame(tick)
     }
-    const kick = () => { if (!tick) { last = performance.now(); tick = requestAnimationFrame(frameTick) } }
+    const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick) } }
+    const onResize = () => { measure(); kick() }
 
-    /** Whichever window is hovered or clicked, the app or a small one, comes to the front */
-    const raise = (el: HTMLElement | null | undefined) => {
-      if (el && el.style.zIndex !== String(zTop)) el.style.zIndex = String(++zTop)
+    measure()
+    targets()
+    aS = aT
+    pS = pT
+    paint()
+    const ro = new ResizeObserver(onResize)
+    ro.observe(frame)
+    window.addEventListener('scroll', kick, { passive: true })
+    window.addEventListener('resize', onResize)
+    mqWide.addEventListener('change', onResize)
+    mqCalm.addEventListener('change', onResize)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('scroll', kick)
+      window.removeEventListener('resize', onResize)
+      mqWide.removeEventListener('change', onResize)
+      mqCalm.removeEventListener('change', onResize)
+      if (raf) cancelAnimationFrame(raf)
     }
-    // hovering raises too, except while another window is being dragged across it
-    const enters = [...FLOATS.map((_, i) => () => { if (!grab) raise(floatRefs.current[i]) }), () => { if (!grab) raise(shell) }]
-    const shell = win.parentElement
-    const downShell = (e: PointerEvent) => { if (e.pointerType !== 'mouse' || e.button === 0) raise(shell) }
+  }, [])
+
+  /* The story's clock. It runs while the stage is on screen, the tab is visible and the
+     scroll has brought the three windows in, and stands still while one is held. Each
+     time it starts, it starts from the top. */
+  useEffect(() => {
+    const sticky = stickyRef.current
+    const frame = frameRef.current
+    if (!sticky || !frame) return
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let clock = 0
+    let elapsed = 0
+    let next = 0
+    let last = 0
+    let inView = false
+
+    const cursor = () => cursorRef.current
+    function park() {
+      const c = cursor()
+      if (!c) return
+      c.classList.remove('on', 'down')
+      c.style.transform = `translate(${(frame!.offsetWidth * 0.62).toFixed(0)}px, ${(frame!.offsetHeight * 0.9).toFixed(0)}px)`
+    }
+    function point(sel: string) {
+      const c = cursor()
+      const t = frame!.querySelector(sel)
+      if (!c) return
+      if (!shown(t)) { c.classList.remove('on'); return }
+      const f = frame!.getBoundingClientRect()
+      const r = t.getBoundingClientRect()
+      c.style.transform = `translate(${(r.left - f.left + r.width * 0.58).toFixed(1)}px, ${(r.top - f.top + r.height * 0.62).toFixed(1)}px)`
+      c.classList.add('on')
+    }
+    function click() {
+      const c = cursor()
+      if (!c || !c.classList.contains('on')) return
+      c.classList.add('down')
+      window.setTimeout(() => c.classList.remove('down'), 200)
+    }
+    function fire(b: Beat) {
+      if (b.restart) { loopsRef.current++; begin(); return }
+      if (b.cursor) point(b.cursor)
+      if (b.click) click()
+      if (b.hide) cursor()?.classList.remove('on')
+      if (b.step !== undefined) setStep(b.step)
+    }
+    function tick() {
+      const now = performance.now()
+      if (!held.current) elapsed += now - last
+      last = now
+      while (next < TIMELINE.length && TIMELINE[next].at <= elapsed) {
+        const b = TIMELINE[next++]
+        fire(b)
+        if (b.restart) break
+      }
+    }
+    function begin() {
+      elapsed = 0
+      next = 0
+      last = performance.now()
+      park()
+      setStep(0)
+    }
+    function stop() {
+      if (clock) window.clearInterval(clock)
+      clock = 0
+    }
+    let paused = false
+    function sync() {
+      if (calm.matches) { stop(); park(); setStep(FLOW.delivered); return }   // the finished story, held still
+      const can = inView && armedRef.current
+      const go = can && !document.hidden
+      if (go && clock) return                                                // already playing
+      if (go) {
+        if (paused) {                                                        // back to the tab: carry on
+          paused = false
+          last = performance.now()
+        } else {
+          latchRef.current = true
+          loopsRef.current = 0
+          begin()
+        }
+        clock = window.setInterval(tick, 50)
+        return
+      }
+      stop()
+      if (can) { paused = true; return }                                     // tab hidden: hold it where it is
+      paused = false
+      park()
+      setStep(0)
+    }
+    syncRef.current = sync
+
+    const io = new IntersectionObserver(([e]) => {
+      const was = inView
+      inView = e.isIntersecting
+      if (!inView) latchRef.current = false                  // gone: the scroll brings them in again next time
+      if (inView !== was) { sync(); paintRef.current() }
+    }, { threshold: 0.05 })
+    io.observe(sticky)
+    document.addEventListener('visibilitychange', sync)
+    calm.addEventListener('change', sync)
+    return () => {
+      stop()
+      io.disconnect()
+      syncRef.current = () => {}
+      document.removeEventListener('visibilitychange', sync)
+      calm.removeEventListener('change', sync)
+    }
+  }, [])
+
+  /* Picking the small windows up: drag with a tilt into the motion and a lift, throw
+     with momentum, a soft bounce off the screen edge. Only while one is in and waiting. */
+  useEffect(() => {
+    const frame = frameRef.current
+    if (!frame) return
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let grab: { i: number; id: number; sx: number; sy: number; x0: number; y0: number; box: DOMRect; samples: { t: number; x: number; y: number }[] } | null = null
+    let raf = 0
+    let last = 0
+
+    const isWaiting = (i: number) => showRef.current[i] > 0.98 && stepRef.current < FLOATS[i].dock
+    function paint(i: number) {
+      const el = dragRefs.current[i]
+      const d = drags.current[i]
+      if (!el) return
+      const w = el.offsetWidth / 2
+      const h = el.offsetHeight / 2
+      el.style.transform = `translate3d(${d.x.toFixed(1)}px, ${d.y.toFixed(1)}px, 0) translate(${w}px, ${h}px) rotate(${d.tilt.toFixed(2)}deg) scale(${(1 + 0.035 * d.lift).toFixed(4)}) translate(${-w}px, ${-h}px)`
+    }
+    /** Keep the window on screen: its box at rest, moved by the drag */
+    function clampTo(i: number, box: DOMRect) {
+      const d = drags.current[i]
+      const vw = document.documentElement.clientWidth
+      const f = frame!.getBoundingClientRect()
+      const minX = 8 - box.left, maxX = vw - 8 - box.right
+      const minY = f.top - 60 - box.top, maxY = f.bottom + 40 - box.bottom
+      let hx = false, hy = false
+      if (d.x < minX) { d.x = minX; hx = true } else if (d.x > maxX) { d.x = maxX; hx = true }
+      if (d.y < minY) { d.y = minY; hy = true } else if (d.y > maxY) { d.y = maxY; hy = true }
+      return { hx, hy }
+    }
+    const boxes: (DOMRect | null)[] = FLOATS.map(() => null)
+    function frameTick(now: number) {
+      raf = 0
+      const dt = Math.min(0.05, (now - last) / 1000)
+      last = now
+      let busy = !!grab
+      drags.current.forEach((d, i) => {
+        if (!isWaiting(i)) return
+        if (d.held) {
+          const lean = calm.matches ? 0 : Math.max(-7, Math.min(7, d.vx * 0.005))
+          d.tilt += (lean - d.tilt) * Math.min(1, dt * 14)
+          d.lift += (1 - d.lift) * Math.min(1, dt * 14)
+        } else {
+          if (Math.abs(d.vx) > 3 || Math.abs(d.vy) > 3) {
+            d.x += d.vx * dt
+            d.y += d.vy * dt
+            const fr = Math.exp(-dt * 4.5)
+            d.vx *= fr
+            d.vy *= fr
+            const b = boxes[i]
+            if (b) {
+              const { hx, hy } = clampTo(i, b)
+              if (hx) d.vx *= -0.35
+              if (hy) d.vy *= -0.35
+            }
+            busy = true
+          } else { d.vx = 0; d.vy = 0 }
+          d.tilt -= d.tilt * Math.min(1, dt * 9)
+          d.lift -= d.lift * Math.min(1, dt * 10)
+          if (Math.abs(d.tilt) > 0.03 || d.lift > 0.003) busy = true
+        }
+        paint(i)
+      })
+      if (busy) raf = requestAnimationFrame(frameTick)
+    }
+    const kick = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(frameTick) } }
 
     function down(i: number, e: PointerEvent) {
       if (e.pointerType === 'mouse' && e.button !== 0) return
-      const el = floatRefs.current[i]
-      if (!el) return
-      raise(el)
-      if (!free[i] || !mqWide.matches) return
+      if (!isWaiting(i)) return
+      const el = dragRefs.current[i]
+      const outer = floatRefs.current[i]
+      if (!el || !outer) return
       e.preventDefault()
       el.setPointerCapture(e.pointerId)
-      const d = drag[i]
+      const d = drags.current[i]
       d.held = true
       d.vx = 0
       d.vy = 0
-      grab = { i, id: e.pointerId, sx: e.clientX, sy: e.clientY, x0: d.x, y0: d.y, samples: [{ t: e.timeStamp, x: d.x, y: d.y }] }
-      el.classList.add('is-grabbed')
+      held.current = true                                   // the story waits for you
+      const r = el.getBoundingClientRect()
+      const box = new DOMRect(r.left - d.x, r.top - d.y, r.width, r.height)
+      boxes[i] = box
+      grab = { i, id: e.pointerId, sx: e.clientX, sy: e.clientY, x0: d.x, y0: d.y, box, samples: [{ t: e.timeStamp, x: d.x, y: d.y }] }
+      outer.classList.add('is-grabbed')
       kick()
     }
     function move(e: PointerEvent) {
       if (!grab || e.pointerId !== grab.id) return
-      const d = drag[grab.i]
+      const d = drags.current[grab.i]
       d.x = grab.x0 + (e.clientX - grab.sx)
       d.y = grab.y0 + (e.clientY - grab.sy)
-      clampDrag(grab.i)
+      clampTo(grab.i, grab.box)
       const sm = grab.samples
       sm.push({ t: e.timeStamp, x: d.x, y: d.y })
       while (sm.length > 2 && e.timeStamp - sm[0].t > 90) sm.shift()
@@ -377,59 +502,90 @@ export function Hero() {
       if (span > 0) { d.vx = (d.x - sm[0].x) / span; d.vy = (d.y - sm[0].y) / span }
       kick()
     }
-    function release(e: PointerEvent | null) {
-      if (!grab || (e && e.pointerId !== grab.id)) return
+    function release(e: PointerEvent) {
+      if (!grab || e.pointerId !== grab.id) return
       const { i, samples } = grab
-      const d = drag[i]
+      const d = drags.current[i]
       const lastSample = samples[samples.length - 1]
-      // a window that was held still before letting go is not thrown
-      if (!e || e.timeStamp - lastSample.t > 70 || mqCalm.matches) { d.vx = 0; d.vy = 0 }
+      if (e.timeStamp - lastSample.t > 70 || calm.matches) { d.vx = 0; d.vy = 0 }   // held still, not thrown
       d.vx = Math.max(-3000, Math.min(3000, d.vx))
       d.vy = Math.max(-3000, Math.min(3000, d.vy))
       d.held = false
+      held.current = false
       floatRefs.current[i]?.classList.remove('is-grabbed')
       grab = null
       kick()
     }
 
-    const onResize = () => { measure(); kick() }
-    measure()
-    readTargets()
-    aS = aT
-    pS = pT
-    paint()
-    const ro = new ResizeObserver(onResize)               // also catches sizes settling as fonts load
-    ro.observe(frame)
-    floatRefs.current.forEach(el => { if (el) ro.observe(el) })
     const downs = FLOATS.map((_, i) => (e: PointerEvent) => down(i, e))
-    floatRefs.current.forEach((el, i) => el?.addEventListener('pointerdown', downs[i]))
-    shell?.addEventListener('pointerdown', downShell)
-    floatRefs.current.forEach((el, i) => el?.addEventListener('pointerenter', enters[i]))
-    shell?.addEventListener('pointerenter', enters[FLOATS.length])
+    dragRefs.current.forEach((el, i) => el?.addEventListener('pointerdown', downs[i]))
     window.addEventListener('pointermove', move)
     window.addEventListener('pointerup', release)
     window.addEventListener('pointercancel', release)
-    const io = new IntersectionObserver(([en]) => { visible = en.isIntersecting; kick() })
-    io.observe(stage)
-    window.addEventListener('resize', onResize)
-    mqWide.addEventListener('change', onResize)
-    mqCalm.addEventListener('change', onResize)
     return () => {
-      ro.disconnect()
-      floatRefs.current.forEach((el, i) => el?.removeEventListener('pointerdown', downs[i]))
-      shell?.removeEventListener('pointerdown', downShell)
-      floatRefs.current.forEach((el, i) => el?.removeEventListener('pointerenter', enters[i]))
-      shell?.removeEventListener('pointerenter', enters[FLOATS.length])
+      dragRefs.current.forEach((el, i) => el?.removeEventListener('pointerdown', downs[i]))
       window.removeEventListener('pointermove', move)
       window.removeEventListener('pointerup', release)
       window.removeEventListener('pointercancel', release)
-      io.disconnect()
-      window.removeEventListener('resize', onResize)
-      mqWide.removeEventListener('change', onResize)
-      mqCalm.removeEventListener('change', onResize)
-      if (tick) cancelAnimationFrame(tick)
+      if (raf) cancelAnimationFrame(raf)
+      held.current = false
     }
   }, [])
+
+  /* Docking: each small window flies, from wherever it is, into the section of the app
+     that has just opened for it, and fades into the spot where its content lands.
+     Step 0 puts them all back where they wait; on a loop they come back in by themselves. */
+  useEffect(() => {
+    const frame = frameRef.current
+    if (!frame) return
+    if (step === 0) {
+      floatRefs.current.forEach((el, i) => {
+        const inner = dragRefs.current[i]
+        Object.assign(drags.current[i], { x: 0, y: 0, vx: 0, vy: 0, tilt: 0, lift: 0, held: false })
+        for (const n of [el, inner]) {
+          if (!n) continue
+          n.style.transition = 'none'
+          n.style.transform = ''
+          n.style.opacity = ''
+          n.style.filter = ''
+          void n.offsetWidth                                 // settle there before transitions return
+          n.style.transition = ''
+        }
+        if (el) {
+          el.classList.remove('is-again')
+          void el.offsetWidth; el.classList.add('is-again')        // first start and every loop: they come in by themselves
+        }
+      })
+      return
+    }
+    FLOATS.forEach((f, i) => {
+      if (step !== f.dock) return
+      const el = floatRefs.current[i]
+      const inner = dragRefs.current[i]
+      if (!el || !inner || !shown(el)) return
+      const d = drags.current[i]
+      d.vx = 0; d.vy = 0; d.tilt = 0; d.lift = 0
+      inner.style.transition = 'transform .35s var(--ease-out-cubic)'
+      inner.style.transform = `translate3d(${d.x.toFixed(1)}px, ${d.y.toFixed(1)}px, 0)`
+      const target = f.into.map(s => frame.querySelector(s)).find(shown) ?? frame
+      const o = el.getBoundingClientRect()                  // the resting box, before the drag
+      const b = target.getBoundingClientRect()
+      const s = Math.min(0.85, Math.max(0.22, b.width / o.width))
+      // scaling about the resting box's centre also scales the drag offset
+      const dx = b.left + b.width / 2 - (o.left + o.width / 2) - s * d.x
+      const dy = b.top + b.height / 2 - (o.top + o.height / 2) - s * d.y
+      el.style.transition = 'transform .6s cubic-bezier(.65, 0, .35, 1), opacity .26s linear .36s, filter .26s linear .36s'
+      el.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(${s.toFixed(3)})`
+      el.style.opacity = '0'
+      el.style.filter = 'blur(2px)'
+    })
+  }, [step])
+
+  const floatEls = [
+    <OrderWindow key="o" pressed={step >= FLOW.accept} />,
+    <KitchenWindow key="k" fired={step >= FLOW.kot} bumped={step >= FLOW.bump} />,
+    <ReceiptWindow key="r" printing={step >= FLOW.print} />,
+  ]
 
   return (
     <section className="hero" aria-labelledby="hero-title">
@@ -492,8 +648,8 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="hs" ref={stageRef}>
-        <div className="hs-sticky">
+      <div className={`hs ${step === FLOW.end ? 'is-fading' : ''}`} ref={stageRef} data-step={step}>
+        <div className="hs-sticky" ref={stickyRef}>
           <div className="hs-frame" ref={frameRef}>
             <div className="hs-shell">
               <div className="win hs-win" ref={winRef}>
@@ -501,29 +657,39 @@ export function Hero() {
                   <div className="win-dots"><span /><span /><span /></div>
                   <div className="win-title">cafe.posomega.com</div>
                 </div>
-                <div className="win-pane hs-pane"><AppWindow /></div>
+                <div className="win-pane hs-pane"><AppWindow step={step} /></div>
               </div>
             </div>
 
             <div className="hs-floats" aria-hidden="true">
-              {[<OrderWindow key="o" />, <KitchenWindow key="k" />, <OfflineWindow key="off" />].map((w, i) => (
+              {FLOATS.map((f, i) => (
                 <div
-                  key={FLOATS[i].key}
-                  className={`hs-float hs-float-${FLOATS[i].key}`}
+                  key={f.key}
+                  className={`hs-float hs-float-${f.key} ${step < f.dock ? 'is-free' : ''} ${step >= f.from && step <= f.dock ? 'is-play' : ''}`}
                   ref={el => { floatRefs.current[i] = el }}
+                  style={{ ['--i' as string]: i }}
                 >
-                  <div className="hs-float-in" style={{ animationDelay: `${380 + i * 90}ms` }}>{w}</div>
+                  <div className="hs-float-show">
+                    <div className="hs-float-drag" ref={el => { dragRefs.current[i] = el }}>{floatEls[i]}</div>
+                  </div>
                 </div>
               ))}
+            </div>
+
+            <div className="hs-cursor" ref={cursorRef} aria-hidden="true">
+              <svg width="18" height="20" viewBox="0 0 18 20"><path d="M2 1.5v15.2l4.1-3.9 2.6 5.9 2.9-1.3-2.6-5.8 5.7-.3z" fill="#101010" stroke="#fff" strokeWidth="1.4" strokeLinejoin="round" /></svg>
             </div>
           </div>
 
           <ol className="hs-steps" ref={stepsRef} aria-label="What just happened">
-            {STEPS.map((s, i) => (
-              <li key={s} className={active >= i ? 'done' : ''}>
-                <span className="n ui-num">{active >= i ? <Icon.Check size={11} /> : i + 1}</span>{s}
-              </li>
-            ))}
+            {STEPS.map((s, i) => {
+              const done = step >= s.at && step < FLOW.end
+              return (
+                <li key={s.label} className={done ? 'done' : ''}>
+                  <span className="n ui-num">{done ? <Icon.Check size={11} /> : i + 1}</span>{s.label}
+                </li>
+              )
+            })}
           </ol>
         </div>
       </div>

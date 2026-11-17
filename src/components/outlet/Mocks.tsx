@@ -1,6 +1,6 @@
 'use client'
 import { Icon } from '../Icons'
-import { Bar, KitchenWindow, OfflineWindow, OrderWindow, inr, useSeconds } from '../hero/HeroScene'
+import { Bar, KitchenWindow, OfflineWindow, OrderWindow, inr, useSeconds } from './Windows'
 import type { Mock } from '@/content/types'
 
 /*

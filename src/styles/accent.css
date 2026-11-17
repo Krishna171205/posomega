@@ -12,7 +12,9 @@
 .fm-seg button[aria-selected='true'] svg { color: var(--blue-500); }
 .hs-steps li.done .n { background: var(--blue-500); }
 .faq-item.open .faq-plus { background: var(--blue-500); }
-.crew-dots span.on { background: var(--blue-500); }
+.crew-bar b, .crew-steps::after { background: var(--blue-500); }
+.crew-step.is-past .crew-step-role::before { background: var(--blue-500); box-shadow: inset 0 0 0 1.5px var(--blue-500); }
+.crew-step.on .crew-step-role::before { box-shadow: inset 0 0 0 1.5px var(--blue-500), 0 0 0 4px var(--blue-100); }
 
 /* Inline links read as links, the way Notion's "Learn more →" do */
 .text-link { color: var(--blue-500); }

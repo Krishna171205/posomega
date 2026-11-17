@@ -18,7 +18,8 @@ export const HERO = {
   /** Facts carried over from the committed homepage copy. */
   meta: ['Same-day setup', 'No setup fee', 'Offline on Android'],
   sub: 'Omega bills, fires KOTs, syncs Swiggy and Zomato, and tracks stock, even when the internet doesn’t.',
-  primary: { label: 'Start free trial', href: 'https://cafe.posomega.com/onboard' },
+  /** Sign-up happens in the POS app; under `next dev` this opens the local preview of the redesigned page (app/signup). */
+  primary: { label: 'Start free trial', href: process.env.NODE_ENV === 'development' ? '/signup' : 'https://cafe.posomega.com/onboard' },
   secondary: { label: 'Talk to sales', href: '/get-started' },
 }
 
@@ -72,14 +73,24 @@ export const MENU: MenuItem[] = [
   { id: 4, name: 'Aloo Paratha', price: 140, cat: 'Kitchen', tone: '#d79b67', img: u('photo-1565557623262-b51c2513a641') },
   { id: 5, name: 'Paneer Tikka', price: 280, cat: 'Kitchen', tone: '#c4572f', img: u('photo-1567188040759-fb8a883dc6d8') },
   { id: 6, name: 'Banoffee Pie', price: 240, cat: 'Desserts', tone: '#d8b648', img: u('photo-1565958011703-44f9829ba187') },
+  { id: 7, name: 'Veg Biryani', price: 260, cat: 'Kitchen', tone: '#c98a3c', img: u('photo-1563379091339-03b21ab4a4f8') },
+  { id: 8, name: 'Masala Dosa', price: 160, cat: 'Kitchen', tone: '#d9a45c', img: u('photo-1668236543090-82eba5ee5976') },
+  { id: 9, name: 'Pav Bhaji', price: 180, cat: 'Kitchen', tone: '#b8572c', img: u('photo-1606491956689-2ea866880c84') },
+  { id: 10, name: 'Samosa (2 pc)', price: 60, cat: 'Kitchen', tone: '#c08a43', img: u('photo-1601050690597-df0568f70950') },
+  { id: 11, name: 'Idli Vada', price: 120, cat: 'Kitchen', tone: '#e6dccb', img: u('photo-1630383249896-424e482df921') },
+  { id: 12, name: 'Cold Coffee', price: 160, cat: 'Drinks', tone: '#8a6a4f', img: u('photo-1517701604599-bb29b565090c') },
 ]
 
-export type FloorTable = { n: number; s: 'free' | 'seated' | 'reserved' | 'bill'; covers?: number; t?: string; amt?: number }
+export type FloorTable = { n: number; s: 'free' | 'seated' | 'reserved' | 'bill'; covers?: number; t?: string; amt?: number; captain?: string; kots?: number }
+/** Main floor is T1-T12, the terrace T13-T20 (sample data). */
 export const FLOOR: FloorTable[] = [
-  { n: 1, s: 'free' }, { n: 2, s: 'seated', covers: 2, t: '0:24', amt: 640 }, { n: 3, s: 'bill', covers: 4, t: '1:12', amt: 2180 },
-  { n: 4, s: 'reserved', covers: 2, t: '20:00' }, { n: 5, s: 'seated', covers: 6, t: '0:48', amt: 3420 }, { n: 6, s: 'free' },
-  { n: 7, s: 'seated', covers: 3, t: '0:32', amt: 1150 }, { n: 8, s: 'free' }, { n: 9, s: 'reserved', covers: 4, t: '20:30' },
-  { n: 10, s: 'seated', covers: 2, t: '1:05', amt: 920 }, { n: 11, s: 'free' }, { n: 12, s: 'bill', covers: 4, t: '1:48', amt: 2760 },
+  { n: 1, s: 'free' }, { n: 2, s: 'seated', covers: 2, t: '0:24', amt: 640, captain: 'Arjun', kots: 2 }, { n: 3, s: 'bill', covers: 4, t: '1:12', amt: 2180, captain: 'Riya', kots: 3 },
+  { n: 4, s: 'reserved', covers: 2, t: '20:00' }, { n: 5, s: 'seated', covers: 6, t: '0:48', amt: 3420, captain: 'Arjun', kots: 4 }, { n: 6, s: 'free' },
+  { n: 7, s: 'seated', covers: 3, t: '0:32', amt: 1150, captain: 'Meher', kots: 2 }, { n: 8, s: 'free' }, { n: 9, s: 'reserved', covers: 4, t: '20:30' },
+  { n: 10, s: 'seated', covers: 2, t: '1:05', amt: 920, captain: 'Riya', kots: 2 }, { n: 11, s: 'free' }, { n: 12, s: 'bill', covers: 4, t: '1:48', amt: 2760, captain: 'Kabir', kots: 5 },
+  { n: 13, s: 'seated', covers: 4, t: '0:15', amt: 1480, captain: 'Meher', kots: 1 }, { n: 14, s: 'free' }, { n: 15, s: 'reserved', covers: 2, t: '21:00' },
+  { n: 16, s: 'seated', covers: 2, t: '0:41', amt: 760, captain: 'Kabir', kots: 2 }, { n: 17, s: 'free' }, { n: 18, s: 'bill', covers: 5, t: '1:20', amt: 3110, captain: 'Riya', kots: 4 },
+  { n: 19, s: 'free' }, { n: 20, s: 'seated', covers: 3, t: '0:09', amt: 540, captain: 'Arjun', kots: 1 },
 ]
 
 export type KdsTicket = { id: string; ch: Channel; where: string; items: string[]; station: 'Hot' | 'Cold' | 'Bar'; mins: number; flag?: string }
@@ -98,6 +109,9 @@ export const STOCK: StockRow[] = [
   { name: 'Sourdough loaf', unit: 'pc', onHand: 28, need: 30, daysLeft: 1.1, note: 'Running low' },
   { name: 'Whole milk', unit: 'L', onHand: 42, need: 30, daysLeft: 3.2, note: 'Healthy' },
   { name: 'Tea leaves', unit: 'kg', onHand: 6.5, need: 2, daysLeft: 5.0, note: 'Healthy' },
+  { name: 'Basmati rice', unit: 'kg', onHand: 36, need: 12, daysLeft: 4.4, note: 'Healthy' },
+  { name: 'Coffee beans', unit: 'kg', onHand: 9.5, need: 4, daysLeft: 3.8, note: 'Healthy' },
+  { name: 'Takeaway cups', unit: 'pc', onHand: 640, need: 240, daysLeft: 4.6, note: 'Healthy' },
 ]
 
 export const RECIPE = {
@@ -113,12 +127,15 @@ export const RECIPE = {
   ],
 }
 
-export type QueueItem = { id: string; ch: Channel; items: string; prep: string }
+export type QueueItem = { id: string; ch: Channel; items: string; prep: string; status: 'Preparing' | 'Ready' | 'Picked up' }
+/** The online board behind the new order in the Platform section (sample data). */
 export const QUEUE: QueueItem[] = [
-  { id: '#0422', ch: 'swiggy', items: '1× Cold Coffee, 1× Club Sandwich', prep: '12 min' },
-  { id: '#0423', ch: 'dine', items: '2× Cold Coffee', prep: '6 min' },
-  { id: '#0424', ch: 'zomato', items: '1× Veg Biryani', prep: '18 min' },
-  { id: '#0425', ch: 'qr', items: '1× Masala Chai, 1× Cold Coffee', prep: '5 min' },
+  { id: '#0422', ch: 'swiggy', items: '1× Cold Coffee, 1× Club Sandwich', prep: '12 min', status: 'Preparing' },
+  { id: '#0424', ch: 'zomato', items: '1× Veg Biryani, 1× Raita', prep: '18 min', status: 'Preparing' },
+  { id: '#0425', ch: 'qr', items: '1× Masala Chai, 1× Cold Coffee', prep: '5 min', status: 'Ready' },
+  { id: '#0417', ch: 'zomato', items: '2× Cold Brew', prep: '9 min', status: 'Ready' },
+  { id: '#0413', ch: 'swiggy', items: '1× Paneer Tikka Roll', prep: '21 min', status: 'Picked up' },
+  { id: '#0411', ch: 'zomato', items: '1× Chole Bhature, 1× Lassi', prep: '24 min', status: 'Picked up' },
 ]
 
 export const DAY_END = {

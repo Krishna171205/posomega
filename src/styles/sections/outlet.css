@@ -207,3 +207,32 @@
   .ol-photo:first-child { grid-column: 1 / -1; }
   .ol-photo { height: 200px; }
 }
+
+/* ── The small looping windows the outlet scenes use (outlet/Windows.tsx) ──
+   They began as the homepage hero's side windows; their rules moved here with them. */
+@keyframes float-in { from { opacity: 0; filter: blur(3px); transform: translateY(10px); } to { opacity: 1; filter: none; transform: none; } }
+@keyframes av-grow-x { from { transform: scaleX(0); } to { transform: none; } }
+.fw-ticket.done { border-top-color: var(--green-500); transition: opacity .6s .3s, transform .6s .3s var(--ease-out-cubic); opacity: .55; transform: translateY(-4px) scale(.98); }
+.fw-ticket.done .fw-ticket-t { color: var(--green-600); }
+.fw-in { animation: float-in .5s var(--ease-out-cubic) both; }
+.fw-accepted { display: flex; align-items: center; justify-content: center; gap: 6px; height: 30px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--green-600); background: color-mix(in oklab, var(--green-500) 12%, var(--white-100)); animation: float-in .35s var(--ease-out-cubic) both; }
+.fw-ring.is-done { color: var(--green-600); }
+.ui-btn.is-press { transform: scale(.96); filter: brightness(.92); transition: transform .15s, filter .15s; }
+.fw-off { padding: 12px; display: grid; gap: 10px; min-height: 228px; align-content: start; }
+.fw-off-s svg { flex: none; }
+.fw-off-s { display: flex; align-items: center; gap: 7px; min-height: 30px; padding: 6px 10px; line-height: 1.3; border-radius: 8px; font-size: 12px; font-weight: 600; animation: float-in .35s var(--ease-out-cubic) both; }
+.is-online .fw-off-s, .is-syncing .fw-off-s { background: var(--blue-100); color: var(--blue-600); }
+.is-offline .fw-off-s { background: var(--warn-soft); color: var(--warn); }
+.is-synced .fw-off-s { background: var(--ok-soft); color: var(--ok); }
+.fw-off-log { display: grid; gap: 6px; min-height: 120px; align-content: start; }
+.fw-off-log li { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; background: var(--white-200); box-shadow: var(--sh-ring); font-size: 11.5px; }
+.fw-off-log .tag { margin-left: auto; font-size: 10.5px; white-space: nowrap; }
+.fw-off-i { flex: none; width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; background: var(--white-100); color: var(--fg-2); box-shadow: var(--sh-ring); }
+.fw-off-o { display: grid; min-width: 0; line-height: 1.25; }
+.fw-off-o b { font-size: 12px; font-weight: 600; }
+.fw-off-o .ui-num { font-size: 10.5px; color: var(--fg-3); white-space: nowrap; }
+li.fw-off-idle { background: none; box-shadow: none; padding: 6px 2px; color: var(--fg-3); }
+.fw-off-bar { height: 4px; border-radius: 99px; background: var(--white-400); overflow: hidden; }
+.fw-off-bar i { display: block; height: 100%; background: var(--green-500); transform-origin: left; animation: av-grow-x 1.8s linear both; }
+.fw-off-f { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 8px; padding-top: 8px; border-top: 1px solid var(--stroke-weak); font-size: 11px; color: var(--fg-3); }
+@media (prefers-reduced-motion: reduce) { .fw-in, .fw-accepted, .fw-off-s, .fw-off-bar i { animation: none; } }

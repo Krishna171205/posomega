@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from 'react'
 import { Icon } from './Icons'
 import { HERO } from '@/content/home'
 
+/** Sign-in happens in the POS app. Under `next dev` this opens the local preview of the redesigned page (app/login). */
+const SIGN_IN = process.env.NODE_ENV === 'development' ? '/login' : 'https://cafe.posomega.com/login'
+
 type MenuItem = { href: string; t: string; d: string }
 type Menu = { id: string; label: string; items: MenuItem[]; foot?: MenuItem }
 
@@ -148,7 +151,7 @@ export function Nav() {
           </nav>
 
           <div className="nav-cta">
-            <a href="https://cafe.posomega.com/login" className="btn btn-ghost btn-sm nav-hide-sm">Sign in</a>
+            <a href={SIGN_IN} className="btn btn-ghost btn-sm nav-hide-sm">Sign in</a>
             <a href={HERO.secondary.href} className="btn btn-outline btn-sm nav-hide-md">{HERO.secondary.label}</a>
             <a href={HERO.primary.href} className="btn btn-blue btn-sm">{HERO.primary.label}</a>
             <button className="nav-burger" aria-label="Open menu" aria-expanded={drawer} onClick={() => setDrawer(true)}>
@@ -176,7 +179,7 @@ export function Nav() {
             <div className="drawer-group">
               <a href="/integrations" className="drawer-link" onClick={() => setDrawer(false)}>Integrations</a>
               <a href="/pricing" className="drawer-link" onClick={() => setDrawer(false)}>Pricing</a>
-              <a href="https://cafe.posomega.com/login" className="drawer-link">Sign in</a>
+              <a href={SIGN_IN} className="drawer-link">Sign in</a>
             </div>
           </div>
           <div className="drawer-foot">

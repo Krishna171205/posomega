@@ -1,7 +1,9 @@
 // Thin fetch wrapper. Mirrors omegaui's lib/api.ts. Cookies carry auth where applicable;
 // all errors are normalised into ApiError so callers can branch on status.
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
+// The Omega API. Called directly (not through a rewrite) so the backend sees the visitor's
+// own address, which its per-IP limit on lead submissions depends on.
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.posomega.com";
 
 export class ApiError extends Error {
   status: number;

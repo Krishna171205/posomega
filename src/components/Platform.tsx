@@ -203,6 +203,11 @@ export function Platform() {
                           <f.icon size={16} />
                         </button>
                       ))}
+                      {/* The rest of the portal, so the rail reads like the real app; not screens here */}
+                      <span className="pf-rail-sep" aria-hidden="true" />
+                      {[Icon.Coffee, Icon.Users, Icon.Clock, Icon.Truck, Icon.Store].map((I, k) => (
+                        <span key={k} className="pf-rail-more" aria-hidden="true"><I size={16} /></span>
+                      ))}
                     </nav>
                     <div className="pf-screens">
                       <BareMocks value={true}>

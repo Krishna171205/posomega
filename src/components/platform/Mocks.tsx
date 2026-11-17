@@ -1,8 +1,8 @@
 'use client'
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { Fragment, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { Icon } from '../Icons'
 import { ChannelBadge } from '../hero/HeroScene'
-import { CHANNEL_LABEL, DAY_END, FLOOR, KDS, MENU, QUEUE, RECIPE, STOCK, type Channel, type KdsTicket } from '@/content/home'
+import { CHANNEL_LABEL, DAY_END, FLOOR, HERO_INCOMING, KDS, MENU, QUEUE, RECIPE, STOCK, type Channel, type KdsTicket, type QueueItem } from '@/content/home'
 
 const inr = (n: number, d = 0) => '₹' + n.toLocaleString('en-IN', { minimumFractionDigits: d, maximumFractionDigits: d })
 
@@ -110,22 +110,29 @@ export function FloorMock() {
   const [sel, setSel] = useState(5)
   const t = FLOOR.find(x => x.n === sel)!
   return (
-    <MockWindow title="Tables · Main floor">
+    <MockWindow title="Tables">
       <div className="floor">
         <div className="floor-grid">
-          {FLOOR.map(x => (
-            <button key={x.n} className={`floor-t st-${x.s} ${sel === x.n ? 'sel' : ''}`} onClick={() => setSel(x.n)} aria-pressed={sel === x.n}>
-              <b>T{x.n}</b>
-              <span>{x.s === 'free' ? 'Free' : x.s === 'reserved' ? x.t : `${x.covers} · ${x.t}`}</span>
-            </button>
+          {[['Main floor', FLOOR.slice(0, 12)], ['Terrace', FLOOR.slice(12)]].map(([zone, tables]) => (
+            <Fragment key={zone as string}>
+              <span className="floor-zone">{zone as string}</span>
+              {(tables as typeof FLOOR).map(x => (
+                <button key={x.n} className={`floor-t st-${x.s} ${sel === x.n ? 'sel' : ''}`} onClick={() => setSel(x.n)} aria-pressed={sel === x.n}>
+                  <b>T{x.n}</b>
+                  <span>{x.s === 'free' ? 'Free' : x.s === 'reserved' ? x.t : `${x.covers} · ${x.t}`}</span>
+                </button>
+              ))}
+            </Fragment>
           ))}
         </div>
         <div className="floor-side">
           <div className="floor-side-h"><b>Table {t.n}</b><span className={`tag ${t.s === 'bill' ? 'tag-warn' : t.s === 'seated' ? 'tag-info' : ''}`}>{FLOOR_LABEL[t.s]}</span></div>
           <dl className="floor-dl">
-            <div><dt>Covers</dt><dd>{t.covers ?? '—'}</dd></div>
-            <div><dt>{t.s === 'reserved' ? 'Booked for' : 'Seated'}</dt><dd className="ui-num">{t.t ?? '—'}</dd></div>
-            <div><dt>Running bill</dt><dd className="ui-num">{t.amt ? inr(t.amt) : '—'}</dd></div>
+            <div><dt>Covers</dt><dd>{t.covers ?? '-'}</dd></div>
+            <div><dt>{t.s === 'reserved' ? 'Booked for' : 'Seated'}</dt><dd className="ui-num">{t.t ?? '-'}</dd></div>
+            <div><dt>Captain</dt><dd>{t.captain ?? '-'}</dd></div>
+            <div><dt>KOTs sent</dt><dd className="ui-num">{t.kots ?? '-'}</dd></div>
+            <div><dt>Running bill</dt><dd className="ui-num">{t.amt ? inr(t.amt) : '-'}</dd></div>
           </dl>
           <div className="floor-actions">
             <span className="ui-btn ghost">Merge</span>
@@ -227,6 +234,13 @@ export function StockMock() {
           </tbody>
         </table>
       </div>
+      <div className="stock-po">
+        <span><b>Draft purchase order</b><span className="muted"> · Azadpur Fresh Co. · 3 items · delivery tomorrow 8 am</span></span>
+        <b className="ui-num">{inr(2140)}</b>
+        <button className="ui-btn stock-btn" onClick={() => setOrdered({ Paneer: true, 'Cold brew concentrate': true, 'Sourdough loaf': true })}>
+          {Object.keys(ordered).length >= 3 ? <><Icon.Check size={11} /> Sent</> : 'Send to supplier'}
+        </button>
+      </div>
     </MockWindow>
   )
 }
@@ -263,66 +277,68 @@ export function RecipeMock() {
   )
 }
 
-/* ── Online orders: one queue + 86 ───────────────────────── */
+/* ── Online orders: accept a Swiggy order, it joins the one queue ── */
+const QTAG = { Preparing: 'tag-warn', Ready: 'tag-ok', 'Picked up': '' } as const
 export function ChannelsMock() {
-  const [on, setOn] = useState(true)
-  const [shown, setShown] = useState(4)
+  // A 10-second loop: the order waits with its timer running, is accepted at 5s (or when
+  // clicked), sits in the queue, then the next one arrives.
+  const [t, setT] = useState(0)
+  const [clicked, setClicked] = useState(false)
   useEffect(() => {
-    // Show the stock change reaching each Omega surface in turn.
-    setShown(0)
-    let i = 0
-    const id = window.setInterval(() => { i += 1; setShown(i); if (i >= 4) window.clearInterval(id) }, 260)
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const id = window.setInterval(() => setT(x => (x + 1) % 10), 1000)
     return () => window.clearInterval(id)
-  }, [on])
-  const surfaces: { ch: Channel; label: string }[] = [
-    { ch: 'dine', label: 'Counter POS' }, { ch: 'qr', label: 'QR menu' },
-  ]
+  }, [])
+  useEffect(() => { if (t === 0) setClicked(false) }, [t])
+  const accepted = clicked || t >= 5
+  const o = HERO_INCOMING
+  const total = Math.round(o.items.reduce((s, i) => s + i.q * i.p, 0) * 1.05)
+  const secs = 45 - Math.min(t, 5) * 7
+  const rows: QueueItem[] = accepted
+    ? [{ id: o.id, ch: o.ch, items: o.items.map(i => `${i.q}× ${i.n}`).join(', '), prep: '15 min', status: 'Preparing' }, ...QUEUE]
+    : QUEUE
   return (
-    <MockWindow title="Online · Menu & queue">
-      <div className="chn">
-        <div className="chn-item">
-          <div>
-            <b>Cold Coffee</b>
-            <span className="muted"> · Drinks · {inr(160)}</span>
+    <MockWindow
+      title="Online orders"
+      right={<span className="onl-chips"><span className="ui-chip on">All {rows.length}</span><span className="ui-chip">Swiggy</span><span className="ui-chip">Zomato</span></span>}
+    >
+      <div className="onl">
+        {!accepted ? (
+          <div className="onl-new" key="new">
+            <ChannelBadge ch={o.ch} />
+            <div className="onl-new-b">
+              <b>New order <span className="ui-num muted">{o.ref} · Delivery</span></b>
+              <span className="onl-new-i">{o.items.map(i => `${i.q}× ${i.n}`).join(', ')}</span>
+            </div>
+            <b className="ui-num onl-new-t">{inr(total)}</b>
+            <span className="fw-ring" style={{ ['--t' as string]: secs / 45 }}><span className="ui-num">0:{String(secs).padStart(2, '0')}</span></span>
+            <span className="ui-btn ghost onl-btn">Reject</span>
+            <button className="ui-btn ok onl-btn" onClick={() => setClicked(true)}>Accept · prep 15m</button>
           </div>
-          <button className={`switch ${on ? 'on' : ''}`} role="switch" aria-checked={on} onClick={() => setOn(v => !v)}>
-            <span className="sr-only">Cold Coffee available</span><i />
-          </button>
-          <span className={`tag ${on ? 'tag-ok' : 'tag-bad'}`}>{on ? 'In stock' : "86'd"}</span>
-        </div>
-        <ul className="chn-surfaces">
-          {surfaces.map((s, i) => (
-            <li key={s.ch}>
-              <ChannelBadge ch={s.ch} /> {s.label}
-              <span className="sp" />
-              {i < shown
-                ? <span className={`chn-state ${on ? 'ok' : 'off'}`}>{on ? 'Live' : 'Hidden'}</span>
-                : <span className="chn-state sync">Syncing…</span>}
+        ) : (
+          <div className="onl-done" key="done" role="status">
+            <Icon.Check size={13} /> {o.id} accepted · KOT #31 sent to the hot line, #32 to the bar
+          </div>
+        )}
+        <ul className="onl-q">
+          {rows.map(q => (
+            <li key={q.id} className={q.id === o.id ? 'is-new' : ''}>
+              <ChannelBadge ch={q.ch} />
+              <span className="ui-num">{q.id}</span>
+              <span className="onl-q-i">{q.items}</span>
+              <span className={`tag ${QTAG[q.status]}`}><span className="d" />{q.status}</span>
+              <span className="ui-num muted onl-q-t">{q.prep}</span>
             </li>
           ))}
         </ul>
-        <div className="chn-q-h">Kitchen queue <span className="muted">· every channel</span></div>
-        <ul className="chn-q">
-          {QUEUE.map(q => {
-            const hit = !on && q.items.includes('Cold Coffee')
-            return (
-              <li key={q.id} className={hit ? 'hit' : ''}>
-                <ChannelBadge ch={q.ch} />
-                <span className="ui-num">{q.id}</span>
-                <span className="chn-q-i">{q.items}</span>
-                <span className="ui-num muted">{q.prep}</span>
-                {hit && <span className="tag tag-bad">Fired before 86</span>}
-              </li>
-            )
-          })}
-        </ul>
-        <p className="chn-note muted">{CHANNEL_LABEL.swiggy} and {CHANNEL_LABEL.zomato} orders arrive in the same queue as dine-in.</p>
+        <p className="onl-note muted">{CHANNEL_LABEL.swiggy} and {CHANNEL_LABEL.zomato} orders sit in the same queue as dine-in and QR.</p>
       </div>
     </MockWindow>
   )
 }
 
 /* ── Reports: day end ────────────────────────────────────── */
+const DAY_HOURS = [['9a', 22], ['10a', 34], ['11a', 41], ['12p', 72], ['1p', 96], ['2p', 81], ['3p', 44], ['4p', 39], ['5p', 52], ['6p', 68], ['7p', 88], ['8p', 100], ['9p', 74], ['10p', 38]] as const
 export function DayEndMock() {
   const [exported, setExported] = useState(false)
   const net = DAY_END.gross - DAY_END.discounts
@@ -345,6 +361,14 @@ export function DayEndMock() {
           <ul className="dayend-legend">
             {DAY_END.pay.map((p, i) => <li key={p.k}><i className={`c${i}`} />{p.k}<span className="ui-num">{inr(p.v)}</span></li>)}
           </ul>
+        </div>
+        <div className="dayend-hours">
+          <div className="dayend-sub">Sales by hour <span className="muted">· lunch and dinner peaks</span></div>
+          <div className="dayend-bars">
+            {DAY_HOURS.map(([h, v], i) => (
+              <div key={h}><i style={{ height: `${v}%`, animationDelay: `${i * 40}ms` }} className={v >= 80 ? 'hot' : ''} /><span>{h}</span></div>
+            ))}
+          </div>
         </div>
         <div className="dayend-disc">
           <div className="dayend-sub">Discounts, with a name and a reason</div>

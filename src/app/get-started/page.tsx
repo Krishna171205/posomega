@@ -16,7 +16,6 @@ interface LeadForm {
 type FieldErrors = Partial<Record<keyof LeadForm, string>>
 
 const EMPTY_FORM: LeadForm = { name: '', cafeName: '', phone: '', city: '' }
-const CONTACT_EMAIL = 'hello@unifiednexgrade.com'
 
 function validate(form: LeadForm): FieldErrors {
   const errors: FieldErrors = {}
@@ -32,7 +31,7 @@ export default function GetStartedPage() {
   const [errors, setErrors] = useState<FieldErrors>({})
   const [busy, setBusy] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [fallbackHref, setFallbackHref] = useState<string | null>(null)
+  const [failed, setFailed] = useState(false)
 
   // The homepage "Send me a demo" field hands the number over in sessionStorage
   // (never the URL), read once and cleared.
@@ -54,20 +53,15 @@ export default function GetStartedPage() {
     if (Object.values(nextErrors).some(Boolean)) return
 
     setBusy(true)
+    setFailed(false)
     try {
-      await api.post('/api/v1/leads', form)
-    } catch (err) {
-      // No leads store is live yet (or the request failed): never drop the lead on
-      // the floor, just widen the net with a direct email fallback.
-      console.warn('[get-started] lead API unavailable, offering direct fallback', err)
-      const subject = encodeURIComponent(`Demo request: ${form.cafeName}`)
-      const body = encodeURIComponent(
-        `Name: ${form.name}\nCafe/restaurant: ${form.cafeName}\nPhone: ${form.phone}\nCity: ${form.city}`
-      )
-      setFallbackHref(`mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`)
+      await api.post('/api/v1/leads', { ...form, source: 'get-started' })
+      setSubmitted(true)
+    } catch {
+      // Keep what they typed and say so; they can retry.
+      setFailed(true)
     } finally {
       setBusy(false)
-      setSubmitted(true)
     }
   }
 
@@ -126,6 +120,7 @@ export default function GetStartedPage() {
                     />
                   </div>
 
+                  {failed && <p className="form-error-msg" role="alert">That did not go through. Check your connection and try again.</p>}
                   <button type="submit" disabled={busy} className="btn btn-blue btn-lg form-submit">
                     {busy ? 'Sending…' : 'Book a demo'}
                     {!busy && <Icon.Arrow size={14} />}
@@ -143,11 +138,6 @@ export default function GetStartedPage() {
                 We&apos;ve got your details for {form.cafeName}. Our team will call {form.phone} within
                 24 hours to set up your demo.
               </p>
-              {fallbackHref && (
-                <a href={fallbackHref} className="btn btn-secondary btn-sm">
-                  Email us directly instead <Icon.ArrowUpRight size={12} />
-                </a>
-              )}
             </div>
           )}
         </div>
