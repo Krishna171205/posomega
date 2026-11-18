@@ -1,40 +1,34 @@
 'use client'
-import { SignUp, type AuthState } from '@/components/auth/Auth'
+import { ContactTeam, type AuthState } from '@/components/auth/Auth'
 import { Peek } from '@/components/crew/Peek'
+import { api } from '@/lib/api'
 
-/** The same small reactions as the sign-in page, with lines for a new account. Only the chef talks. */
+/** The crew on the band follow the form. Only the chef talks. */
 function crew(s: AuthState) {
-  // hands down while it signs in, and for the result
-  const cover = s.focus === 'password' && !s.busy && !s.error ? (s.showPassword ? 'peek' : 'shy') : undefined
   const mood = s.error ? 'worried' : s.busy ? 'think' : 'happy'
   const say = s.error ? 'Hmm, check that once?'
-    : s.busy ? 'Setting up your kitchen…'
-    : cover === 'shy' ? 'Not looking!'
-    : cover === 'peek' ? 'Just a tiny peek…'
+    : s.busy ? 'Sending it to the team…'
     : s.focus === 'restaurant' ? 'Ooh, what’s it called?'
+    : s.focus === 'phone' ? 'We’ll ring you on this.'
     : s.filled ? undefined : 'Welcome aboard!'
-  // `active`: up as soon as any of it is on screen. The default waits until a figure is
-  // 12% of the window's height clear of the bottom edge, which a band pinned to the
-  // bottom of a tall window never is, so they would never come up.
+  // `active`: up as soon as any of it is on screen (the band sits at the bottom edge)
   return (
     <>
-      <Peek active who="owner" side="left" x="8%" enter="phone" mood={mood} cover={cover} />
-      <Peek active who="chef" side="right" x="8%" enter="hat" mood={mood} cover={cover} say={say} />
+      <Peek active who="owner" side="left" x="8%" enter="phone" mood={mood} />
+      <Peek active who="chef" side="right" x="8%" enter="hat" mood={mood} say={say} />
     </>
   )
 }
 
-/** The sign-up design with a stand-in submit: it shows the busy state, then says where accounts are made for real. */
+/** New cafes ask for a call back; the details go to the same leads store as the homepage demo form. */
 export function SignupPreview() {
   return (
-    <SignUp
-      onSubmit={async () => {
-        await new Promise(r => setTimeout(r, 1400))
-        throw new Error('This is a local preview of the new design. To create an account, use cafe.posomega.com.')
-      }}
+    <ContactTeam
+      onSubmit={async v => { await api.post('/api/v1/leads', { name: v.name, cafeName: v.restaurant, phone: v.phone, city: v.city, role: v.role, source: 'signup' }) }}
       signinHref="/login"
       backHref="/"
       decor={crew}
+      waiterFrom="right"
     />
   )
 }

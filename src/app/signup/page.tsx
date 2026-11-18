@@ -1,18 +1,16 @@
 import type { Metadata } from 'next'
-import { redirect } from 'next/navigation'
 import { SignupPreview } from './SignupPreview'
 
 export const metadata: Metadata = {
-  title: 'Create an account',
-  robots: { index: false, follow: false },
+  title: 'Talk to our team',
+  description: 'Get your restaurant on Omega POS. Leave your number and the Omega team sets up your outlet for you.',
 }
 
 /*
- * The redesigned POS sign-up page, previewed. Accounts are created in the POS app at
- * cafe.posomega.com/onboard, so under `next dev` this renders the design and in a
- * production build /signup forwards there. Same component file as /login.
+ * New cafes do not create their own account; the Omega team sets each one up. This page
+ * takes a name and a number and stores them as a lead (omegaservice /api/v1/leads), so
+ * unlike /login it works on this origin and is served in production too.
  */
 export default function SignupPage() {
-  if (process.env.NODE_ENV !== 'development') redirect('https://cafe.posomega.com/onboard')
   return <SignupPreview />
 }

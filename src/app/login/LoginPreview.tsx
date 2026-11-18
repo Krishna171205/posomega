@@ -40,6 +40,7 @@ export function LoginPreview() {
       signupHref="/signup"
       backHref="/"
       decor={crew}
+      waiterFrom="left"
     />
   )
 }
