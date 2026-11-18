@@ -107,6 +107,8 @@ export function Crew() {
     if (!list || !stage) return
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)')
     let raf = 0, busy = false, quietAt = 0, lastAbs = 0, pending = 0
+    let speeds: number[] = []                    // |deltaY| of the gesture so far, newest last
+    const mean = (a: number[]) => a.reduce((t, v) => t + v, 0) / (a.length || 1)
     const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
 
     /** Where the middle of the screen is among the steps, as a fractional step index */
@@ -133,7 +135,7 @@ export function Crew() {
         if (k < 1) raf = requestAnimationFrame(step)
         else {
           raf = 0; busy = false
-          // A flick that came in mid-glide: carry on to the next step straight away
+          // a new flick that came in mid-glide: carry on to the next step
           if (pending) { const d = pending; pending = 0; move(d) }
         }
       }
@@ -148,16 +150,30 @@ export function Crew() {
       // Heading out past either end: let the page scroll on
       if ((dir < 0 && (f < 0 || (resting && near === 0))) || (dir > 0 && (f > last || (resting && near === last)))) return
       e.preventDefault()
-      // A new flick, or the momentum tail of the last one? A tail only ever slows down and
-      // arrives every frame, so: a pause, a jump in speed, or a mouse-wheel notch (big,
-      // even steps a little apart) all count as a new flick.
+      // A new flick, or the rest of the last one? (The approach full-page scrollers use.)
+      // A trackpad flick speeds up, then trails off in a long momentum tail that wobbles
+      // (2, 3, 2, 4...), so single deltas say little. A new flick is: the first event
+      // after a pause; a mouse-wheel notch (the same big delta again, a little apart); or,
+      // once the current flick's tail has begun, the last three deltas clearly faster than
+      // the six before them. After each step the history starts again, so the
+      // rest of that flick (its speed-up, its tail) can never start a second one. A new
+      // flick during a glide waits for it and then moves on, at most one queued.
       const now = performance.now(), abs = Math.abs(e.deltaY), gapMs = now - quietAt
-      const fresh = gapMs > 220 || (abs > lastAbs * 1.6 && abs > 8) || (abs >= 50 && gapMs > 40 && abs >= lastAbs)
+      if (gapMs > 200) speeds = []
+      speeds.push(abs)
+      if (speeds.length > 60) speeds.shift()
+      const notch = abs >= 50 && gapMs > 40 && Math.abs(abs - lastAbs) < 1
       quietAt = now
       lastAbs = abs
+      const n = speeds.length
+      const peak = Math.max(...speeds), at = speeds.indexOf(peak)
+      const tail = speeds.slice(at).some(v => v < peak * 0.75)
+      const recent = mean(speeds.slice(-3)), before = mean(speeds.slice(-9, -3))
+      const fresh = gapMs > 200 || notch || (n > 9 && tail && recent > before * 1.6 && recent > 10)
       if (!fresh) return
-      if (busy) { pending = dir; return }
-      move(dir)
+      speeds = []
+      if (busy) pending = dir
+      else move(dir)
     }
     function move(dir: number) {
       const { mid, c, last, f, near, resting } = where()
