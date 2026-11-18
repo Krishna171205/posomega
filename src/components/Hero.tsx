@@ -174,7 +174,7 @@ export function Hero() {
   const drags = useRef<Drag[]>(FLOATS.map(() => ({ x: 0, y: 0, vx: 0, vy: 0, tilt: 0, lift: 0, held: false })))
   const held = useRef(false)
   /** How far each small window has come in (0 to 1), from the scroll */
-  const showRef = useRef<number[]>(FLOATS.map(() => 1))
+  const showRef = useRef<number[]>(FLOATS.map(() => 0))
   /** The scroll has brought all three in, so the story may play */
   const armedRef = useRef(false)
   /** The story has started: the windows stay in even if the page scrolls back a little */
@@ -668,9 +668,9 @@ export function Hero() {
               {FLOATS.map((f, i) => (
                 <div
                   key={f.key}
-                  className={`hs-float hs-float-${f.key} ${step < f.dock ? 'is-free' : ''}`}
+                  className={`hs-float hs-float-${f.key} ${step < f.dock ? 'is-free' : ''} is-out`}
                   ref={el => { floatRefs.current[i] = el }}
-                  style={{ ['--i' as string]: i }}
+                  style={{ ['--i' as string]: i, ['--show' as string]: 0 }}
                 >
                   <div className="hs-float-show">
                     <div className="hs-float-drag" ref={el => { dragRefs.current[i] = el }}>{floatEls[i]}</div>
