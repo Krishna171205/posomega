@@ -292,8 +292,8 @@
    then Hero.tsx flies it into the section of the app it updates (inline transform). */
 .hs-float { position: absolute; transform-origin: 50% 50%; will-change: transform, opacity; }
 .hs-float-show {
-  --k: calc(1 - var(--show, 1));
-  opacity: var(--show, 1);
+  --k: calc(1 - var(--show, 0));
+  opacity: var(--show, 0);
   transform: translate(calc(var(--k) * var(--from-x, 0px)), calc(var(--k) * var(--from-y, 0px))) scale(calc(1 - var(--k) * .12));
   filter: blur(calc(var(--k) * 8px));
   transform-origin: var(--grow, 50% 50%);
