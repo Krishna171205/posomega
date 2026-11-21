@@ -14,13 +14,13 @@ const POINTS: { ic: React.ReactNode; t: string; d: string; peek?: { who: Who; sa
   {
     ic: <Icon.Box size={16} />,
     t: 'We do the migration',
-    d: 'Your menu, modifier groups, customers and inventory come off your current POS and into Omega before you switch over. Included in onboarding, not quoted separately as a project.',
+    d: 'Your menu, modifier groups, customers and inventory come off your current POS and into PepperPe before you switch over. Included in onboarding, not quoted separately as a project.',
   },
   {
     peek: { who: 'captain', say: 'Ask for it. We might ship it.', side: 'right', x: '10%', enter: 'lean' },
     ic: <Icon.Sparkle size={16} />,
     t: 'Your requests shape what ships next',
-    d: 'The roadmap is currently set by the cafés actually running Omega. That stops being true once there are hundreds of them, which is exactly why it is worth something now.',
+    d: 'The roadmap is currently set by the cafés actually running PepperPe. That stops being true once there are hundreds of them, which is exactly why it is worth something now.',
   },
 ]
 
@@ -36,10 +36,10 @@ export function WorkingWithUs() {
         <div className="proof-top" data-rv>
           <div className="eyebrow"><span className="dot" />Where we are</div>
           <blockquote className="proof-quote">
-            Omega runs real cafés today, and not many of them. If you want a POS with two hundred logos
+            PepperPe runs real cafés today, and not many of them. If you want a POS with two hundred logos
             on the homepage, <span className="proof-em">that is not us yet.</span>
           </blockquote>
-          <p className="proof-by">The team at Omega · Unified Nexgrade</p>
+          <p className="proof-by">The team at PepperPe · Unified Nexgrade</p>
         </div>
 
         {CONSENTED_CUSTOMERS.length > 0 && (

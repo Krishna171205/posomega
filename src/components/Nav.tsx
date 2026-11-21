@@ -4,7 +4,7 @@ import { Icon } from './Icons'
 import { HERO } from '@/content/home'
 
 /** Sign-in happens in the POS app. Under `next dev` this opens the local preview of the redesigned page (app/login). */
-const SIGN_IN = process.env.NODE_ENV === 'development' ? '/login' : 'https://cafe.posomega.com/login'
+const SIGN_IN = process.env.NODE_ENV === 'development' ? '/login' : 'https://billing.pepperpe.com/login'
 
 type MenuItem = { href: string; t: string; d: string }
 type Menu = { id: string; label: string; items: MenuItem[]; foot?: MenuItem }
@@ -103,9 +103,9 @@ export function Nav() {
 
       <header className={`nav ${scrolled ? 'is-scrolled' : ''} ${open ? 'is-open' : ''}`}>
         <div className="nav-inner">
-          <a href="/" className="nav-logo" aria-label="Omega home">
+          <a href="/" className="nav-logo" aria-label="PepperPe home">
             <span className="glyph" aria-hidden="true">Ω</span>
-            <span>Omega</span>
+            <span>PepperPe</span>
           </a>
 
           <nav className="nav-links" aria-label="Main">
@@ -164,7 +164,7 @@ export function Nav() {
       {drawer && (
         <div className="drawer" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="drawer-head">
-            <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>Omega</span></a>
+            <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>PepperPe</span></a>
             <button className="nav-burger" aria-label="Close menu" onClick={() => setDrawer(false)}><Icon.Close size={18} /></button>
           </div>
           <div className="drawer-body">

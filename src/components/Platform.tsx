@@ -37,7 +37,7 @@ const FEATURES: Feature[] = [
     id: 'tables', name: 'Table management', icon: Icon.Table,
     lead: 'Every table, at a glance.',
     p: 'Who is seated, for how long and what they have spent, with reservations in the same view.',
-    link: { href: '/for/fine-dining', label: 'Omega for fine dining' },
+    link: { href: '/for/fine-dining', label: 'PepperPe for fine dining' },
     mock: <FloorMock />,
     peek: { who: 'server', say: 'Table 3 asked for the bill.', side: 'left', x: '10%', enter: 'walk' },
   },
@@ -52,7 +52,7 @@ const FEATURES: Feature[] = [
   {
     id: 'inventory', name: 'Inventory & recipe costing', icon: Icon.Box,
     lead: 'Know what runs out before it does.',
-    p: 'Every sale removes its actual ingredients, and Omega flags what is running low before service.',
+    p: 'Every sale removes its actual ingredients, and PepperPe flags what is running low before service.',
     link: { href: '/features/inventory-and-forecasting', label: 'Inventory' },
     mock: <StockMock />,
     peek: { who: 'store', say: 'Paneer is running low.', side: 'left', x: '14%', enter: 'eyes' },
@@ -193,7 +193,7 @@ export function Platform() {
                 <div className="win pf-win has-peek">
                   <div className="win-bar">
                     <div className="win-dots"><span /><span /><span /></div>
-                    <div className="win-title">cafe.posomega.com</div>
+                    <div className="win-title">billing.pepperpe.com</div>
                   </div>
                   <div className="win-pane pf-app">
                     <nav className="pf-rail" aria-label="Feature screens">

@@ -19,10 +19,10 @@ export const FEATURE_PAGES: MarketingPage[] = [
     h1: 'Offline restaurant billing',
     h1Tail: 'that keeps taking orders.',
     lede:
-      'On the Omega Android app, orders are written to the tablet first and synced after. When the internet drops, billing and cash keep going, and the queue syncs on its own when the line comes back.',
-    metaTitle: 'Offline Restaurant Billing App | Omega POS',
+      'On the PepperPe Android app, orders are written to the tablet first and synced after. When the internet drops, billing and cash keep going, and the queue syncs on its own when the line comes back.',
+    metaTitle: 'Offline Restaurant Billing App | PepperPe',
     metaDescription:
-      'The Omega Android app bills through an internet outage: orders are saved on the tablet, queued, and synced without duplicates when the connection returns.',
+      'The PepperPe Android app bills through an internet outage: orders are saved on the tablet, queued, and synced without duplicates when the connection returns.',
     sections: [
       {
         kind: 'prose',
@@ -46,15 +46,15 @@ export const FEATURE_PAGES: MarketingPage[] = [
         kind: 'prose',
         heading: 'Where offline mode runs today',
         body: [
-          'Offline-first billing is built into the Omega Android app, which is on Google Play in early access. The web POS at cafe.posomega.com needs a connection.',
+          'Offline-first billing is built into the PepperPe Android app, which is on Google Play in early access. The web POS at billing.pepperpe.com needs a connection.',
           'The kitchen display and the online views also work through our servers, so during an outage the tablet keeps billing and the rest catches up when the line returns. We would rather say that plainly than have you discover it at seven on a Saturday.',
         ],
       },
     ],
     faq: [
       {
-        q: 'Which Omega terminal works offline?',
-        a: 'The Omega Android app. It saves orders on the tablet and syncs them later. The web POS in the browser needs an internet connection.',
+        q: 'Which PepperPe terminal works offline?',
+        a: 'The PepperPe Android app. It saves orders on the tablet and syncs them later. The web POS in the browser needs an internet connection.',
       },
       {
         q: 'Will syncing the queue create duplicate orders?',
@@ -81,7 +81,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
     h1Tail: 'that the kitchen can read.',
     lede:
       'GST invoices with tax worked out per line, kitchen order tickets routed by station, part payments and mixed tenders on one bill, and every discount recorded with who gave it and why.',
-    metaTitle: 'Restaurant Billing & KOT Software | Omega POS',
+    metaTitle: 'Restaurant Billing & KOT Software | PepperPe',
     metaDescription:
       'Restaurant billing with GST worked out per line, KOTs routed by kitchen station, part and mixed payments, and discounts recorded with a reason and the staff member.',
     sections: [
@@ -90,7 +90,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
         heading: 'The KOT decides whether service works',
         body: [
           'A bill is read once, at the end. A kitchen order ticket is read under time pressure, in heat, by someone holding something else. It is the highest-frequency document in the building.',
-          'Omega sends each item to the station that makes it, set per item, so the tandoor sees tandoor items and the bar sees drinks. Notes like "no onion" travel with the item to the ticket and the kitchen display.',
+          'PepperPe sends each item to the station that makes it, set per item, so the tandoor sees tandoor items and the bar sees drinks. Notes like "no onion" travel with the item to the ticket and the kitchen display.',
         ],
       },
       {
@@ -122,14 +122,14 @@ export const FEATURE_PAGES: MarketingPage[] = [
         heading: 'Discounts and removed items are where margin leaks',
         body: [
           'The largest unexplained variance in most restaurants is not theft from the till. It is discounts and items removed after they were made, which are easy and look legitimate.',
-          'Omega records the reason and the staff member on every discount and audits removed items, and the discount and cancellation reports break both down by staff. A manager can answer "why was margin down last month" with something better than a shrug.',
+          'PepperPe records the reason and the staff member on every discount and audits removed items, and the discount and cancellation reports break both down by staff. A manager can answer "why was margin down last month" with something better than a shrug.',
         ],
       },
     ],
     faq: [
       {
-        q: 'Does Omega produce GST invoices?',
-        a: 'Yes. Invoices carry your GSTIN and tax worked out per line from each item\'s slab. Omega does not yet print HSN or SAC codes per item or produce a GSTR return file; sales go to your accountant through the Tally export and the tax report.',
+        q: 'Does PepperPe produce GST invoices?',
+        a: 'Yes. Invoices carry your GSTIN and tax worked out per line from each item\'s slab. PepperPe does not yet print HSN or SAC codes per item or produce a GSTR return file; sales go to your accountant through the Tally export and the tax report.',
       },
       {
         q: 'Can a bill be paid in parts or split by tender?',
@@ -156,7 +156,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
     h1Tail: 'for restaurants that run hot.',
     lede:
       'Every order on one screen per station, from the counter, QR tables, Swiggy and Zomato, with the channel on each ticket. Runs in a browser on whatever screen you can mount.',
-    metaTitle: 'Restaurant Kitchen Display System (KDS) | Omega POS',
+    metaTitle: 'Restaurant Kitchen Display System (KDS) | PepperPe',
     metaDescription:
       'A browser-based KDS: orders from every channel in one queue, routed by kitchen station, with start, ready and served on each ticket. Runs on any screen.',
     sections: [
@@ -165,7 +165,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
         heading: 'One list instead of a pile of slips',
         body: [
           'A kitchen running on paper has no shared view of what is waiting. Slips get lost, two stations make the same item, and the delivery order sits while the line works through dine-in.',
-          'Omega puts every order, whatever channel it came from, on the screen of the station that makes it, in the order it was fired, with the channel marked so the line knows whether it is plating or packing.',
+          'PepperPe puts every order, whatever channel it came from, on the screen of the station that makes it, in the order it was fired, with the channel marked so the line knows whether it is plating or packing.',
         ],
       },
       {
@@ -184,7 +184,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
         kind: 'prose',
         heading: 'What it needs',
         body: [
-          'The kitchen display runs in a browser and stays in step through our servers, so it needs the restaurant\'s internet connection. If the line drops, the Omega Android app keeps billing and the kitchen display catches up when it returns.',
+          'The kitchen display runs in a browser and stays in step through our servers, so it needs the restaurant\'s internet connection. If the line drops, the PepperPe Android app keeps billing and the kitchen display catches up when it returns.',
         ],
       },
     ],
@@ -203,7 +203,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
       },
       {
         q: 'Does the KDS work during an internet outage?',
-        a: 'No, it needs the connection. Billing can continue on the Omega Android app, and the kitchen display picks up the queued orders once the line is back.',
+        a: 'No, it needs the connection. Billing can continue on the PepperPe Android app, and the kitchen display picks up the queued orders once the line is back.',
       },
     ],
     related: ['features/billing-and-kot', 'for/qsr', 'for/cloud-kitchens', 'integrations/swiggy-zomato'],
@@ -218,7 +218,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
     h1Tail: 'that deducts itself as you sell.',
     lede:
       'Recipes on every dish, variation and add-on, so each sale takes its ingredients off. Wastage logged with a reason, purchases and expenses in the same place, and low-stock reorder suggestions in the Android app.',
-    metaTitle: 'Restaurant Inventory Management Software | Omega POS',
+    metaTitle: 'Restaurant Inventory Management Software | PepperPe',
     metaDescription:
       'Recipe-level stock deduction for restaurants, including variations and add-ons, wastage with reasons, store and counter stock, purchases and expenses.',
     sections: [
@@ -227,7 +227,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
         heading: 'Counting stock is not the same as managing it',
         body: [
           'Most restaurant inventory is a counting exercise: what you have, and what you bought. The useful question is what you should have used, and that only exists if every sale knows its recipe.',
-          'Omega deducts stock at the recipe level, so selling a dish removes its actual ingredients rather than a count of that dish. Variations and add-ons carry their own recipes, so a large coffee with extra shot takes off what it really used.',
+          'PepperPe deducts stock at the recipe level, so selling a dish removes its actual ingredients rather than a count of that dish. Variations and add-ons carry their own recipes, so a large coffee with extra shot takes off what it really used.',
         ],
       },
       {
@@ -257,7 +257,7 @@ export const FEATURE_PAGES: MarketingPage[] = [
         a: 'As detailed as the decisions you want to make. A café tracking milk, beans and syrups gets most of the value for little setup. You can start shallow and deepen the recipes that turn out to matter.',
       },
       {
-        q: 'Does Omega forecast demand?',
+        q: 'Does PepperPe forecast demand?',
         a: 'The Android app suggests reorder quantities from recent sales. There is no stock-level forecasting in the web POS yet, and no automatic par levels.',
       },
       {

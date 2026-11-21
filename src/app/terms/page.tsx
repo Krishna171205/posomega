@@ -2,7 +2,7 @@ import { LegalPage } from '@/components/LegalPage'
 
 export const metadata = {
   title: 'Terms of Service',
-  description: 'The agreement between you and Omega Point-of-Sale.',
+  description: 'The agreement between you and PepperPe Point-of-Sale.',
   alternates: { canonical: '/terms' },
 }
 
@@ -12,27 +12,27 @@ export default function Page() {
       title="Terms of"
       italicTail="service."
       updated="24 May 2026"
-      intro="By using Omega Point-of-Sale, you agree to these terms. They are written for humans — if anything is unclear, write to us and we will explain."
+      intro="By using PepperPe Point-of-Sale, you agree to these terms. They are written for humans. If anything is unclear, write to us and we will explain."
       sections={[
         {
           heading: '1. The service',
-          body: 'Omega is a cloud-hosted point-of-sale, inventory, and analytics platform for restaurants, cafés, bars, and cloud kitchens, operated by Unified Nexgrade Pvt. Ltd. ("Omega", "we"). You access it via web, mobile, and supported hardware terminals.',
+          body: 'PepperPe is a cloud-hosted point-of-sale, inventory, and analytics platform for restaurants, cafés, bars, and cloud kitchens, operated by Unified Nexgrade Pvt. Ltd. ("PepperPe", "we"). You access it via web, mobile, and supported hardware terminals.',
         },
         {
-          heading: '2. Who can use Omega',
+          heading: '2. Who can use PepperPe',
           body: 'You must be a legally constituted business in India, at least 18 years old, and authorised to bind your business to this agreement. You must provide accurate registration details and keep them current.',
         },
         {
           heading: '3. Your subscription',
           body: [
-            'Subscriptions are billed monthly or annually per outlet, in advance. Fees are listed at posomega.com/pricing and may be revised with 30 days\' notice.',
+            'Subscriptions are billed monthly or annually per outlet, in advance. Fees are listed at pepperpe.com/pricing and may be revised with 30 days\' notice.',
             'You can cancel any time. Pre-paid annual subscriptions are non-refundable after 14 days from the start of a new billing cycle, except where required by law.',
           ],
         },
         {
           heading: '4. Acceptable use',
           body: [
-            'You will not use Omega to violate Indian law, infringe third-party rights, or process transactions that breach our payment partners\' rules.',
+            'You will not use PepperPe to violate Indian law, infringe third-party rights, or process transactions that breach our payment partners\' rules.',
             'You will not reverse-engineer the service, attempt unauthorised access, or resell access to non-affiliated third parties.',
             'You are responsible for the conduct of staff accounts you create.',
           ],
@@ -51,7 +51,7 @@ export default function Page() {
         },
         {
           heading: '8. Hardware',
-          body: 'Omega Terminal, Omega Mini, and Omega Print carry a 12-month manufacturer warranty against defects. Extended warranty and on-site replacement are available on Growth and Enterprise plans.',
+          body: 'PepperPe Terminal, PepperPe Mini, and PepperPe Print carry a 12-month manufacturer warranty against defects. Extended warranty and on-site replacement are available on Growth and Enterprise plans.',
         },
         {
           heading: '9. Termination',

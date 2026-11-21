@@ -32,7 +32,7 @@ const PLANS: Plan[] = [
     tier: 'Starter', name: 'Single outlet', monthly: 1499, annual: 1199,
     desc: 'For one location, getting started.',
     features: ['Unlimited orders, staff and terminals', 'Billing, KOTs, kitchen display', 'Recipe-level inventory', 'UPI, card and cash payments', '1 aggregator integration', 'Offline billing on the Android app', 'Email support'],
-    cta: { label: 'Start free trial', href: 'https://cafe.posomega.com/onboard' },
+    cta: { label: 'Start free trial', href: 'https://billing.pepperpe.com/onboard' },
   },
   {
     tier: 'Growth', name: 'Multi-outlet', monthly: 3499, annual: 2799,
@@ -98,7 +98,7 @@ export function Pricing() {
           <Icon.Printer size={18} />
           <div>
             <b>Free hardware on Growth with a 12-month commitment.</b>
-            <span>One Omega Terminal and one Omega Print per outlet, worth ₹31,300.</span>
+            <span>One PepperPe Terminal and one PepperPe Print per outlet, worth ₹31,300.</span>
           </div>
           <a href="/get-started" className="btn btn-outline btn-sm">Claim offer <Icon.Arrow size={12} /></a>
         </div>

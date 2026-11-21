@@ -34,9 +34,9 @@ export function LoginPreview() {
     <SignIn
       onSubmit={async () => {
         await new Promise(r => setTimeout(r, 1400))
-        throw new Error('This is a local preview of the new design. To sign in, use cafe.posomega.com.')
+        throw new Error('This is a local preview of the new design. To sign in, use billing.pepperpe.com.')
       }}
-      forgotHref="https://cafe.posomega.com/login"
+      forgotHref="https://billing.pepperpe.com/login"
       signupHref="/signup"
       backHref="/"
       decor={crew}

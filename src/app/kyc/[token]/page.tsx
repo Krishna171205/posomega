@@ -4,5 +4,5 @@ import { redirect } from 'next/navigation'
 // This origin has no API URL configured and is not in the CORS allowlist.
 export default async function KycRedirect({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params
-  redirect(`https://cafe.posomega.com/kyc/${token}`)
+  redirect(`https://billing.pepperpe.com/kyc/${token}`)
 }

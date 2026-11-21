@@ -120,7 +120,7 @@ function CallScene() {
         <circle className="cs-backdrop" cx="352" cy="262" r="214" />
 
         {/* Small things around the call, drawn like the crew: the demo going in the calendar,
-            the confirmation mail, and a printed bill (what Omega does once it is set up) */}
+            the confirmation mail, and a printed bill (what PepperPe does once it is set up) */}
         <g transform="translate(184 110) rotate(-10) scale(1.6)">
           <g className="cs-float">
             <rect x="-24" y="-20" width="48" height="44" rx="7" className="cs-obj" />
@@ -148,7 +148,7 @@ function CallScene() {
           </g>
         </g>
 
-        {/* The Omega: an even ring (outer 172, inner 130, centre 330,248). At the base the
+        {/* The PepperPe: an even ring (outer 172, inner 130, centre 330,248). At the base the
             ring is cut straight down at x 275 and 385 and its outer circle runs into flat
             feet as thick as the ring, like the plain geometric glyph */}
         <path
@@ -189,7 +189,7 @@ function CallScene() {
         <circle className="cs-link-ping" cx="543" cy="123" r="7" />
 
         {/* Our agent, on a headset, at a laptop with an Ω on the lid. Drawn around
-            x 396-566, y 305-506; the wrapper puts her at the Omega's top right, clear of
+            x 396-566, y 305-506; the wrapper puts her at the PepperPe's top right, clear of
             the ring (its right edge is x 502). */}
         <g transform="translate(203.2 -170) scale(.8)">
         <g className="cs-agent">

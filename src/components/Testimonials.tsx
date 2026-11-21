@@ -310,8 +310,8 @@ function Rail({ items, preview }: { items: Testimonial[]; preview: boolean }) {
           <h2 id="tk-title" className="h-section">Straight off <span className="h-muted">the ticket rail.</span></h2>
           <p className="lede">
             {preview
-              ? 'Sample tickets showing the kind of service Omega is built for. Illustrative only, not quotes from real customers.'
-              : 'What restaurant teams running Omega tell us, in their own words.'}
+              ? 'Sample tickets showing the kind of service PepperPe is built for. Illustrative only, not quotes from real customers.'
+              : 'What restaurant teams running PepperPe tell us, in their own words.'}
           </p>
         </div>
       </div>

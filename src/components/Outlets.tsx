@@ -31,56 +31,56 @@ const OUTLETS: Outlet[] = [
     id: 'cafes', name: 'Cafés', kind: 'Coffee shops and all-day cafés',
     text: 'Modifiers one tap from the item for the morning queue, regulars remembered by phone number, and stock that deducts itself cup by cup.',
     pills: ['Fast billing', 'Phone-number loyalty', 'Recipe stock'],
-    link: { href: '/for/cafes', label: 'Omega for cafés' },
+    link: { href: '/for/cafes', label: 'PepperPe for cafés' },
     crew: { who: 'server', enter: 'walk', side: 'right' },
   },
   {
     id: 'bakeries', name: 'Bakeries', kind: 'Bakeries, ice cream and dessert shops',
     text: 'Sizes and flavours as variations, cakes ordered and paid ahead for pickup, and a stamp card that brings regulars back.',
     pills: ['Variations and add-ons', 'Prepaid pickup orders', 'Stamp cards'],
-    link: { href: '/for/bakeries', label: 'Omega for bakeries' },
+    link: { href: '/for/bakeries', label: 'PepperPe for bakeries' },
     crew: { who: 'store', enter: 'pop', side: 'left' },
   },
   {
     id: 'qsr', name: 'Quick service', kind: 'QSR counters',
     text: 'Combos billed in seconds, tickets split by kitchen station, and a token screen that answers "is mine ready?".',
     pills: ['Combo billing', 'Station-wise KDS', 'Token display'],
-    link: { href: '/for/qsr', label: 'Omega for QSR' },
+    link: { href: '/for/qsr', label: 'PepperPe for QSR' },
     crew: { who: 'chef', enter: 'hat', side: 'right' },
   },
   {
     id: 'food-courts', name: 'Food courts', kind: 'Food courts and canteens',
     text: 'Guests order by QR from the table, every order gets a token, and the display calls it out when it is ready.',
     pills: ['QR ordering', 'Token display', 'One kitchen queue'],
-    link: { href: '/for/food-courts', label: 'Omega for food courts' },
+    link: { href: '/for/food-courts', label: 'PepperPe for food courts' },
     crew: { who: 'manager', enter: 'phone', side: 'left' },
   },
   {
     id: 'fine-dining', name: 'Fine dining', kind: 'Chef-led dining rooms',
     text: 'The whole room on one floor plan, guests who can call a waiter or pay from the table, and allergies printed on every KOT.',
     pills: ['Floor plan', 'Call waiter', 'Reservations'],
-    link: { href: '/for/fine-dining', label: 'Omega for fine dining' },
+    link: { href: '/for/fine-dining', label: 'PepperPe for fine dining' },
     crew: { who: 'captain', enter: 'lean', side: 'right' },
   },
   {
     id: 'cloud-kitchens', name: 'Cloud kitchens', kind: 'Delivery-first kitchens',
     text: 'Swiggy and Zomato orders in one queue with a prep time on each, and your own riders tracked from accepted to delivered.',
     pills: ['One aggregator queue', 'Own delivery riders', 'Recipe stock'],
-    link: { href: '/for/cloud-kitchens', label: 'Omega for cloud kitchens' },
+    link: { href: '/for/cloud-kitchens', label: 'PepperPe for cloud kitchens' },
     crew: { who: 'chef', enter: 'pop', side: 'left' },
   },
   {
     id: 'bars', name: 'Bars & breweries', kind: 'Bars, pubs and lounges',
     text: 'Happy-hour prices that switch themselves on and off, and drinks to the bar and food to the kitchen from one order.',
     pills: ['Happy-hour pricing', 'Bar and kitchen stations', 'Floor plan'],
-    link: { href: '/for/bars', label: 'Omega for bars' },
+    link: { href: '/for/bars', label: 'PepperPe for bars' },
     crew: { who: 'owner', enter: 'walk', side: 'right' },
   },
   {
     id: 'chains', name: 'Chains', kind: 'Multi-outlet restaurants',
     text: 'Every outlet in one report, each one billing through an internet outage, and stock compared outlet by outlet.',
     pills: ['All-outlet reports', 'Offline per outlet', 'Stock by outlet'],
-    link: { href: '/for/chains', label: 'Omega for chains' },
+    link: { href: '/for/chains', label: 'PepperPe for chains' },
     crew: { who: 'manager', enter: 'eyes', side: 'left' },
   },
 ]
@@ -353,7 +353,7 @@ export function Outlets() {
           <h2 id="outlets-title" className="h-section">Built for the way <span className="h-muted">you serve.</span></h2>
           <p className="lede">
             A café, a QSR line and a coursed dining room need different things from the same till.
-            Pick yours to see what Omega does for it.
+            Pick yours to see what PepperPe does for it.
           </p>
         </div>
 
@@ -382,7 +382,7 @@ export function Outlets() {
                   <span className="ol-kind">{o.kind}</span>
                 </button>
 
-                <div className="ol-pop" id={`ol-${o.id}`} role="region" aria-label={`${o.name}: what Omega does`} inert={!isOpen}>
+                <div className="ol-pop" id={`ol-${o.id}`} role="region" aria-label={`${o.name}: what PepperPe does`} inert={!isOpen}>
                   <div className="ol-vis">
                     <span className={`ol-ghost ol-ic-${o.id}`} aria-hidden="true"><OutletIcon id={o.id} /></span>
                     <div className="ol-scene has-peek">

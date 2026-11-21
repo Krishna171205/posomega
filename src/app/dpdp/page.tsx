@@ -2,7 +2,7 @@ import { LegalPage } from '@/components/LegalPage'
 
 export const metadata = {
   title: 'DPDP Notice',
-  description: 'How Omega complies with the Digital Personal Data Protection Act, 2023.',
+  description: 'How PepperPe complies with the Digital Personal Data Protection Act, 2023.',
   alternates: { canonical: '/dpdp' },
 }
 
@@ -16,19 +16,19 @@ export default function Page() {
       sections={[
         {
           heading: '1. Who is the data fiduciary',
-          body: 'Unified Nexgrade Pvt. Ltd., operating Omega Point-of-Sale, registered at Delhi NCR, India. For all DPDP-related notices, write to dpo@unifiednexgrade.com.',
+          body: 'Unified Nexgrade Pvt. Ltd., operating PepperPe Point-of-Sale, registered at Delhi NCR, India. For all DPDP-related notices, write to dpo@unifiednexgrade.com.',
         },
         {
           heading: '2. What personal data we process',
           body: [
             'From restaurant operators (our direct customers): business and owner details, contact information, banking details, and operational data described in our Privacy policy.',
-            'From cafe customers (your end users, processed on your behalf): phone number, name where you collect it, order history, and any feedback they submit via Omega-powered surfaces.',
+            'From cafe customers (your end users, processed on your behalf): phone number, name where you collect it, order history, and any feedback they submit via PepperPe-powered surfaces.',
             'We are a data processor in respect of your cafe customers\' data, and you are the data fiduciary.',
           ],
         },
         {
           heading: '3. Purposes of processing',
-          body: 'To operate the Omega service, settle payments, provide support, prevent fraud, meet legal obligations, and improve the product using aggregated metrics. We do not process personal data for profiling, automated decision-making affecting legal rights, or behavioural advertising.',
+          body: 'To operate the PepperPe service, settle payments, provide support, prevent fraud, meet legal obligations, and improve the product using aggregated metrics. We do not process personal data for profiling, automated decision-making affecting legal rights, or behavioural advertising.',
         },
         {
           heading: '4. Lawful basis',

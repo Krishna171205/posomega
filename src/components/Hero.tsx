@@ -591,7 +591,7 @@ export function Hero() {
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero-bg" aria-hidden="true">
         {/* WebGL2 dot physics: the same component and settings as gradientui's
-            /brand and /supplier heroes, recoloured to Omega's black and white. */}
+            /brand and /supplier heroes, recoloured to PepperPe's black and white. */}
         <DotGrid
           dotSize={1.3}
           gap={11}
@@ -655,7 +655,7 @@ export function Hero() {
               <div className="win hs-win" ref={winRef}>
                 <div className="win-bar">
                   <div className="win-dots"><span /><span /><span /></div>
-                  <div className="win-title">cafe.posomega.com</div>
+                  <div className="win-title">billing.pepperpe.com</div>
                 </div>
                 <div className="win-pane hs-pane"><AppWindow step={step} /></div>
               </div>

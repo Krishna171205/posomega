@@ -5,13 +5,13 @@ export const LANDING_PAGES: MarketingPage[] = [
     slug: 'app',
     crumb: 'Android app',
     eyebrow: 'Android app',
-    h1: 'Omega POS Android app',
+    h1: 'PepperPe Android app',
     h1Tail: 'early access on Google Play.',
     lede:
       'A Kotlin-native tablet terminal for billing, orders and the kitchen queue, built offline-first so the till keeps working when the connection does not. It is on Google Play in early access, and we would rather you knew exactly what that means before you install it.',
-    metaTitle: 'Omega POS Android App | Restaurant Billing App on Google Play',
+    metaTitle: 'PepperPe Android App | Restaurant Billing App on Google Play',
     metaDescription:
-      'Omega POS on Google Play: an offline-first Android tablet app for restaurant billing, orders and the kitchen queue. Early access, same account as the web POS.',
+      'PepperPe on Google Play: an offline-first Android tablet app for restaurant billing, orders and the kitchen queue. Early access, same account as the web POS.',
     primaryCta: {
       href: 'https://play.google.com/store/apps/details?id=com.unifiednexgrade.omega',
       label: 'Get it on Google Play',
@@ -23,8 +23,8 @@ export const LANDING_PAGES: MarketingPage[] = [
         heading: 'What early access actually means here',
         body: [
           'The app is published and installable. It is not yet the surface we put a paying café on by default, and we would rather say that on our own website than have you find out on a Friday night.',
-          'The web POS at cafe.posomega.com is the primary terminal today. It runs in a browser on the same tablet, it is what our live cafés are billing on, and every feature lands there first. The Android app is the same product in a native shell, ahead on feel and on offline behaviour, behind on a small number of things that genuinely need device hardware.',
-          'If you are evaluating Omega, start on the web POS. Install the app alongside it if you want to see where the product is going, or if offline reliability is the specific thing you are shopping for.',
+          'The web POS at billing.pepperpe.com is the primary terminal today. It runs in a browser on the same tablet, it is what our live cafés are billing on, and every feature lands there first. The Android app is the same product in a native shell, ahead on feel and on offline behaviour, behind on a small number of things that genuinely need device hardware.',
+          'If you are evaluating PepperPe, start on the web POS. Install the app alongside it if you want to see where the product is going, or if offline reliability is the specific thing you are shopping for.',
         ],
       },
       {
@@ -33,7 +33,7 @@ export const LANDING_PAGES: MarketingPage[] = [
         cards: [
           { t: 'Offline-first billing', d: 'Orders are written to the device first and synced after, so the terminal does not slow down or stop when the connection does.' },
           { t: 'Orders and kitchen queue', d: 'The same order queue and kitchen display as the web POS, including aggregator orders, on one screen.' },
-          { t: 'One account, both surfaces', d: 'Sign in with your existing Omega credentials. Outlets, menu, staff and reporting are shared, not duplicated.' },
+          { t: 'One account, both surfaces', d: 'Sign in with your existing PepperPe credentials. Outlets, menu, staff and reporting are shared, not duplicated.' },
           { t: 'Register and shift close', d: 'Open and close the register on the device, with the day reconciling into the same reporting as everything else.' },
           { t: 'Catalogue and inventory', d: 'Menu, modifiers and stock, editable from the terminal rather than only from a back office.' },
           { t: 'Built for a tablet', d: 'Designed for a counter tablet in landscape, not a phone layout stretched to fit.' },
@@ -57,8 +57,8 @@ export const LANDING_PAGES: MarketingPage[] = [
     ],
     faq: [
       {
-        q: 'Is the Omega POS app free?',
-        a: 'The app is a free download. It signs in to an Omega account, and the account is what is billed: Rs 1,499 per outlet per month for a single location. There is no separate charge for the Android app, and no per-device or per-seat fee, so installing it on a second tablet costs nothing.',
+        q: 'Is the PepperPe app free?',
+        a: 'The app is a free download. It signs in to an PepperPe account, and the account is what is billed: Rs 1,499 per outlet per month for a single location. There is no separate charge for the Android app, and no per-device or per-seat fee, so installing it on a second tablet costs nothing.',
       },
       {
         q: 'What Android version and hardware does it need?',
@@ -69,8 +69,8 @@ export const LANDING_PAGES: MarketingPage[] = [
         a: 'Yes, and this is the part it does better than the browser. Orders are written to the device first and queued for sync, so billing continues through an outage and reconciles automatically afterwards. Card and UPI payments still need a connection, because they cannot be confirmed without one.',
       },
       {
-        q: 'Do I need the app to use Omega?',
-        a: 'No. The web POS at cafe.posomega.com is the primary surface and is what our live cafés bill on. The app is an alternative terminal for the same account, not a requirement and not an upsell.',
+        q: 'Do I need the app to use PepperPe?',
+        a: 'No. The web POS at billing.pepperpe.com is the primary surface and is what our live cafés bill on. The app is an alternative terminal for the same account, not a requirement and not an upsell.',
       },
       {
         q: 'Can I use the app and the web POS at the same time?',
@@ -88,7 +88,7 @@ export const LANDING_PAGES: MarketingPage[] = [
     h1Tail: 'for Indian cafés and restaurants.',
     lede:
       'GST billing, kitchen order tickets, recipe-level inventory, Swiggy and Zomato orders and UPI in one system. Runs on the tablet you already have and costs Rs 1,499 per outlet per month.',
-    metaTitle: 'Restaurant Billing Software India | Omega POS',
+    metaTitle: 'Restaurant Billing Software India | PepperPe',
     metaDescription:
       'Restaurant billing software for Indian cafés and restaurants: GST invoices, KOT and kitchen display, recipe inventory, Swiggy and Zomato orders, UPI. From Rs 1,499 per outlet.',
     sections: [
@@ -97,7 +97,7 @@ export const LANDING_PAGES: MarketingPage[] = [
         heading: 'What restaurant billing software actually has to do',
         body: [
           'A restaurant does not need something that only prints bills. It needs one system that takes an order at a counter or a table, sends the right parts to the right kitchen station, prices it under GST, collects payment, takes the ingredients off stock, and does all of it the same way whether the order came from a walk-in, a QR code or Swiggy.',
-          'Systems that only do the billing half push the rest onto people: a tablet per platform, an inventory spreadsheet, a reconciliation ritual every night. Omega keeps the order, the ticket, the stock deduction and the payment as one record.',
+          'Systems that only do the billing half push the rest onto people: a tablet per platform, an inventory spreadsheet, a reconciliation ritual every night. PepperPe keeps the order, the ticket, the stock deduction and the payment as one record.',
         ],
       },
       {
@@ -107,7 +107,7 @@ export const LANDING_PAGES: MarketingPage[] = [
           { t: 'GST billing', d: 'Tax worked out per line from each item\'s slab, with your GSTIN on the invoice and a Tally export for your accountant.' },
           { t: 'KOT and kitchen display', d: 'Tickets routed by station to paper, to screen, or both.' },
           { t: 'Inventory at recipe level', d: 'Sales deduct their ingredients, including variations and add-ons, with wastage logged by reason.' },
-          { t: 'Swiggy and Zomato orders', d: 'Accepted in Omega with a prep time and sent to the kitchen with the rest.' },
+          { t: 'Swiggy and Zomato orders', d: 'Accepted in PepperPe with a prep time and sent to the kitchen with the rest.' },
           { t: 'UPI, card and cash', d: 'UPI collected against the bill, mixed tenders and part payments, register shifts.' },
           { t: 'Tables, QR and reservations', d: 'Floor plan, QR ordering at the table, call waiter, pay at table and a reservation diary with waitlist.' },
           { t: 'Loyalty by phone number', d: 'Coins, stamp cards and customer history keyed to the guest\'s phone.' },
@@ -129,9 +129,9 @@ export const LANDING_PAGES: MarketingPage[] = [
         intro:
           'Most restaurants evaluating billing software are replacing something. The switch is the part that decides whether it hurts.',
         steps: [
-          { t: 'Hand over your menu', d: 'Send us your current menu and modifiers. Our team sets them up in Omega as part of onboarding.' },
+          { t: 'Hand over your menu', d: 'Send us your current menu and modifiers. Our team sets them up in PepperPe as part of onboarding.' },
           { t: 'Check it together', d: 'Everything is checked against your live menu before you switch, so nobody proofreads a menu during service.' },
-          { t: 'Run both briefly', d: 'Most restaurants run the old system alongside Omega for a short period. Nothing forces a single cut-over date.' },
+          { t: 'Run both briefly', d: 'Most restaurants run the old system alongside PepperPe for a short period. Nothing forces a single cut-over date.' },
           { t: 'Switch', d: 'Pick a quiet shift. Staff training happens on the order screen, which is the only surface most of them touch.' },
         ],
       },
@@ -139,7 +139,7 @@ export const LANDING_PAGES: MarketingPage[] = [
         kind: 'prose',
         heading: 'Who it is for',
         body: [
-          'Omega is built for Indian food businesses: cafés, bakeries and dessert shops, quick-service restaurants and food courts, dining rooms, bars and breweries, pizzerias, cloud kitchens and growing chains. Each has its own page describing what it gets.',
+          'PepperPe is built for Indian food businesses: cafés, bakeries and dessert shops, quick-service restaurants and food courts, dining rooms, bars and breweries, pizzerias, cloud kitchens and growing chains. Each has its own page describing what it gets.',
           'It is not built for retail. If you run a grocery or a pharmacy, the inventory model here is the wrong shape for you.',
         ],
       },
@@ -147,7 +147,7 @@ export const LANDING_PAGES: MarketingPage[] = [
     faq: [
       {
         q: 'How much does restaurant billing software cost in India?',
-        a: 'Omega is Rs 1,499 per outlet per month for a single location and Rs 3,499 per outlet per month for up to ten outlets, with twenty per cent off on annual billing. There is no setup fee, no per-seat charge and no per-transaction fee from us. When comparing quotes, check whether a price is per outlet or per terminal.',
+        a: 'PepperPe is Rs 1,499 per outlet per month for a single location and Rs 3,499 per outlet per month for up to ten outlets, with twenty per cent off on annual billing. There is no setup fee, no per-seat charge and no per-transaction fee from us. When comparing quotes, check whether a price is per outlet or per terminal.',
       },
       {
         q: 'Do I need to buy new hardware?',
@@ -155,15 +155,15 @@ export const LANDING_PAGES: MarketingPage[] = [
       },
       {
         q: 'Does it work without an internet connection?',
-        a: 'The Omega Android app does: it saves orders on the tablet and syncs them when the line returns. The web POS and the kitchen display need a connection. Card and UPI payments always need one.',
+        a: 'The PepperPe Android app does: it saves orders on the tablet and syncs them when the line returns. The web POS and the kitchen display need a connection. Card and UPI payments always need one.',
       },
       {
         q: 'Is it GST compliant?',
-        a: 'Invoices carry your GSTIN and tax worked out per line from each item\'s slab. Omega does not yet print HSN or SAC codes per item or produce GSTR return files; your accountant works from the Tally export and tax reports.',
+        a: 'Invoices carry your GSTIN and tax worked out per line from each item\'s slab. PepperPe does not yet print HSN or SAC codes per item or produce GSTR return files; your accountant works from the Tally export and tax reports.',
       },
       {
         q: 'Can I move from Petpooja, Posist or another POS?',
-        a: 'Yes. Our team sets up your menu and modifiers in Omega as part of onboarding, at no extra cost, and you can run both systems side by side while you switch.',
+        a: 'Yes. Our team sets up your menu and modifiers in PepperPe as part of onboarding, at no extra cost, and you can run both systems side by side while you switch.',
       },
       {
         q: 'How long does setup take?',
@@ -181,7 +181,7 @@ export const LANDING_PAGES: MarketingPage[] = [
     h1Tail: 'tax worked out on every line.',
     lede:
       'Each item carries its own tax slab, so food and drinks at different rates sit correctly on one invoice. Your GSTIN on every bill, a tax report per period, and a Tally export your accountant can import.',
-    metaTitle: 'GST Billing Software for Restaurants | Omega POS',
+    metaTitle: 'GST Billing Software for Restaurants | PepperPe',
     metaDescription:
       'GST restaurant billing with tax worked out per line from each item\'s slab, GSTIN on every invoice, tax reports and a Tally export for your accountant.',
     sections: [
@@ -195,7 +195,7 @@ export const LANDING_PAGES: MarketingPage[] = [
       },
       {
         kind: 'cards',
-        heading: 'What Omega handles',
+        heading: 'What PepperPe handles',
         cards: [
           { t: 'Tax per line', d: 'Every item has its own tax slab, so a mixed bill is taxed line by line, not as one total.' },
           { t: 'GSTIN on the invoice', d: 'Each outlet carries its own GSTIN, which prints on its bills.' },
@@ -209,7 +209,7 @@ export const LANDING_PAGES: MarketingPage[] = [
         kind: 'prose',
         heading: 'What is not built yet',
         body: [
-          'Omega does not yet print HSN or SAC codes per item, and it does not produce GSTR return files. Filing stays with you or your accountant, working from the tax report and the Tally export.',
+          'PepperPe does not yet print HSN or SAC codes per item, and it does not produce GSTR return files. Filing stays with you or your accountant, working from the tax report and the Tally export.',
           'We would rather say that here than have it surface at filing time.',
         ],
       },
@@ -217,13 +217,13 @@ export const LANDING_PAGES: MarketingPage[] = [
         kind: 'prose',
         heading: 'A note on what this page is not',
         body: [
-          'This describes what the software does. It is not tax advice, and rates and rules change. Your rate configuration and how you treat specific items are between you and your accountant, and Omega is set up to match their answer.',
+          'This describes what the software does. It is not tax advice, and rates and rules change. Your rate configuration and how you treat specific items are between you and your accountant, and PepperPe is set up to match their answer.',
         ],
       },
     ],
     faq: [
       {
-        q: 'Does Omega generate GST invoices?',
+        q: 'Does PepperPe generate GST invoices?',
         a: 'Yes. Invoices carry your GSTIN and tax worked out per line from each item\'s slab.',
       },
       {
@@ -231,12 +231,12 @@ export const LANDING_PAGES: MarketingPage[] = [
         a: 'Yes. Each outlet carries its own GSTIN, and reports can be read per outlet.',
       },
       {
-        q: 'Does Omega print HSN codes?',
+        q: 'Does PepperPe print HSN codes?',
         a: 'Not yet. Tax is correct per line, but HSN and SAC codes are not printed per item today.',
       },
       {
-        q: 'Can I file GST returns from Omega?',
-        a: 'No. Omega gives your accountant a tax report and a Tally export; it does not produce GSTR files or file on your behalf.',
+        q: 'Can I file GST returns from PepperPe?',
+        a: 'No. PepperPe gives your accountant a tax report and a Tally export; it does not produce GSTR files or file on your behalf.',
       },
     ],
     related: ['restaurant-billing-software', 'features/billing-and-kot', 'pricing', 'integrations/upi-and-payments'],

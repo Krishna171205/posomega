@@ -8,7 +8,7 @@
  */
 
 export const HERO = {
-  banner: { label: 'Omega for Android is in early access', href: '/app' },
+  banner: { label: 'PepperPe for Android is in early access', href: '/app' },
   h1: 'The restaurant POS that never drops an order.',
   /** Visual headline: lead + rotating ending. `h1` above stays the accessible/SEO text. */
   h1Lead: 'The restaurant POS that',
@@ -17,9 +17,9 @@ export const HERO = {
   h1Words: ['an order.', 'a KOT.', 'a bill.', 'a table.'] as const,
   /** Facts carried over from the committed homepage copy. */
   meta: ['Same-day setup', 'No setup fee', 'Offline on Android'],
-  sub: 'Omega bills, fires KOTs, syncs Swiggy and Zomato, and tracks stock, even when the internet doesn’t.',
+  sub: 'PepperPe bills, fires KOTs, syncs Swiggy and Zomato, and tracks stock, even when the internet doesn’t.',
   /** Sign-up happens in the POS app; under `next dev` this opens the local preview of the redesigned page (app/signup). */
-  primary: { label: 'Start free trial', href: process.env.NODE_ENV === 'development' ? '/signup' : 'https://cafe.posomega.com/onboard' },
+  primary: { label: 'Start free trial', href: process.env.NODE_ENV === 'development' ? '/signup' : 'https://billing.pepperpe.com/onboard' },
   secondary: { label: 'Talk to sales', href: '/get-started' },
 }
 
@@ -201,10 +201,10 @@ export const INTEGRATION_GROUPS: { tag: string; blurb: string; href?: string; it
 
 export const FAQS = [
   { q: 'How long does setup actually take?', a: "Most cafés are taking orders the same day. Menu, taxes, tables and printer are set up in one flow, with no on-site engineer visit to schedule. If you're moving from another POS, our team sets up your menu and modifiers as part of onboarding." },
-  { q: 'What happens when the internet goes down?', a: 'On the Omega Android app, billing keeps going: orders are saved on the tablet and synced automatically when the line returns, without duplicates. The web POS and the kitchen display need a connection, and card and UPI payments always do. Cash keeps working.' },
+  { q: 'What happens when the internet goes down?', a: 'On the PepperPe Android app, billing keeps going: orders are saved on the tablet and synced automatically when the line returns, without duplicates. The web POS and the kitchen display need a connection, and card and UPI payments always do. Cash keeps working.' },
   { q: 'Do I have to buy your hardware?', a: 'No. The web POS runs in a browser on an Android tablet, iPad or PC and prints to standard thermal printers. Our hardware is optional, and most restaurants keep the printer and cash drawer they already have.' },
   { q: 'How does the Swiggy / Zomato integration work?', a: 'Swiggy and Zomato orders arrive in the same queue as dine-in and takeaway. Accept with a prep time and the KOT goes to the right station. Menu, price and stock changes on the platforms are still made on their side today.' },
   { q: "What's your pricing in plain English?", a: '₹1,499 per outlet per month for Starter, ₹3,499 for Growth, custom for Enterprise. No setup fees, no per-seat charges, no per-transaction fees. Pay annually and save 20%.' },
-  { q: 'Is my data secure?', a: "Your data sits in Indian data centres and is encrypted at rest and in transit. Card payments are handled by PCI-DSS certified payment partners, so raw card data never touches Omega's systems. We don't train AI on your customer data. Our SOC 2 programme is in progress and we will publish the report when it is complete." },
-  { q: 'Can I switch from Petpooja / Posist / another POS?', a: 'Yes. Our team sets up your menu and modifiers in Omega as part of onboarding at no extra cost, and you can run both systems side by side while you switch.' },
+  { q: 'Is my data secure?', a: "Your data sits in Indian data centres and is encrypted at rest and in transit. Card payments are handled by PCI-DSS certified payment partners, so raw card data never touches PepperPe's systems. We don't train AI on your customer data. Our SOC 2 programme is in progress and we will publish the report when it is complete." },
+  { q: 'Can I switch from Petpooja / Posist / another POS?', a: 'Yes. Our team sets up your menu and modifiers in PepperPe as part of onboarding at no extra cost, and you can run both systems side by side while you switch.' },
 ]

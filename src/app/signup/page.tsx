@@ -3,7 +3,7 @@ import { SignupPreview } from './SignupPreview'
 
 export const metadata: Metadata = {
   title: 'Talk to our team',
-  description: 'Get your restaurant on Omega POS. Leave your number and the Omega team sets up your outlet for you.',
+  description: 'Get your restaurant on PepperPe. Leave your number and the PepperPe team sets up your outlet for you.',
 }
 
 /*

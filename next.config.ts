@@ -54,6 +54,12 @@ const nextConfig: NextConfig = {
         // still a duplicate: it can be linked, shared and indexed on its own.
         // 308 preserves the method and is treated as a permanent redirect.
         source: '/:path*',
+        has: [{ type: 'host', value: 'www.pepperpe.com' }],
+        destination: 'https://pepperpe.com/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
         has: [{ type: 'host', value: 'www.posomega.com' }],
         destination: 'https://posomega.com/:path*',
         permanent: true,

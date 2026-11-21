@@ -16,7 +16,7 @@ const STEPS = [
     who: 'Captain' as const,
     role: 'Floor captain',
     title: 'Punch the order once.',
-    body: 'Take it on the tablet at the table. Omega fires the KOT to the right kitchen station and keeps the bill running for that table.',
+    body: 'Take it on the tablet at the table. PepperPe fires the KOT to the right kitchen station and keeps the bill running for that table.',
     lines: ['Table 7, two masala dosa. Sent!', 'No more running slips to the kitchen.', 'Call waiter? I see it on my screen.'],
   },
   {
@@ -37,7 +37,7 @@ const STEPS = [
     who: 'Storekeeper' as const,
     role: 'Store in-charge',
     title: 'Stock that counts itself.',
-    body: 'Link dishes to recipes and Omega takes the ingredients off as they sell, then flags what is running low before service.',
+    body: 'Link dishes to recipes and PepperPe takes the ingredients off as they sell, then flags what is running low before service.',
     lines: ['Milk is low. I knew before the rush.', 'Every plate, costed.', 'Fewer surprises at the morning count.'],
   },
   {
@@ -312,7 +312,7 @@ export function Crew() {
         <div className="sec-head center" data-rv>
           <span className="eyebrow"><span className="dot" />How it works</span>
           <h2 id="crew-title" className="h-section">Your whole team, <span className="h-muted">on one system.</span></h2>
-          <p className="lede">Five people, one service. Here is what each of them does differently with Omega.</p>
+          <p className="lede">Five people, one service. Here is what each of them does differently with PepperPe.</p>
         </div>
 
         <div className="crew-grid">

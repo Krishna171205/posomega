@@ -2,7 +2,7 @@ import { LegalPage } from '@/components/LegalPage'
 
 export const metadata = {
   title: 'Privacy Policy',
-  description: 'How Omega Point-of-Sale collects, uses, and protects your data.',
+  description: 'How PepperPe Point-of-Sale collects, uses, and protects your data.',
   alternates: { canonical: '/privacy' },
 }
 
@@ -12,7 +12,7 @@ export default function Page() {
       title="Privacy"
       italicTail="policy."
       updated="24 May 2026"
-      intro="We built Omega for restaurant operators, not advertisers. This policy explains what we collect, why we collect it, and the controls you have."
+      intro="We built PepperPe for restaurant operators, not advertisers. This policy explains what we collect, why we collect it, and the controls you have."
       sections={[
         {
           heading: '1. What we collect',
@@ -25,7 +25,7 @@ export default function Page() {
         {
           heading: '2. How we use it',
           body: [
-            'To operate the Omega platform: process orders, sync inventory across aggregators, settle payments, and deliver receipts.',
+            'To operate the PepperPe platform: process orders, sync inventory across aggregators, settle payments, and deliver receipts.',
             'To provide support: investigate issues you report and prevent fraud.',
             'To improve the product: aggregated and de-identified metrics shape what we build next. We do not train AI models on your customer data.',
           ],
@@ -50,14 +50,14 @@ export default function Page() {
           heading: '6. Your rights under DPDP Act 2023',
           body: [
             'Access, correction, completion, and erasure of personal data you have provided.',
-            'Withdrawal of consent at any time (note: withdrawal may limit your ability to use Omega).',
+            'Withdrawal of consent at any time (note: withdrawal may limit your ability to use PepperPe).',
             'Nomination of another individual to exercise your rights in the event of incapacity.',
             'Grievance redressal — write to grievance@unifiednexgrade.com.',
           ],
         },
         {
           heading: '7. Retention',
-          body: 'We retain operational data for as long as your Omega account is active, plus 7 years thereafter to comply with Indian tax and accounting law. You can request deletion at any time, subject to those obligations.',
+          body: 'We retain operational data for as long as your PepperPe account is active, plus 7 years thereafter to comply with Indian tax and accounting law. You can request deletion at any time, subject to those obligations.',
         },
         {
           heading: '8. Cookies & analytics',

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { INDEXABLE_SLUGS } from '@/content/registry'
 
-const base = 'https://posomega.com'
+const base = 'https://pepperpe.com'
 
 // Marketing pages are prerendered at build time, so build time is their real
 // last-modified date. Legal pages keep the date they were actually last revised.

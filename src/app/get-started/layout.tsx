@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 // title and a canonical pointing at "/", which made it a duplicate of the homepage.
 export const metadata: Metadata = {
   title: 'Get started',
-  description: 'Tell us about your cafe and we will set up your Omega POS trial.',
+  description: 'Tell us about your cafe and we will set up your PepperPe trial.',
   alternates: { canonical: '/get-started' },
   robots: { index: false, follow: true },
 }

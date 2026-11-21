@@ -2,7 +2,7 @@ import { LegalPage } from '@/components/LegalPage'
 
 export const metadata = {
   title: 'Cookie Policy',
-  description: 'The cookies and similar technologies Omega uses, and how to control them.',
+  description: 'The cookies and similar technologies PepperPe uses, and how to control them.',
   alternates: { canonical: '/cookies' },
 }
 
@@ -16,7 +16,7 @@ export default function Page() {
       sections={[
         {
           heading: '1. Essential cookies',
-          body: 'These keep Omega working — your sign-in session, your CSRF token, and a load-balancing cookie that routes you to the nearest edge. You cannot disable these without breaking the product.',
+          body: 'These keep PepperPe working: your sign-in session, your CSRF token, and a load-balancing cookie that routes you to the nearest edge. You cannot disable these without breaking the product.',
         },
         {
           heading: '2. Preference cookies',
@@ -24,11 +24,11 @@ export default function Page() {
         },
         {
           heading: '3. Analytics',
-          body: 'We use first-party analytics — a single Omega-owned cookie that records anonymous, aggregated page views, click paths, and load times. We do not use Google Analytics, Hotjar, or any third-party analytics on the Omega application. The marketing site (posomega.com) uses Vercel\'s first-party analytics for traffic measurement.',
+          body: 'We use first-party analytics: a single PepperPe-owned cookie that records anonymous, aggregated page views, click paths, and load times. We do not use Google Analytics, Hotjar, or any third-party analytics on the PepperPe application. The marketing site (pepperpe.com) uses Vercel\'s first-party analytics for traffic measurement.',
         },
         {
           heading: '4. Marketing & advertising cookies',
-          body: 'We do not set marketing or advertising cookies. We do not embed Facebook Pixel, Google Ads, LinkedIn Insight Tag, or similar trackers on the Omega application.',
+          body: 'We do not set marketing or advertising cookies. We do not embed Facebook Pixel, Google Ads, LinkedIn Insight Tag, or similar trackers on the PepperPe application.',
         },
         {
           heading: '5. Third-party cookies',

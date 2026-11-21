@@ -68,7 +68,7 @@ export function Footer({ crew = false }: { crew?: boolean }) {
       <div className="container">
         <div className="footer-grid">
           <div className="footer-brand">
-            <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>Omega</span></a>
+            <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>PepperPe</span></a>
             <p>Restaurant point of sale, built in India for Indian kitchens.</p>
           </div>
           {COLS.map(c => (

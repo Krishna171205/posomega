@@ -22,8 +22,8 @@ function Mark({ l }: { l: Logo }) {
 export function Strip() {
   if (CONSENTED_CUSTOMERS.length > 0) {
     return (
-      <section className="strip" aria-label="Restaurants running Omega">
-        <p className="strip-label">Running service on Omega</p>
+      <section className="strip" aria-label="Restaurants running PepperPe">
+        <p className="strip-label">Running service on PepperPe</p>
         <ul className="strip-row">
           {CONSENTED_CUSTOMERS.map(c => (
             <li key={c.name} className="strip-cust">

@@ -15,6 +15,6 @@ export const metadata: Metadata = {
  * components/auth/Auth.tsx, ready to move into the POS app.
  */
 export default function LoginPage() {
-  if (process.env.NODE_ENV !== 'development') redirect('https://cafe.posomega.com/login')
+  if (process.env.NODE_ENV !== 'development') redirect('https://billing.pepperpe.com/login')
   return <LoginPreview />
 }

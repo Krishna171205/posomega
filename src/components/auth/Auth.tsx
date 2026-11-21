@@ -75,7 +75,7 @@ function Shell({ backHref, title, sub, decor, waiterFrom, state, children, after
         <main className="au-main">
           <a className="au-back" href={backHref}>
             <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            posomega.com
+            pepperpe.com
           </a>
           <div className="au-col">
             <div className="au-card">
@@ -192,9 +192,9 @@ export function SignIn({
   onSubmit,
   forgotHref = '/forgot-password',
   signupHref = '/signup',
-  backHref = 'https://posomega.com',
-  termsHref = 'https://posomega.com/terms',
-  privacyHref = 'https://posomega.com/privacy',
+  backHref = 'https://pepperpe.com',
+  termsHref = 'https://pepperpe.com/terms',
+  privacyHref = 'https://pepperpe.com/privacy',
   decor,
   waiterFrom,
   initialError,
@@ -224,8 +224,8 @@ export function SignIn({
 
   return (
     <Shell
-      backHref={backHref} title="Welcome back" sub="Sign in to Omega POS" decor={decor} waiterFrom={waiterFrom} state={{ ...f.state, error: !!error }}
-      after={<><p className="au-alt">New to Omega? <a href={signupHref}>Talk to our team</a></p><Terms termsHref={termsHref} privacyHref={privacyHref} /></>}
+      backHref={backHref} title="Welcome back" sub="Sign in to PepperPe" decor={decor} waiterFrom={waiterFrom} state={{ ...f.state, error: !!error }}
+      after={<><p className="au-alt">New to PepperPe? <a href={signupHref}>Talk to our team</a></p><Terms termsHref={termsHref} privacyHref={privacyHref} /></>}
     >
       <form className={`au-form ${f.busy ? 'is-busy' : ''}`} onSubmit={submit} noValidate aria-busy={f.busy}>
         <div className={`au-field ${f.bad === 'email' ? 'has-error' : ''}`}>
@@ -287,9 +287,9 @@ export type ContactProps = {
 export function ContactTeam({
   onSubmit,
   signinHref = '/login',
-  backHref = 'https://posomega.com',
-  termsHref = 'https://posomega.com/terms',
-  privacyHref = 'https://posomega.com/privacy',
+  backHref = 'https://pepperpe.com',
+  termsHref = 'https://pepperpe.com/terms',
+  privacyHref = 'https://pepperpe.com/privacy',
   decor,
   waiterFrom,
 }: ContactProps) {
@@ -330,9 +330,9 @@ export function ContactTeam({
     <Shell
       backHref={backHref}
       title={sent ? `Thanks, ${f.values.name.trim().split(' ')[0]}.` : 'Talk to our team'}
-      sub={sent ? `We will call +91 ${f.values.phone} within a day and set up ${f.values.restaurant.trim()} on Omega for you.` : 'We set up every cafe for you, menu and all.'}
+      sub={sent ? `We will call +91 ${f.values.phone} within a day and set up ${f.values.restaurant.trim()} on PepperPe for you.` : 'We set up every cafe for you, menu and all.'}
       decor={decor} waiterFrom={waiterFrom} state={{ ...f.state, error: !!f.error, filled: sent || f.state.filled }}
-      after={<><p className="au-alt">Already on Omega? <a href={signinHref}>Sign in</a></p><Terms termsHref={termsHref} privacyHref={privacyHref} /></>}
+      after={<><p className="au-alt">Already on PepperPe? <a href={signinHref}>Sign in</a></p><Terms termsHref={termsHref} privacyHref={privacyHref} /></>}
     >
       {!sent && (
         <form className={`au-form ${f.busy ? 'is-busy' : ''}`} onSubmit={submit} noValidate aria-busy={f.busy}>

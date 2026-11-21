@@ -53,7 +53,7 @@ export function OutletPageView({ page, siblings }: { page: MarketingPage & { out
     ),
     tabs: (
       <section className="mk-block ol-tabs-sec">
-        <h2 className="h-section mk-h2">How Omega runs {inSentence(o.short)}</h2>
+        <h2 className="h-section mk-h2">How PepperPe runs {inSentence(o.short)}</h2>
         <OutletTabs tabs={o.tabs} />
       </section>
     ),
@@ -91,7 +91,7 @@ export function OutletPageView({ page, siblings }: { page: MarketingPage & { out
     ),
     proof: proof.length > 0 ? (
       <section className="mk-block">
-        <h2 className="h-section mk-h2">Running on Omega</h2>
+        <h2 className="h-section mk-h2">Running on PepperPe</h2>
         <ul className="ol-proof">
           {proof.map(c => <li key={c.name}><b>{c.name}</b>{c.place && <span className="muted">{c.place}</span>}</li>)}
         </ul>
@@ -185,7 +185,7 @@ export function OutletPageView({ page, siblings }: { page: MarketingPage & { out
 
           <section className="mk-endcap ol-endcap">
             <h2 className="h-section">See it on <span className="h-muted">your own menu.</span></h2>
-            <p className="lede">Tell us about your outlet and we will set Omega up with your items, tables and stations for the demo.</p>
+            <p className="lede">Tell us about your outlet and we will set PepperPe up with your items, tables and stations for the demo.</p>
             <Link href="/get-started" className="btn btn-blue btn-lg">Book a demo <Icon.Arrow size={13} /></Link>
           </section>
         </div>

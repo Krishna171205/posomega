@@ -8,13 +8,13 @@ import { SITE, jsonLdScript } from '@/lib/seo'
 import { pageLink } from '@/content/registry'
 
 export const metadata: Metadata = {
-  title: { absolute: 'Omega POS Pricing | Restaurant POS Cost in India' },
+  title: { absolute: 'PepperPe Pricing | Restaurant POS Cost in India' },
   description:
-    'Omega POS pricing: Rs 1,499 per outlet per month for one location, Rs 3,499 for up to ten. No setup fee, no per-seat charge, no per-transaction fee.',
+    'PepperPe pricing: Rs 1,499 per outlet per month for one location, Rs 3,499 for up to ten. No setup fee, no per-seat charge, no per-transaction fee.',
   alternates: { canonical: '/pricing' },
   openGraph: {
     type: 'article',
-    title: 'Omega POS Pricing | Restaurant POS Software Cost in India',
+    title: 'PepperPe Pricing | Restaurant POS Software Cost in India',
     description:
       'Rs 1,499 per outlet per month for a single location, Rs 3,499 for up to ten outlets. No setup fee, no per-seat charge, no per-transaction fee.',
     url: `${SITE}/pricing`,
@@ -32,7 +32,7 @@ const breadcrumb = {
 
 const FAQ = [
   {
-    q: 'Is Omega priced per outlet or per terminal?',
+    q: 'Is PepperPe priced per outlet or per terminal?',
     a: 'Per outlet. Staff logins, terminals and transactions are unlimited within an outlet, so putting a second till on a busy counter costs nothing extra in software. This is worth checking in any quote you compare against, because per-terminal licensing is common and changes the real cost substantially once a counter has more than one screen.',
   },
   {
@@ -41,7 +41,7 @@ const FAQ = [
   },
   {
     q: 'Do you take a cut of each transaction?',
-    a: 'No. There is no per-transaction fee from Omega. Your payment provider charges its own merchant discount rate, which is a separate arrangement between you and them, and we do not mark it up or take a share of it.',
+    a: 'No. There is no per-transaction fee from PepperPe. Your payment provider charges its own merchant discount rate, which is a separate arrangement between you and them, and we do not mark it up or take a share of it.',
   },
   {
     q: 'What does annual billing save?',
@@ -57,7 +57,7 @@ const FAQ = [
   },
   {
     q: 'Do I have to buy your hardware?',
-    a: 'No. Omega runs on any modern Android tablet, iPad or Windows terminal and pairs with standard thermal printers over Bluetooth, USB or network. Our hardware is optional. Most existing restaurants keep the printer and cash drawer they already have.',
+    a: 'No. PepperPe runs on any modern Android tablet, iPad or Windows terminal and pairs with standard thermal printers over Bluetooth, USB or network. Our hardware is optional. Most existing restaurants keep the printer and cash drawer they already have.',
   },
 ]
 
@@ -81,7 +81,7 @@ export default function PricingPage() {
           <header className="mk-hero">
             <div className="eyebrow"><span className="dot" />Pricing</div>
             <h1 className="h-display mk-h1">
-              What Omega costs<br /><span className="h-muted">and what it does not.</span>
+              What PepperPe costs<br /><span className="h-muted">and what it does not.</span>
             </h1>
             <p className="lede mk-lede">
               Rs 1,499 per outlet per month for a single location, Rs 3,499 per outlet for up to ten,

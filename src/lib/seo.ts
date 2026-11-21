@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import type { MarketingPage } from '@/content/types'
 
-export const SITE = 'https://posomega.com'
+export const SITE = 'https://pepperpe.com'
 
 export function pageMetadata(page: MarketingPage): Metadata {
   const path = `/${page.slug}`

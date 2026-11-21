@@ -13,11 +13,11 @@ type OutletPage = MarketingPage & { outlet: OutletExtras }
 
 const PRINTER_FAQ = {
   q: 'Does it work with the printer I already have?',
-  a: 'Omega runs on Android tablets, iPads and Windows or Mac machines, and pairs with standard thermal printers over Bluetooth, USB or network. If you already have a counter setup, you usually keep the printer and the cash drawer and replace only the software.',
+  a: 'PepperPe runs on Android tablets, iPads and Windows or Mac machines, and pairs with standard thermal printers over Bluetooth, USB or network. If you already have a counter setup, you usually keep the printer and the cash drawer and replace only the software.',
 }
 const OFFLINE_FAQ = {
   q: 'What happens when the internet goes down mid-service?',
-  a: 'On the Omega Android app, billing and cash keep running: orders are saved on the tablet and sync the moment the connection comes back, so nothing is lost. The web POS and the kitchen display need a connection.',
+  a: 'On the PepperPe Android app, billing and cash keep running: orders are saved on the tablet and sync the moment the connection comes back, so nothing is lost. The web POS and the kitchen display need a connection.',
 }
 
 export const SEGMENTS: OutletPage[] = [
@@ -28,8 +28,8 @@ export const SEGMENTS: OutletPage[] = [
     eyebrow: 'For coffee shops and all-day cafés',
     h1: 'Café POS software',
     h1Tail: 'that keeps up with the morning rush.',
-    lede: 'Modifiers one tap from the item, regulars remembered by their phone number, and stock that deducts itself as every cup sells. Omega is billing and operations for cafés in India.',
-    metaTitle: 'Café POS and Billing Software in India | Omega POS',
+    lede: 'Modifiers one tap from the item, regulars remembered by their phone number, and stock that deducts itself as every cup sells. PepperPe is billing and operations for cafés in India.',
+    metaTitle: 'Café POS and Billing Software in India | PepperPe',
     metaDescription: 'Café POS software for Indian coffee shops: fast billing with modifiers, KOTs, phone-number loyalty and stamp cards, recipe-level stock, UPI, GST and offline mode.',
     outlet: {
       photos: { hero: { id: 'photo-1509042239860-f550ce710b93', alt: 'Latte with leaf art on a wooden café table' }, strip: [{ id: 'photo-1442512595331-e89e73853f31', alt: 'Barista making pour-over coffee' }, { id: 'photo-1495474472287-4d71bcdd2085', alt: 'Two cups of latte art held together' }, { id: 'photo-1497515114629-f71d768fd07c', alt: 'Steaming coffee cup on roasted beans' }] },
@@ -72,7 +72,7 @@ export const SEGMENTS: OutletPage[] = [
         {
           label: 'Pickup orders',
           h: 'Orders paid before they reach the counter',
-          d: 'Guests order and pay ahead on Grabbit, our customer app, and pick up in a slot. The order lands in Omega like any other.',
+          d: 'Guests order and pay ahead on Grabbit, our customer app, and pick up in a slot. The order lands in PepperPe like any other.',
           points: ['Pickup slots you control', 'Paid online, no queue', 'Same KOT and same reports'],
           mock: { kind: 'preorder', title: 'Grabbit · Pickup orders', orders: [{ t: '8:40', n: '2× Cappuccino', who: 'Riya' }, { t: '8:45', n: 'Cold coffee, croissant', who: 'Arjun' }, { t: '8:50', n: '3× Masala chai', who: 'Office order' }] },
         },
@@ -90,12 +90,12 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'What makes café billing different',
         body: [
           'A café is not a small restaurant. The order value is lower, the order count is far higher, and most of it lands inside a short window in the morning. A system that is fine for a forty-cover dining room falls apart at a counter taking two hundred orders before eleven.',
-          'The failure is always the same: too many taps. Omega puts the busiest items on the first screen and keeps modifiers on the item, so the flow works one-handed while the other hand is on the machine.',
+          'The failure is always the same: too many taps. PepperPe puts the busiest items on the first screen and keeps modifiers on the item, so the flow works one-handed while the other hand is on the machine.',
         ],
       },
     ],
     faq: [
-      { q: 'Can Omega handle a café with one outlet?', a: 'Yes. The Starter plan is Rs 1,499 per outlet per month for one location, with no per-seat charge, so a second terminal on the counter costs nothing extra in software.' },
+      { q: 'Can PepperPe handle a café with one outlet?', a: 'Yes. The Starter plan is Rs 1,499 per outlet per month for one location, with no per-seat charge, so a second terminal on the counter costs nothing extra in software.' },
       PRINTER_FAQ,
       { q: 'How long does it take to train a new barista?', a: 'Most new staff bill on their first shift. The order screen is the only surface a barista needs, and it stays shallow: busy items first, modifiers on the item.' },
       OFFLINE_FAQ,
@@ -110,7 +110,7 @@ export const SEGMENTS: OutletPage[] = [
     h1: 'QSR billing software',
     h1Tail: 'built for the lunch line.',
     lede: 'Combos billed in seconds, tickets split by kitchen station, a token screen that answers "is mine ready?", and Swiggy and Zomato orders in the same queue as the counter.',
-    metaTitle: 'QSR POS and Billing Software in India | Omega POS',
+    metaTitle: 'QSR POS and Billing Software in India | PepperPe',
     metaDescription: 'QSR billing software for Indian quick-service restaurants: combo billing, station-wise KOT and kitchen display, token display, QR ordering, aggregator orders and offline mode.',
     outlet: {
       photos: { hero: { id: 'photo-1606491956689-2ea866880c84', alt: 'Pav bhaji with buttered pav' }, strip: [{ id: 'photo-1601050690597-df0568f70950', alt: 'Samosas with green chutney' }, { id: 'photo-1568901346375-23c9450c58cd', alt: 'A stacked burger' }] },
@@ -145,8 +145,8 @@ export const SEGMENTS: OutletPage[] = [
         {
           label: 'Online orders',
           h: 'Swiggy and Zomato in the same queue',
-          d: 'Aggregator orders arrive in Omega next to counter and QR orders. Accept with a prep time and the KOT goes straight to the kitchen.',
-          points: ['Accept or reject in Omega', 'Prep time on every order', 'One kitchen queue'],
+          d: 'Aggregator orders arrive in PepperPe next to counter and QR orders. Accept with a prep time and the KOT goes straight to the kitchen.',
+          points: ['Accept or reject in PepperPe', 'Prep time on every order', 'One kitchen queue'],
           mock: { kind: 'orders', title: 'Online orders' },
         },
       ],
@@ -163,14 +163,14 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'In QSR, the POS sets the speed of the line',
         body: [
           'A quick-service counter lives or dies on throughput. Every extra tap at billing and every ticket that reaches the wrong station shows up as minutes in the queue.',
-          'Omega keeps the order screen shallow, routes each item to its station as it is billed, and gives guests a token screen so the counter can keep billing instead of answering questions.',
+          'PepperPe keeps the order screen shallow, routes each item to its station as it is billed, and gives guests a token screen so the counter can keep billing instead of answering questions.',
         ],
       },
     ],
     faq: [
       { q: 'Does the kitchen display need its own hardware?', a: 'No. It runs in a browser on any screen you can mount, including a spare tablet or an existing monitor. Most kitchens start with what is already in the building.' },
       { q: 'Can guests order from their table by QR?', a: 'Yes. Each table gets a QR code, the guest orders from their phone, and the order lands in the same queue and the same kitchen display as the counter.' },
-      { q: 'How many outlets can Omega handle?', a: 'The Growth plan covers up to ten outlets at Rs 3,499 per outlet per month, with reports across all of them. For more than ten, get in touch and we will quote against your store count.' },
+      { q: 'How many outlets can PepperPe handle?', a: 'The Growth plan covers up to ten outlets at Rs 3,499 per outlet per month, with reports across all of them. For more than ten, get in touch and we will quote against your store count.' },
       OFFLINE_FAQ,
     ],
     related: ['features/kitchen-display', 'integrations/swiggy-zomato', 'for/food-courts', 'pricing'],
@@ -183,7 +183,7 @@ export const SEGMENTS: OutletPage[] = [
     h1: 'Fine dining restaurant POS',
     h1Tail: 'that reads the room for you.',
     lede: 'A floor plan that shows every table at a glance, guests who can call a waiter or pay from the table, reservations with a waitlist, and allergies printed on the kitchen ticket.',
-    metaTitle: 'Fine Dining Restaurant POS Software | Omega POS',
+    metaTitle: 'Fine Dining Restaurant POS Software | PepperPe',
     metaDescription: 'POS for fine dining restaurants in India: floor plan, call waiter and pay at table, reservations and waitlist, allergen tags on KOTs, captain reports, GST billing.',
     outlet: {
       photos: { hero: { id: 'photo-1606660023296-81d67734170a', alt: 'A dining table set with plates, glasses and candles' }, strip: [{ id: 'photo-1723132688333-83018f3560be', alt: 'A plated dish and a glass of wine' }, { id: 'photo-1484156818044-c040038b0719', alt: 'Wine glasses lined along a table' }] },
@@ -236,14 +236,14 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'The POS is the only thing that sees every table',
         body: [
           'In a dining room the manager cannot be at every table. The floor plan is the one place where the state of the room is visible at once: who is seated, who is waiting, who wants the bill.',
-          'Omega puts that state on one screen and lets the guest add to it, by calling a waiter or paying from the table, so service moves at the guest\'s pace instead of the waiter\'s.',
+          'PepperPe puts that state on one screen and lets the guest add to it, by calling a waiter or paying from the table, so service moves at the guest\'s pace instead of the waiter\'s.',
         ],
       },
     ],
     faq: [
       { q: 'Can I lay out my actual floor plan?', a: 'Yes. Tables are placed on a plan that matches the room, and each table shows whether it is free, seated or waiting on the bill.' },
       { q: 'How are allergies handled?', a: 'Dishes carry allergen and dietary tags, and the guest\'s note is added to the order. Both print on the KOT and show on the kitchen display.' },
-      { q: 'Does Omega pace courses or split a bill by seat?', a: 'Not yet. Orders can be held and fired to the kitchen, but there is no course-by-course pacing or seat-level bill split today. We would rather tell you now than in the demo.' },
+      { q: 'Does PepperPe pace courses or split a bill by seat?', a: 'Not yet. Orders can be held and fired to the kitchen, but there is no course-by-course pacing or seat-level bill split today. We would rather tell you now than in the demo.' },
       PRINTER_FAQ,
     ],
     related: ['features/billing-and-kot', 'features/kitchen-display', 'for/bars', 'pricing'],
@@ -256,7 +256,7 @@ export const SEGMENTS: OutletPage[] = [
     h1: 'Cloud kitchen POS software',
     h1Tail: 'for kitchens no guest ever sees.',
     lede: 'Swiggy and Zomato orders in one queue with a prep time on each, a kitchen display split by station, your own riders tracked to the door, and recipe stock on every dish.',
-    metaTitle: 'Cloud Kitchen POS Software in India | Omega POS',
+    metaTitle: 'Cloud Kitchen POS Software in India | PepperPe',
     metaDescription: 'Cloud kitchen POS for India: Swiggy and Zomato orders in one queue, prep times, station-wise kitchen display, own delivery riders, recipe-level inventory, GST billing.',
     outlet: {
       photos: { hero: { id: 'photo-1617347454431-f49d7ff5c3b1', alt: 'Delivery rider on a scooter at night' }, strip: [{ id: 'photo-1585937421612-70a008356fbe', alt: 'Bowls of Indian curry' }, { id: 'photo-1519608487953-e999c86e7455', alt: 'City street at night' }] },
@@ -270,8 +270,8 @@ export const SEGMENTS: OutletPage[] = [
         {
           label: 'Aggregator orders',
           h: 'Every app in one queue',
-          d: 'Swiggy and Zomato orders land in Omega. Accept with a prep time and the KOT goes to the kitchen without anyone retyping it.',
-          points: ['Accept or reject in Omega', 'Prep time on every order', 'Online order activity report'],
+          d: 'Swiggy and Zomato orders land in PepperPe. Accept with a prep time and the KOT goes to the kitchen without anyone retyping it.',
+          points: ['Accept or reject in PepperPe', 'Prep time on every order', 'Online order activity report'],
           mock: { kind: 'orders', title: 'Online orders' },
         },
         {
@@ -309,14 +309,14 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'The tablet wall is the problem',
         body: [
           'A delivery kitchen with a tablet per platform has to watch every tablet, retype every order and keep every menu in step by hand. Mistakes show up as cancellations and bad ratings.',
-          'Omega brings the orders into one queue and one kitchen display, so the kitchen works from a single list no matter where the order came from.',
+          'PepperPe brings the orders into one queue and one kitchen display, so the kitchen works from a single list no matter where the order came from.',
         ],
       },
     ],
     faq: [
-      { q: 'Do I still need the aggregator tablets?', a: 'Orders arrive and are accepted in Omega. Menu, price and stock changes on Swiggy and Zomato are still made on their side today, so most kitchens keep one partner app for that.' },
-      { q: 'Can I run several brands from one kitchen?', a: 'Not as one shared menu yet. Today each brand runs as its own outlet in Omega, with its own menu and its own reports. Shared stock across brands is not built.' },
-      { q: 'Does Omega handle my own delivery fleet?', a: 'Yes. Riders log in, get assigned orders, and each delivery is tracked from accepted to delivered.' },
+      { q: 'Do I still need the aggregator tablets?', a: 'Orders arrive and are accepted in PepperPe. Menu, price and stock changes on Swiggy and Zomato are still made on their side today, so most kitchens keep one partner app for that.' },
+      { q: 'Can I run several brands from one kitchen?', a: 'Not as one shared menu yet. Today each brand runs as its own outlet in PepperPe, with its own menu and its own reports. Shared stock across brands is not built.' },
+      { q: 'Does PepperPe handle my own delivery fleet?', a: 'Yes. Riders log in, get assigned orders, and each delivery is tracked from accepted to delivered.' },
       OFFLINE_FAQ,
     ],
     related: ['integrations/swiggy-zomato', 'features/kitchen-display', 'for/pizzerias', 'pricing'],
@@ -329,7 +329,7 @@ export const SEGMENTS: OutletPage[] = [
     h1: 'Bar and brewery POS software',
     h1Tail: 'with happy hour on autopilot.',
     lede: 'Happy-hour prices that switch on and off by themselves, drinks to the bar and food to the kitchen from one order, and a floor plan for the late-night rush.',
-    metaTitle: 'Bar, Pub and Brewery POS Software | Omega POS',
+    metaTitle: 'Bar, Pub and Brewery POS Software | PepperPe',
     metaDescription: 'Bar and brewery POS for India: automatic happy-hour pricing, bar and kitchen stations from one order, floor plan, call waiter, hourly sales reports, GST billing.',
     outlet: {
       photos: { hero: { id: 'photo-1785765991779-4003970f84a6', alt: 'Beer taps lined up on a dark bar counter' }, strip: [{ id: 'photo-1651980909099-ddb028d72855', alt: 'A back bar lined with bottles' }, { id: 'photo-1785765979897-71c046625d71', alt: 'Bar counter with taps in low light' }] },
@@ -391,14 +391,14 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'Happy hour is a pricing rule, not a memory test',
         body: [
           'When the bartender has to remember to switch prices, happy hour starts late, ends late, or never ends at all. Each of those leaks money or annoys a guest.',
-          'Omega treats it as a rule: a time window with a discount that the system applies and removes by itself, and that the reports record as charged.',
+          'PepperPe treats it as a rule: a time window with a discount that the system applies and removes by itself, and that the reports record as charged.',
         ],
       },
     ],
     faq: [
       { q: 'Does it handle happy-hour pricing?', a: 'Yes. Set the time window and the discount once, and it applies itself at the start and stops at the end. The discount report shows what was given.' },
       { q: 'Can I run food and drinks on the same bill?', a: 'Yes. Drinks route to the bar station and food to the kitchen from the same order, and both land on one bill with GST on each line.' },
-      { q: 'Can Omega track liquor by the peg?', a: 'Not yet. Recipes and stock work for ingredients today, but peg-level pour tracking and bottle stocktakes are not built. We would rather say so up front.' },
+      { q: 'Can PepperPe track liquor by the peg?', a: 'Not yet. Recipes and stock work for ingredients today, but peg-level pour tracking and bottle stocktakes are not built. We would rather say so up front.' },
       PRINTER_FAQ,
     ],
     related: ['features/billing-and-kot', 'features/kitchen-display', 'for/fine-dining', 'pricing'],
@@ -411,7 +411,7 @@ export const SEGMENTS: OutletPage[] = [
     h1: 'Food court and canteen POS',
     h1Tail: 'where every order gets a token.',
     lede: 'Guests order by QR or at the counter, every order gets a token, and the display calls it out when it is ready. Built for a lunch rush squeezed into one hour.',
-    metaTitle: 'Food Court and Canteen POS Software | Omega POS',
+    metaTitle: 'Food Court and Canteen POS Software | PepperPe',
     metaDescription: 'POS for food courts, canteens and cafeterias in India: QR ordering, token display, fast counter billing, kitchen display, UPI and cash, hourly sales, offline mode.',
     outlet: {
       photos: { hero: { id: 'photo-1559329007-40df8a9345d8', alt: 'A busy dining hall seen from above' }, strip: [{ id: 'photo-1546833999-b9f581a1996d', alt: 'Steel thali with curries and roti' }, { id: 'photo-1567337710282-00832b415979', alt: 'Thali with curries and bread' }] },
@@ -464,12 +464,12 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'A canteen has one hour to get it right',
         body: [
           'Most of a canteen\'s day happens between one and two in the afternoon. A slow counter or a crowd at the pickup window in that hour costs more than the rest of the day combined.',
-          'Omega spreads the load: guests order by QR from the table, the counter handles the rest, and the token display does the calling.',
+          'PepperPe spreads the load: guests order by QR from the table, the counter handles the rest, and the token display does the calling.',
         ],
       },
     ],
     faq: [
-      { q: 'Can each stall in a food court run its own menu?', a: 'Yes. Each stall runs as its own outlet in Omega with its own menu, kitchen display and reports. One central counter that bills across several stalls is not built yet.' },
+      { q: 'Can each stall in a food court run its own menu?', a: 'Yes. Each stall runs as its own outlet in PepperPe with its own menu, kitchen display and reports. One central counter that bills across several stalls is not built yet.' },
       { q: 'What screen do I need for the token display?', a: 'Any TV or monitor with a browser. The display shows the token board and can show menu slides between calls.' },
       OFFLINE_FAQ,
       PRINTER_FAQ,
@@ -484,7 +484,7 @@ export const SEGMENTS: OutletPage[] = [
     h1: 'Bakery and dessert shop POS',
     h1Tail: 'for every size, flavour and scoop.',
     lede: 'Sizes and flavours as variations, toppings as add-ons, cakes ordered and paid ahead for pickup, and a stamp card that brings regulars back for the next pastry.',
-    metaTitle: 'Bakery, Ice Cream and Dessert Shop POS | Omega POS',
+    metaTitle: 'Bakery, Ice Cream and Dessert Shop POS | PepperPe',
     metaDescription: 'POS for bakeries, cake shops, ice cream and dessert parlours in India: variations and add-ons, prepaid pickup orders, stamp-card loyalty, recipe stock, wastage, GST billing.',
     outlet: {
       photos: { hero: { id: 'photo-1517433670267-08bbd4be890f', alt: 'Bakery counter with fresh bread and pastries' }, strip: [{ id: 'photo-1578985545062-69928b1d9587', alt: 'Chocolate drip cake' }, { id: 'photo-1567206563064-6f60f40a2b57', alt: 'Ice cream tubs in a gelato counter' }, { id: 'photo-1555507036-ab1f4038808a', alt: 'Croissants dusted with sugar' }] },
@@ -514,7 +514,7 @@ export const SEGMENTS: OutletPage[] = [
           label: 'Pickup orders',
           h: 'Orders paid ahead, ready on time',
           d: 'Guests order and pay on Grabbit, our customer app, and pick up in a slot. No notebook, no unpaid cake left on the shelf.',
-          points: ['Pickup slots you control', 'Paid online up front', 'Lands in Omega like any order'],
+          points: ['Pickup slots you control', 'Paid online up front', 'Lands in PepperPe like any order'],
           mock: { kind: 'preorder', title: 'Grabbit · Pickup orders', orders: [{ t: '11:00', n: 'Chocolate truffle cake · 1 kg', who: 'Meera' }, { t: '12:30', n: '6× Red velvet jar', who: 'Kabir' }, { t: '4:00', n: 'Blueberry cheesecake · 500 g', who: 'Office order' }] },
         },
         {
@@ -545,13 +545,13 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'Bakery menus multiply fast',
         body: [
           'A bakery or dessert shop sells few products in many shapes: the same cake in three sizes, eggless or not, the same ice cream in cups, cones and sundaes. Set each one up as a separate item and the menu becomes unusable.',
-          'Omega keeps one item with variations and add-on groups, so the menu stays short, the bill stays correct, and the recipe deducts the right amount for each size.',
+          'PepperPe keeps one item with variations and add-on groups, so the menu stays short, the bill stays correct, and the recipe deducts the right amount for each size.',
         ],
       },
     ],
     faq: [
       { q: 'Can I sell by weight?', a: 'Not from a weighing scale yet. Most bakeries set fixed sizes, such as 500 g and 1 kg, as variations of the item, each with its own price and recipe.' },
-      { q: 'Does Omega track batches and expiry dates?', a: 'Not yet. Stock is tracked by recipe and unsold items can be logged as wastage with a reason, but batch and expiry tracking is not built.' },
+      { q: 'Does PepperPe track batches and expiry dates?', a: 'Not yet. Stock is tracked by recipe and unsold items can be logged as wastage with a reason, but batch and expiry tracking is not built.' },
       { q: 'Does it work for ice cream parlours?', a: 'Yes. Scoops, cups and cones work as variations, toppings as add-on groups, and stamp cards bring regulars back.' },
       OFFLINE_FAQ,
     ],
@@ -565,7 +565,7 @@ export const SEGMENTS: OutletPage[] = [
     h1: 'Pizzeria POS software',
     h1Tail: 'for every size, crust and topping.',
     lede: 'Sizes, crusts and toppings billed in a few taps, tickets on the oven station screen, Swiggy and Zomato in one queue, and your own riders tracked to the door.',
-    metaTitle: 'Pizzeria and Pizza Shop POS Software | Omega POS',
+    metaTitle: 'Pizzeria and Pizza Shop POS Software | PepperPe',
     metaDescription: 'Pizzeria POS for India: sizes, crusts and toppings as variations and add-ons, kitchen display, Swiggy and Zomato orders, own delivery riders, GST billing, offline mode.',
     outlet: {
       photos: { hero: { id: 'photo-1574071318508-1cdbab80d002', alt: 'Margherita pizza with basil' }, strip: [{ id: 'photo-1513104890138-7c749659a591', alt: 'Sliced pizza on a board' }, { id: 'photo-1604382354936-07c5d9983bd3', alt: 'Pizza on a dark floured surface' }, { id: 'photo-1595854341625-f33ee10dbf94', alt: 'Pizza on an orange table' }] },
@@ -609,7 +609,7 @@ export const SEGMENTS: OutletPage[] = [
           label: 'Online orders',
           h: 'Swiggy and Zomato with the counter',
           d: 'Aggregator orders arrive in the same queue, accepted with a prep time and sent straight to the oven.',
-          points: ['Accept or reject in Omega', 'Prep time on every order', 'One kitchen queue'],
+          points: ['Accept or reject in PepperPe', 'Prep time on every order', 'One kitchen queue'],
           mock: { kind: 'orders', title: 'Online orders' },
         },
       ],
@@ -626,13 +626,13 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'A pizza menu is a matrix',
         body: [
           'Three sizes, a few crusts and twenty toppings make hundreds of combinations. Billing them as separate items is impossible, and billing them loosely means toppings go into the oven that never reached the bill.',
-          'Omega models the matrix directly: variations for size and crust, add-on groups for toppings, and a recipe per size so stock and food cost follow what was actually made.',
+          'PepperPe models the matrix directly: variations for size and crust, add-on groups for toppings, and a recipe per size so stock and food cost follow what was actually made.',
         ],
       },
     ],
     faq: [
       { q: 'Can I do half-and-half pizzas?', a: 'Not as a split-pizza builder. Most pizzerias set it up as a variation or as an add-on group with the second half\'s toppings.' },
-      { q: 'Does Omega handle my own delivery riders?', a: 'Yes. Riders log in, get assigned orders, and each delivery is tracked from accepted to delivered.' },
+      { q: 'Does PepperPe handle my own delivery riders?', a: 'Yes. Riders log in, get assigned orders, and each delivery is tracked from accepted to delivered.' },
       PRINTER_FAQ,
       OFFLINE_FAQ,
     ],
@@ -646,7 +646,7 @@ export const SEGMENTS: OutletPage[] = [
     h1: 'Restaurant chain POS',
     h1Tail: 'with every outlet on one screen.',
     lede: 'Sales, items and payments from every outlet in one report, offline billing on the Android app, and stock and purchases tracked outlet by outlet.',
-    metaTitle: 'Multi-Outlet Restaurant Chain POS | Omega POS',
+    metaTitle: 'Multi-Outlet Restaurant Chain POS | PepperPe',
     metaDescription: 'POS for restaurant chains in India: reports across all outlets, offline billing on Android, recipe stock and purchases per outlet, staff attendance, Tally export, GST invoices.',
     outlet: {
       photos: { hero: { id: 'photo-1517248135467-4c7edcad34c4', alt: 'A large restaurant dining room with rows of tables and chairs' }, strip: [{ id: 'photo-1567157577867-05ccb1388e66', alt: 'Marine Drive, Mumbai' }, { id: 'photo-1477587458883-47145ed94245', alt: 'Hawa Mahal, Jaipur' }, { id: 'photo-1570168007204-dfb528c6958f', alt: 'Gateway of India, Mumbai' }] },
@@ -667,7 +667,7 @@ export const SEGMENTS: OutletPage[] = [
         {
           label: 'Offline billing',
           h: 'An outage does not stop the counter',
-          d: 'Outlets on the Omega Android app bill through an outage and sync when the line comes back, so head-office numbers fill in without gaps.',
+          d: 'Outlets on the PepperPe Android app bill through an outage and sync when the line comes back, so head-office numbers fill in without gaps.',
           points: ['Local order queue', 'Automatic sync', 'Nothing double counted'],
           mock: { kind: 'offline' },
         },
@@ -692,7 +692,7 @@ export const SEGMENTS: OutletPage[] = [
         heading: 'Growth breaks the day-end',
         body: [
           'At one outlet the owner sees everything. At five, the day-end becomes a stream of photos and voice notes, and the numbers are a day late and never quite comparable.',
-          'Omega keeps every outlet on the same system and the same reports, so the chain is read from one screen and each outlet can still bill on its own when its connection drops.',
+          'PepperPe keeps every outlet on the same system and the same reports, so the chain is read from one screen and each outlet can still bill on its own when its connection drops.',
         ],
       },
     ],

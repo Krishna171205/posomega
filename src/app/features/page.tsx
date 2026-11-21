@@ -3,8 +3,8 @@ import { HubPageView } from '@/components/marketing/MarketingPageView'
 import { FEATURE_PAGES } from '@/content/features'
 
 export const metadata: Metadata = {
-  title: { absolute: 'Omega POS Features | Billing, KOT, KDS, Inventory' },
-  description: 'What Omega actually does: GST-compliant billing and KOT routing, a kitchen display that sequences by departure time, recipe-level inventory with demand prediction, and an offline-first architecture.',
+  title: { absolute: 'PepperPe Features | Billing, KOT, KDS, Inventory' },
+  description: 'What PepperPe actually does: GST-compliant billing and KOT routing, a kitchen display that sequences by departure time, recipe-level inventory with demand prediction, and an offline-first architecture.',
   alternates: { canonical: '/features' },
 }
 
