@@ -3,7 +3,7 @@
 
 // The Omega API. Called directly (not through a rewrite) so the backend sees the visitor's
 // own address, which its per-IP limit on lead submissions depends on.
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.posomega.com";
+const BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.pepperpe.com";
 
 export class ApiError extends Error {
   status: number;

@@ -22,7 +22,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
   "img-src 'self' data: https:",
-  `connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL ?? 'https://api.posomega.com'}`,
+  `connect-src 'self' ${process.env.NEXT_PUBLIC_API_URL ?? 'https://api.pepperpe.com'}`,
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -47,24 +47,18 @@ const nextConfig: NextConfig = {
     return [{ source: '/:path*', headers: securityHeaders }]
   },
   async redirects() {
-    return [
-      {
-        // www.posomega.com served a 200 duplicate of the apex. The canonical tag
-        // pointed search engines at the apex, but a duplicate that resolves is
-        // still a duplicate: it can be linked, shared and indexed on its own.
-        // 308 preserves the method and is treated as a permanent redirect.
+    // One canonical host. www and the old brand domains (posomega.com, the 2026-11 rename)
+    // and pepperpe.in all 308 to https://pepperpe.com, path kept, so old links, KYC links
+    // in sent emails and search rankings carry over. 308 preserves the method and is a
+    // permanent redirect for search engines.
+    return ['www.pepperpe.com', 'pepperpe.in', 'www.pepperpe.in', 'posomega.com', 'www.posomega.com'].map(
+      (host) => ({
         source: '/:path*',
-        has: [{ type: 'host', value: 'www.pepperpe.com' }],
+        has: [{ type: 'host' as const, value: host }],
         destination: 'https://pepperpe.com/:path*',
         permanent: true,
-      },
-      {
-        source: '/:path*',
-        has: [{ type: 'host', value: 'www.posomega.com' }],
-        destination: 'https://posomega.com/:path*',
-        permanent: true,
-      },
-    ]
+      }),
+    )
   },
 }
 
