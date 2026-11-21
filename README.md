@@ -1,6 +1,6 @@
 # @gradient365/omegaui-landing
 
-Omega POS marketing site. `omegaui-landing.com` (domain TBD).
+PepperPe (formerly Omega POS) marketing site at pepperpe.com. Repo, package and infra names still use "omega".
 
 ## Stack
 
