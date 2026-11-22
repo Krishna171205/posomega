@@ -127,9 +127,9 @@ export const INTEGRATION_PAGES: MarketingPage[] = [
       },
       {
         q: 'Does PepperPe charge a per-transaction fee?',
-        a: 'No. PepperPe is priced per outlet per month with no per-transaction charge from us. The payment gateway\'s own charges for online payments are separate.',
+        a: 'No. PepperPe does not take a cut of your transactions. The payment gateway\'s own charges for online payments are separate.',
       },
     ],
-    related: ['features/billing-and-kot', 'pricing', 'integrations/swiggy-zomato', 'restaurant-billing-software'],
+    related: ['features/billing-and-kot', 'integrations/swiggy-zomato', 'restaurant-billing-software'],
   },
 ]

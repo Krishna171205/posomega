@@ -147,7 +147,6 @@ export function Nav() {
               </div>
             ))}
             <a href="/integrations" className="nav-link">Integrations</a>
-            <a href="/pricing" className="nav-link">Pricing</a>
           </nav>
 
           <div className="nav-cta">
@@ -178,7 +177,6 @@ export function Nav() {
             ))}
             <div className="drawer-group">
               <a href="/integrations" className="drawer-link" onClick={() => setDrawer(false)}>Integrations</a>
-              <a href="/pricing" className="drawer-link" onClick={() => setDrawer(false)}>Pricing</a>
               <a href={SIGN_IN} className="drawer-link">Sign in</a>
             </div>
           </div>

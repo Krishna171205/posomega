@@ -39,6 +39,7 @@ const COLS: { h: string; links: { href: string; t: string; ext?: boolean }[] }[]
     links: [
       { href: '/restaurant-billing-software', t: 'Restaurant billing software' },
       { href: '/gst-billing-software-for-restaurants', t: 'GST billing' },
+      { href: '/tools', t: 'Free tools' },
       { href: '/#faq', t: 'FAQ' },
       { href: 'mailto:security@unifiednexgrade.com', t: 'Security' },
     ],
@@ -46,7 +47,6 @@ const COLS: { h: string; links: { href: string; t: string; ext?: boolean }[] }[]
   {
     h: 'Company',
     links: [
-      { href: '/pricing', t: 'Pricing' },
       { href: '/get-started', t: 'Contact' },
       { href: 'mailto:careers@unifiednexgrade.com', t: 'Careers' },
       { href: 'mailto:hello@unifiednexgrade.com', t: 'Press' },

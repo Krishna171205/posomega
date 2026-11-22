@@ -95,12 +95,12 @@ export const SEGMENTS: OutletPage[] = [
       },
     ],
     faq: [
-      { q: 'Can PepperPe handle a café with one outlet?', a: 'Yes. The Starter plan is Rs 1,499 per outlet per month for one location, with no per-seat charge, so a second terminal on the counter costs nothing extra in software.' },
+      { q: 'Can PepperPe handle a café with one outlet?', a: 'Yes. Single-outlet cafés are most of who we work with, and a second terminal on the counter does not need a second setup. For a price, talk to sales: we quote after a short call about your outlet.' },
       PRINTER_FAQ,
       { q: 'How long does it take to train a new barista?', a: 'Most new staff bill on their first shift. The order screen is the only surface a barista needs, and it stays shallow: busy items first, modifiers on the item.' },
       OFFLINE_FAQ,
     ],
-    related: ['features/billing-and-kot', 'features/inventory-and-forecasting', 'for/bakeries', 'pricing'],
+    related: ['features/billing-and-kot', 'features/inventory-and-forecasting', 'for/bakeries'],
   },
   {
     slug: 'for/qsr',
@@ -170,10 +170,10 @@ export const SEGMENTS: OutletPage[] = [
     faq: [
       { q: 'Does the kitchen display need its own hardware?', a: 'No. It runs in a browser on any screen you can mount, including a spare tablet or an existing monitor. Most kitchens start with what is already in the building.' },
       { q: 'Can guests order from their table by QR?', a: 'Yes. Each table gets a QR code, the guest orders from their phone, and the order lands in the same queue and the same kitchen display as the counter.' },
-      { q: 'How many outlets can PepperPe handle?', a: 'The Growth plan covers up to ten outlets at Rs 3,499 per outlet per month, with reports across all of them. For more than ten, get in touch and we will quote against your store count.' },
+      { q: 'How many outlets can PepperPe handle?', a: 'As many as you run, with reports across all of them. Pricing depends on your outlet count and setup, so get in touch and we will quote against it.' },
       OFFLINE_FAQ,
     ],
-    related: ['features/kitchen-display', 'integrations/swiggy-zomato', 'for/food-courts', 'pricing'],
+    related: ['features/kitchen-display', 'integrations/swiggy-zomato', 'for/food-courts'],
   },
   {
     slug: 'for/fine-dining',
@@ -246,7 +246,7 @@ export const SEGMENTS: OutletPage[] = [
       { q: 'Does PepperPe pace courses or split a bill by seat?', a: 'Not yet. Orders can be held and fired to the kitchen, but there is no course-by-course pacing or seat-level bill split today. We would rather tell you now than in the demo.' },
       PRINTER_FAQ,
     ],
-    related: ['features/billing-and-kot', 'features/kitchen-display', 'for/bars', 'pricing'],
+    related: ['features/billing-and-kot', 'features/kitchen-display', 'for/bars'],
   },
   {
     slug: 'for/cloud-kitchens',
@@ -319,7 +319,7 @@ export const SEGMENTS: OutletPage[] = [
       { q: 'Does PepperPe handle my own delivery fleet?', a: 'Yes. Riders log in, get assigned orders, and each delivery is tracked from accepted to delivered.' },
       OFFLINE_FAQ,
     ],
-    related: ['integrations/swiggy-zomato', 'features/kitchen-display', 'for/pizzerias', 'pricing'],
+    related: ['integrations/swiggy-zomato', 'features/kitchen-display', 'for/pizzerias'],
   },
   {
     slug: 'for/bars',
@@ -401,7 +401,7 @@ export const SEGMENTS: OutletPage[] = [
       { q: 'Can PepperPe track liquor by the peg?', a: 'Not yet. Recipes and stock work for ingredients today, but peg-level pour tracking and bottle stocktakes are not built. We would rather say so up front.' },
       PRINTER_FAQ,
     ],
-    related: ['features/billing-and-kot', 'features/kitchen-display', 'for/fine-dining', 'pricing'],
+    related: ['features/billing-and-kot', 'features/kitchen-display', 'for/fine-dining'],
   },
   {
     slug: 'for/food-courts',
@@ -474,7 +474,7 @@ export const SEGMENTS: OutletPage[] = [
       OFFLINE_FAQ,
       PRINTER_FAQ,
     ],
-    related: ['for/qsr', 'features/billing-and-kot', 'integrations/upi-and-payments', 'pricing'],
+    related: ['for/qsr', 'features/billing-and-kot', 'integrations/upi-and-payments'],
   },
   {
     slug: 'for/bakeries',
@@ -555,7 +555,7 @@ export const SEGMENTS: OutletPage[] = [
       { q: 'Does it work for ice cream parlours?', a: 'Yes. Scoops, cups and cones work as variations, toppings as add-on groups, and stamp cards bring regulars back.' },
       OFFLINE_FAQ,
     ],
-    related: ['for/cafes', 'features/inventory-and-forecasting', 'features/billing-and-kot', 'pricing'],
+    related: ['for/cafes', 'features/inventory-and-forecasting', 'features/billing-and-kot'],
   },
   {
     slug: 'for/pizzerias',
@@ -636,7 +636,7 @@ export const SEGMENTS: OutletPage[] = [
       PRINTER_FAQ,
       OFFLINE_FAQ,
     ],
-    related: ['for/cloud-kitchens', 'integrations/swiggy-zomato', 'features/kitchen-display', 'pricing'],
+    related: ['for/cloud-kitchens', 'integrations/swiggy-zomato', 'features/kitchen-display'],
   },
   {
     slug: 'for/chains',
@@ -697,11 +697,11 @@ export const SEGMENTS: OutletPage[] = [
       },
     ],
     faq: [
-      { q: 'How is a chain priced?', a: 'The Growth plan covers up to ten outlets at Rs 3,499 per outlet per month. For more than ten, get in touch and we will quote against your store count.' },
+      { q: 'How is a chain priced?', a: 'Against your store count and setup. Talk to sales and we will quote after a short call.' },
       { q: 'Can head office push one menu to every outlet?', a: 'Not yet. Menus are managed per outlet today. A head-office menu that pushes to all outlets is not built, and we would rather say so before the demo.' },
       { q: 'Does it track staff attendance?', a: 'Yes. Staff tap an NFC tag at the outlet to clock in and out, and attendance is visible per outlet.' },
       OFFLINE_FAQ,
     ],
-    related: ['features/offline-mode', 'features/inventory-and-forecasting', 'pricing', 'for/qsr'],
+    related: ['features/offline-mode', 'features/inventory-and-forecasting', 'for/qsr'],
   },
 ]

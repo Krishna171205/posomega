@@ -165,7 +165,6 @@ export function OutletPageView({ page, siblings }: { page: MarketingPage & { out
               <p className="lede mk-lede">{page.lede}</p>
               <div className="mk-cta-row">
                 <Link href="/get-started" className="btn btn-blue">Book a demo <Icon.Arrow size={12} /></Link>
-                <Link href="/pricing" className="btn btn-secondary">See pricing</Link>
               </div>
             </div>
             <div className="ol-hero-art">

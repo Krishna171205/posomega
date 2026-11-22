@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { Nav } from '../Nav'
 import { Footer } from '../Footer'
 import { Icon } from '../Icons'
+import { Calculator } from './Calculator'
+import { ToolFeedback } from './ToolFeedback'
 import type { MarketingPage } from '@/content/types'
 import { pageLink, TEMPLATE_PAGE_BY_SLUG } from '@/content/registry'
 import { breadcrumbJsonLd, jsonLdScript } from '@/lib/seo'
@@ -109,9 +111,11 @@ export function MarketingPageView({ page }: { page: MarketingPage }) {
                   Book a demo <Icon.Arrow size={12} />
                 </Link>
               )}
-              <Link href="/pricing" className="btn btn-secondary">See pricing</Link>
             </div>
           </header>
+
+          {page.tool && <Calculator kind={page.tool} />}
+          {page.tool && <ToolFeedback page={page.slug.split('/').pop()!} />}
 
           {page.sections.map((s, i) => <Section key={i} section={s} />)}
 

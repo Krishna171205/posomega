@@ -18,27 +18,6 @@
 .proof-note a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--stroke-strong); text-underline-offset: 3px; }
 @media (max-width: 860px) { .proof-grid { grid-template-columns: 1fr; } }
 
-/* ── Pricing ────────────────────────────────────────────── */
-.pricing .seg { margin-top: 12px; }
-.price-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; align-items: stretch; }
-.price-card { display: flex; flex-direction: column; border-radius: var(--r-2xl); background: var(--bg); box-shadow: var(--sh-ring), var(--sh-card); overflow: hidden; }
-.price-card.featured { box-shadow: 0 0 0 1.5px var(--black-100), var(--sh-float); }
-.price-top { padding: 24px; display: grid; gap: 4px; border-bottom: 1px solid var(--stroke-weak); }
-.price-tier { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--fg-3); }
-.price-name { font-size: 15px; font-weight: 600; }
-.price-amt { margin-top: 18px; font-family: var(--font-display); font-variation-settings: 'opsz' 32; font-size: 40px; font-weight: 600; letter-spacing: -0.035em; line-height: 1; }
-.price-amt span { margin-left: 4px; font-family: var(--font-sans); font-variation-settings: 'opsz' 14; font-size: 13px; font-weight: 500; letter-spacing: 0; color: var(--fg-3); }
-.price-desc { margin-top: 8px; font-size: 13.5px; color: var(--fg-3); min-height: 2.6em; }
-.price-cta { margin-top: 16px; width: 100%; }
-.price-feat { padding: 20px 24px 24px; display: grid; gap: 10px; align-content: start; background: var(--bg-2); flex: 1; }
-.price-feat li { display: flex; gap: 9px; align-items: flex-start; font-size: 14px; color: var(--fg-2); }
-.price-feat li svg { flex: none; margin-top: 3px; color: var(--fg); }
-.price-feat li.lead { font-weight: 600; color: var(--fg); }
-.price-offer { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 12px; padding: 16px 20px; border-radius: var(--r-2xl); background: var(--bg-2); box-shadow: inset 0 0 0 1px var(--stroke-weak); }
-.price-offer > div { flex: 1; min-width: 220px; display: grid; gap: 2px; font-size: 14px; }
-.price-offer span { color: var(--fg-3); font-size: 13.5px; }
-@media (max-width: 900px) { .price-grid { grid-template-columns: 1fr; max-width: 480px; margin-inline: auto; } }
-
 /* ── Changelog ──────────────────────────────────────────── */
 .cl-head { display: grid; gap: 16px; margin-bottom: 32px; }
 .cl-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }

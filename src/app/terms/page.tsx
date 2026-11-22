@@ -25,7 +25,7 @@ export default function Page() {
         {
           heading: '3. Your subscription',
           body: [
-            'Subscriptions are billed monthly or annually per outlet, in advance. Fees are listed at pepperpe.com/pricing and may be revised with 30 days\' notice.',
+            'Subscriptions are billed monthly or annually per outlet, in advance. Fees are as set out in your quote or order form and may be revised with 30 days\' notice.',
             'You can cancel any time. Pre-paid annual subscriptions are non-refundable after 14 days from the start of a new billing cycle, except where required by law.',
           ],
         },
@@ -51,7 +51,7 @@ export default function Page() {
         },
         {
           heading: '8. Hardware',
-          body: 'PepperPe Terminal, PepperPe Mini, and PepperPe Print carry a 12-month manufacturer warranty against defects. Extended warranty and on-site replacement are available on Growth and Enterprise plans.',
+          body: 'PepperPe Terminal, PepperPe Mini, and PepperPe Print carry a 12-month manufacturer warranty against defects. Extended warranty and on-site replacement are available on request.',
         },
         {
           heading: '9. Termination',

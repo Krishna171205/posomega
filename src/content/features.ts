@@ -269,6 +269,6 @@ export const FEATURE_PAGES: MarketingPage[] = [
         a: 'Yes, with a reason each time, so waste is reported separately instead of hiding in the stock count.',
       },
     ],
-    related: ['for/cafes', 'for/cloud-kitchens', 'features/billing-and-kot', 'pricing'],
+    related: ['for/cafes', 'for/cloud-kitchens', 'features/billing-and-kot'],
   },
 ]

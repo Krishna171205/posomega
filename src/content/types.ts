@@ -3,6 +3,9 @@ export type MarketingSection =
   | { kind: 'cards'; heading: string; intro?: string; cards: { t: string; d: string }[] }
   | { kind: 'steps'; heading: string; intro?: string; steps: { t: string; d: string }[] }
 
+/** Which calculator a /tools page renders under its hero. */
+export type ToolKind = 'gst' | 'food-cost' | 'menu-price'
+
 export type MarketingPage = {
   /** Path without the leading slash, e.g. "for/cafes". Also the sitemap key. */
   slug: string
@@ -27,6 +30,8 @@ export type MarketingPage = {
    * tab and is rendered as a plain <a> rather than a next/link.
    */
   primaryCta?: { href: string; label: string; external?: boolean }
+  /** Set on /tools/* pages: renders that calculator under the hero. */
+  tool?: ToolKind
   /** Set on /for/* pages: renders the animated outlet template. */
   outlet?: OutletExtras
 }

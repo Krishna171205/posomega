@@ -16,7 +16,7 @@ export const HERO = {
   /** Kept short so the rotating part never wraps differently between words. */
   h1Words: ['an order.', 'a KOT.', 'a bill.', 'a table.'] as const,
   /** Facts carried over from the committed homepage copy. */
-  meta: ['Same-day setup', 'No setup fee', 'Offline on Android'],
+  meta: ['Same-day setup', 'Menu set up for you', 'Offline on Android'],
   sub: 'PepperPe bills, fires KOTs, syncs Swiggy and Zomato, and tracks stock, even when the internet doesn’t.',
   /** Sign-up happens in the POS app; under `next dev` this opens the local preview of the redesigned page (app/signup). */
   primary: { label: 'Start free trial', href: process.env.NODE_ENV === 'development' ? '/signup' : 'https://billing.pepperpe.com/onboard' },
@@ -154,7 +154,7 @@ export const DAY_END = {
   ],
 }
 
-/** Integrations named in src/content (integrations.ts, segments.ts, pricing). Nothing else. */
+/** Integrations named in src/content (integrations.ts, segments.ts). Nothing else. */
 export const WORKS_WITH = [
   'Swiggy', 'Zomato', 'UPI', 'Google Pay', 'PhonePe', 'Paytm', 'Tally',
 ]
@@ -191,7 +191,7 @@ export const INTEGRATION_GROUPS: { tag: string; blurb: string; href?: string; it
   {
     tag: 'Hardware',
     blurb: 'Keep the printer and drawer you already have.',
-    href: '/pricing',
+    href: '/get-started',
     items: [
       { n: 'Thermal printers', d: 'Bluetooth, USB or network.' },
       { n: 'Any tablet or PC', d: 'Web POS in the browser, Android app for offline.' },
@@ -204,7 +204,7 @@ export const FAQS = [
   { q: 'What happens when the internet goes down?', a: 'On the PepperPe Android app, billing keeps going: orders are saved on the tablet and synced automatically when the line returns, without duplicates. The web POS and the kitchen display need a connection, and card and UPI payments always do. Cash keeps working.' },
   { q: 'Do I have to buy your hardware?', a: 'No. The web POS runs in a browser on an Android tablet, iPad or PC and prints to standard thermal printers. Our hardware is optional, and most restaurants keep the printer and cash drawer they already have.' },
   { q: 'How does the Swiggy / Zomato integration work?', a: 'Swiggy and Zomato orders arrive in the same queue as dine-in and takeaway. Accept with a prep time and the KOT goes to the right station. Menu, price and stock changes on the platforms are still made on their side today.' },
-  { q: "What's your pricing in plain English?", a: '₹1,499 per outlet per month for Starter, ₹3,499 for Growth, custom for Enterprise. No setup fees, no per-seat charges, no per-transaction fees. Pay annually and save 20%.' },
+  { q: 'How much does PepperPe cost?', a: 'Pricing depends on how many outlets you run and what you need set up, so we quote after a short call rather than publish a rate card. Talk to sales or book a demo and we will walk you through it.' },
   { q: 'Is my data secure?', a: "Your data sits in Indian data centres and is encrypted at rest and in transit. Card payments are handled by PCI-DSS certified payment partners, so raw card data never touches PepperPe's systems. We don't train AI on your customer data. Our SOC 2 programme is in progress and we will publish the report when it is complete." },
   { q: 'Can I switch from Petpooja / Posist / another POS?', a: 'Yes. Our team sets up your menu and modifiers in PepperPe as part of onboarding at no extra cost, and you can run both systems side by side while you switch.' },
 ]

@@ -58,7 +58,7 @@ export const LANDING_PAGES: MarketingPage[] = [
     faq: [
       {
         q: 'Is the PepperPe app free?',
-        a: 'The app is a free download. It signs in to an PepperPe account, and the account is what is billed: Rs 1,499 per outlet per month for a single location. There is no separate charge for the Android app, and no per-device or per-seat fee, so installing it on a second tablet costs nothing.',
+        a: 'Yes, the app is a free download. It signs in to your PepperPe account, and there is no separate charge for the Android app, so installing it on a second tablet costs nothing extra.',
       },
       {
         q: 'What Android version and hardware does it need?',
@@ -74,10 +74,10 @@ export const LANDING_PAGES: MarketingPage[] = [
       },
       {
         q: 'Can I use the app and the web POS at the same time?',
-        a: 'Yes. They are two terminals on one account, so a counter can run the browser while a second station runs the app. Orders, menu and reporting are shared, and pricing is per outlet, so running both costs no more than running one.',
+        a: 'Yes. They are two terminals on one account, so a counter can run the browser while a second station runs the app. Orders, menu and reporting are shared between them.',
       },
     ],
-    related: ['pricing', 'features/offline-mode', 'restaurant-billing-software', 'for/cafes'],
+    related: ['features/offline-mode', 'restaurant-billing-software', 'for/cafes'],
   },
 
   {
@@ -87,10 +87,10 @@ export const LANDING_PAGES: MarketingPage[] = [
     h1: 'Restaurant billing software',
     h1Tail: 'for Indian cafés and restaurants.',
     lede:
-      'GST billing, kitchen order tickets, recipe-level inventory, Swiggy and Zomato orders and UPI in one system. Runs on the tablet you already have and costs Rs 1,499 per outlet per month.',
+      'GST billing, kitchen order tickets, recipe-level inventory, Swiggy and Zomato orders and UPI in one system. Runs on the tablet you already have.',
     metaTitle: 'Restaurant Billing Software India | PepperPe',
     metaDescription:
-      'Restaurant billing software for Indian cafés and restaurants: GST invoices, KOT and kitchen display, recipe inventory, Swiggy and Zomato orders, UPI. From Rs 1,499 per outlet.',
+      'Restaurant billing software for Indian cafés and restaurants: GST invoices, KOT and kitchen display, recipe inventory, Swiggy and Zomato orders, UPI.',
     sections: [
       {
         kind: 'prose',
@@ -118,8 +118,7 @@ export const LANDING_PAGES: MarketingPage[] = [
         kind: 'prose',
         heading: 'What it costs',
         body: [
-          'Rs 1,499 per outlet per month for a single location, Rs 3,499 per outlet per month for up to ten outlets, and custom pricing for more. Annual billing is twenty per cent cheaper.',
-          'There is no per-seat charge, so a second terminal on a busy counter is an operational decision and not a licensing one. There is no setup fee and no per-transaction fee from us.',
+          'Pricing depends on how many outlets you run and what you need set up, so we quote after a short call rather than publish a rate card. Talk to sales or book a demo and we will walk you through it.',
           'Hardware is optional. The web POS runs in a browser on an Android tablet, iPad or PC and prints to standard thermal printers, so an existing restaurant usually keeps its printer and cash drawer and changes only the software.',
         ],
       },
@@ -147,7 +146,7 @@ export const LANDING_PAGES: MarketingPage[] = [
     faq: [
       {
         q: 'How much does restaurant billing software cost in India?',
-        a: 'PepperPe is Rs 1,499 per outlet per month for a single location and Rs 3,499 per outlet per month for up to ten outlets, with twenty per cent off on annual billing. There is no setup fee, no per-seat charge and no per-transaction fee from us. When comparing quotes, check whether a price is per outlet or per terminal.',
+        a: 'Pricing depends on how many outlets you run and what you need set up, so we quote after a short call rather than publish a rate card. Talk to sales or book a demo and we will walk you through it. When comparing quotes from any vendor, check whether the price is per outlet or per terminal, and what onboarding includes.',
       },
       {
         q: 'Do I need to buy new hardware?',
@@ -170,7 +169,7 @@ export const LANDING_PAGES: MarketingPage[] = [
         a: 'Most cafés are taking orders the same day. Menu, taxes, tables and printer are set up in one flow, with no on-site engineer visit to schedule.',
       },
     ],
-    related: ['gst-billing-software-for-restaurants', 'pricing', 'features/offline-mode', 'integrations/swiggy-zomato'],
+    related: ['gst-billing-software-for-restaurants', 'features/offline-mode', 'integrations/swiggy-zomato'],
   },
 
   {
@@ -239,6 +238,6 @@ export const LANDING_PAGES: MarketingPage[] = [
         a: 'No. PepperPe gives your accountant a tax report and a Tally export; it does not produce GSTR files or file on your behalf.',
       },
     ],
-    related: ['restaurant-billing-software', 'features/billing-and-kot', 'pricing', 'integrations/upi-and-payments'],
+    related: ['restaurant-billing-software', 'features/billing-and-kot', 'integrations/upi-and-payments'],
   },
 ]

@@ -89,14 +89,6 @@ const jsonLd = {
       url: 'https://pepperpe.com/',
       description:
         'A modern point-of-sale platform built for restaurants, cafes, bars, and cloud kitchens.',
-      offers: {
-        '@type': 'Offer',
-        price: '1499',
-        priceCurrency: 'INR',
-        // Matches the Starter tier in src/components/Pricing.tsx.
-        description: 'Starter plan, per outlet per month. Unlimited seats.',
-        url: 'https://pepperpe.com/pricing',
-      },
     },
     {
       '@type': 'Organization',

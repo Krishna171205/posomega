@@ -17,7 +17,7 @@ import { Reveals } from '@/components/Reveals'
 /*
  * Order: what it is (hero, what it works with), what it does (the six modules),
  * who uses it, why it holds up (offline), where it fits (outlet types, integrations),
- * who is behind it, then questions and the close. Pricing lives on /pricing.
+ * who is behind it, then questions and the close.
  */
 export default function Page() {
   return (
