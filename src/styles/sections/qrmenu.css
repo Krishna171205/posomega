@@ -233,12 +233,8 @@
 
 /* Interactive comparison (QrCompare) */
 .qc { display: grid; gap: 18px; margin-top: 28px; }
-.qc-switch { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; justify-self: start; padding: 5px; border-radius: 99px; background: var(--bg-2); box-shadow: inset 0 0 0 1px var(--stroke-weak); }
-.qc-switch-label { padding: 0 8px 0 10px; font-size: 13px; color: var(--fg-3); }
-.qc-switch button { padding: 8px 14px; border-radius: 99px; font-size: 14px; font-weight: 500; color: var(--fg-2); transition: background-color 180ms ease, color 180ms ease, box-shadow 180ms ease; }
-.qc-switch button.is-on { background: var(--bg); color: var(--fg); box-shadow: 0 1px 2px #0000001a, inset 0 0 0 1px var(--stroke); }
 .qc-board { border-radius: 22px; box-shadow: inset 0 0 0 1px var(--stroke-weak); overflow: hidden; }
-.qc-head, .qc-row { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); align-items: center; }
+.qc-head, .qc-row { display: grid; grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)); align-items: center; }
 .qc-head { padding: 18px 0 16px; background: var(--bg-2); border-bottom: 1px solid var(--stroke-weak); }
 .qc-col { display: grid; gap: 6px; justify-items: center; padding: 0 14px; text-align: center; }
 .qc-col strong { font-size: 14.5px; font-weight: 600; }
@@ -262,18 +258,14 @@
 .qc-us .qc-yes { background: var(--blue-500); color: #fff; }
 .qc-no { background: var(--bg-subtle); color: var(--fg-3); }
 .qc-some { font-size: 12.5px; color: var(--fg-3); text-align: center; }
-.qc-swap { animation: qc-swap 260ms cubic-bezier(0.23, 1, 0.32, 1) both; }
 @keyframes qc-swap { from { opacity: 0; transform: translateY(4px); } }
 .qc-why { padding: 0 18px 16px; font-size: 14.5px; line-height: 1.55; color: var(--fg-3); animation: qc-swap 220ms cubic-bezier(0.23, 1, 0.32, 1) both; }
 @media (max-width: 640px) {
-  .qc-head, .qc-row { grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.85fr) minmax(0, 0.85fr); }
+  .qc-head, .qc-row { grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 0.8fr)); }
   .qc-label { padding: 12px 10px 12px 14px; font-size: 14px; }
   .qc-col { padding: 0 6px; }
   .qc-col strong { font-size: 12.5px; }
   .qc-chev { display: none; }
-  .qc-switch { justify-self: stretch; }
-  .qc-switch-label { width: 100%; padding: 4px 10px 2px; }
-  .qc-switch button { flex: 1; font-size: 13px; padding: 8px 10px; }
   .qc-why { padding: 0 14px 14px; font-size: 13.5px; }
 }
-@media (prefers-reduced-motion: reduce) { .qc-swap, .qc-why { animation: none; } .qc-meter i { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .qc-why { animation: none; } .qc-meter i { transition: none; } }

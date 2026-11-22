@@ -3,9 +3,9 @@
 import { useState } from 'react'
 
 /*
- * "Most QR menus stop at the menu": pick what to compare against, see both columns side
- * by side with a score, and tap a row for why it matters. Competitors are categories,
- * not named products, and the "apps" column is hedged where it varies.
+ * "Most QR menus stop at the menu": three columns side by side with a score each, and
+ * tap a row for why it matters. Competitors are categories, not named products, and
+ * the "apps" column is hedged where it varies.
  */
 
 type Cell = true | false | string
@@ -31,36 +31,28 @@ function Mark({ c }: { c: Cell }) {
   return <span className="qc-some">{c}</span>
 }
 
+function Score({ name, full, part, us }: { name: string; full: number; part?: number; us?: boolean }) {
+  return (
+    <div className={us ? 'qc-col qc-us' : 'qc-col'}>
+      <strong>{name}</strong>
+      <div className="qc-meter"><i style={{ width: `${((full + (part ?? 0) / 2) / ROWS.length) * 100}%` }} /></div>
+      <small>{full} of {ROWS.length}{part ? `, ${part} partly` : ''}</small>
+    </div>
+  )
+}
+
 export function QrCompare() {
-  const [rival, setRival] = useState<Rival>('free')
   const [open, setOpen] = useState<number | null>(null)
-  const full = ROWS.filter(r => r[rival] === true).length
-  const part = ROWS.filter(r => typeof r[rival] === 'string').length
+  const count = (k: Rival) => ROWS.filter(r => r[k] === true).length
+  const partly = (k: Rival) => ROWS.filter(r => typeof r[k] === 'string').length
 
   return (
     <div className="qc">
-      <div className="qc-switch" role="group" aria-label="Compare PepperPe with">
-        <span className="qc-switch-label">Compare with</span>
-        {(Object.keys(RIVALS) as Rival[]).map(k => (
-          <button key={k} type="button" aria-pressed={rival === k} className={rival === k ? 'is-on' : undefined} onClick={() => setRival(k)}>
-            {RIVALS[k]}
-          </button>
-        ))}
-      </div>
-
       <div className="qc-board">
         <div className="qc-head">
           <span />
-          <div className="qc-col">
-            <strong key={rival} className="qc-swap">{RIVALS[rival]}</strong>
-            <div className="qc-meter"><i style={{ width: `${((full + part / 2) / ROWS.length) * 100}%` }} /></div>
-            <small>{full} of {ROWS.length}{part ? `, ${part} partly` : ''}</small>
-          </div>
-          <div className="qc-col qc-us">
-            <strong>PepperPe with Grabbit</strong>
-            <div className="qc-meter"><i style={{ width: '100%' }} /></div>
-            <small>{ROWS.length} of {ROWS.length}</small>
-          </div>
+          {(Object.keys(RIVALS) as Rival[]).map(k => <Score key={k} name={RIVALS[k]} full={count(k)} part={partly(k)} />)}
+          <Score name="PepperPe with Grabbit" full={ROWS.length} us />
         </div>
 
         <ul className="qc-rows">
@@ -68,7 +60,8 @@ export function QrCompare() {
             <li key={r.row} className={open === i ? 'is-open' : undefined}>
               <button type="button" className="qc-row" aria-expanded={open === i} onClick={() => setOpen(open === i ? null : i)}>
                 <span className="qc-label">{r.row}<i className="qc-chev" aria-hidden="true" /></span>
-                <span className="qc-cell"><span key={rival} className="qc-swap"><Mark c={r[rival]} /></span></span>
+                <span className="qc-cell"><Mark c={r.free} /></span>
+                <span className="qc-cell"><Mark c={r.apps} /></span>
                 <span className="qc-cell qc-us"><Mark c={true} /></span>
               </button>
               {open === i && <p className="qc-why">{r.why}</p>}
