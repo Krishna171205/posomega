@@ -9,6 +9,7 @@ const COLS: { h: string; links: { href: string; t: string; ext?: boolean }[] }[]
       { href: '/features/inventory-and-forecasting', t: 'Inventory' },
       { href: '/features/offline-mode', t: 'Offline mode' },
       { href: '/qr-menu', t: 'QR menu & ordering' },
+      { href: '/nfc-table-tags', t: 'NFC table tags' },
       { href: '/app', t: 'Android app' },
     ],
   },

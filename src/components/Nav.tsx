@@ -19,6 +19,7 @@ const MENUS: Menu[] = [
       { href: '/features/inventory-and-forecasting', t: 'Inventory', d: 'Recipe-level stock, wastage, purchases.' },
       { href: '/features/offline-mode', t: 'Offline mode', d: 'The Android app keeps billing without internet.' },
       { href: '/qr-menu', t: 'QR menu & table ordering', d: 'Guests order from their table, with Grabbit.' },
+      { href: '/nfc-table-tags', t: 'NFC table tags', d: 'One tap for menu, Wi-Fi, rewards, reviews.' },
     ],
     foot: { href: '/app', t: 'Android app', d: 'Early access' },
   },

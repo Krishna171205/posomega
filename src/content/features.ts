@@ -324,3 +324,55 @@ export const QR_MENU_PAGE: MarketingPage = {
     ],
     related: ['features/kitchen-display', 'features/billing-and-kot', 'for/cafes', 'for/food-courts'],
   }
+
+/** /nfc-table-tags: hand-built page (components/nfc), registered here for metadata, sitemap and links. */
+export const NFC_TAGS_PAGE: MarketingPage = {
+    slug: 'nfc-table-tags',
+    parent: FEATURES,
+    crumb: 'NFC table tags',
+    eyebrow: 'NFC table tags, with Grabbit',
+    h1: 'NFC table tags',
+    h1Tail: 'one tap for the menu, Wi-Fi, rewards and reviews.',
+    lede:
+      'Guests tap their phone on the stand at their table and your café opens: menu, Wi-Fi, a stamp card that saves to their wallet, and feedback that turns into Google reviews. No app to download. The same tap also orders, calls a waiter and pays, because it runs on the PepperPe POS.',
+    metaTitle: 'NFC Table Tags for Cafés and Restaurants | Tap for Menu, Wi-Fi, Loyalty | PepperPe',
+    metaDescription:
+      'NFC table stands for Indian cafés and restaurants: guests tap for your menu, Wi-Fi, a wallet stamp card and Google reviews, then order and pay from the table. No app. Stands supplied and set up by PepperPe.',
+    sections: [
+      {
+        kind: 'prose',
+        heading: 'One stand on every table',
+        body: [
+          'Each stand carries an NFC tag and a QR code for the same table, so every phone gets in: tap on phones with NFC, scan on the rest. Both open your café on Grabbit with the table already set.',
+          'From there guests see the menu, copy the Wi-Fi password, collect stamps, leave feedback and order. Orders land in PepperPe like any other, so the kitchen ticket, GST bill and stock all stay in one system.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'Do guests need an app?',
+        a: 'No. A tap opens your café in the phone\'s browser with the table set. Nothing to download and no account needed to look at the menu or join the Wi-Fi.',
+      },
+      {
+        q: 'Which phones can tap?',
+        a: 'iPhone XS and newer, and most Android phones with NFC switched on, open the page with the screen unlocked. Every stand also has a QR code for the same table, so older phones scan instead.',
+      },
+      {
+        q: 'Do you supply the stands?',
+        a: 'Yes. We send stands for your tables with the tags already set to your café and table numbers, and help you place them. Talk to sales for numbers and finish.',
+      },
+      {
+        q: 'How does the stamp card work?',
+        a: 'You set the rewards, for example a free coffee after eight visits. Guests save the card to Apple Wallet or Google Wallet in one tap and collect stamps when they order. No paper card to lose.',
+      },
+      {
+        q: 'Do only happy guests get asked for a Google review?',
+        a: 'No. Every guest who leaves feedback gets the Google review link, as Google\'s rules require. Low ratings also reach you privately straight away, so you can put it right before they post.',
+      },
+      {
+        q: 'Can my staff use the tags too?',
+        a: 'Yes. Staff tap an attendance tag at the outlet to clock in and out. PepperPe checks they are on site and the shift shows up in attendance.',
+      },
+    ],
+    related: ['qr-menu', 'features/kitchen-display', 'for/cafes', 'for/fine-dining'],
+  }

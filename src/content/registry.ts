@@ -1,6 +1,6 @@
 import type { MarketingPage } from './types'
 import { SEGMENTS } from './segments'
-import { FEATURE_PAGES, QR_MENU_PAGE } from './features'
+import { FEATURE_PAGES, NFC_TAGS_PAGE, QR_MENU_PAGE } from './features'
 import { INTEGRATION_PAGES } from './integrations'
 import { LANDING_PAGES } from './landing-pages'
 import { TOOL_PAGES } from './tools'
@@ -11,6 +11,7 @@ export const TEMPLATE_PAGES: MarketingPage[] = [
   ...SEGMENTS,
   ...FEATURE_PAGES,
   QR_MENU_PAGE,
+  NFC_TAGS_PAGE,
   ...INTEGRATION_PAGES,
   ...TOOL_PAGES,
 ]
