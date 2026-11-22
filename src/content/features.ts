@@ -272,3 +272,55 @@ export const FEATURE_PAGES: MarketingPage[] = [
     related: ['for/cafes', 'for/cloud-kitchens', 'features/billing-and-kot'],
   },
 ]
+
+/**
+ * QR menu and table ordering lives at the top level (/qr-menu) for search, with
+ * qrmenu.pepperpe.com redirecting to it. Rendered by components/qrmenu/QrMenuPage;
+ * this entry supplies metadata, FAQ, the Features hub card and the sitemap URL.
+ */
+export const QR_MENU_PAGE: MarketingPage = {
+    slug: 'qr-menu',
+    parent: FEATURES,
+    crumb: 'QR menu & table ordering',
+    eyebrow: 'QR menu and table ordering, with Grabbit',
+    h1: 'QR menu and table ordering',
+    h1Tail: 'from the table straight to your kitchen.',
+    lede:
+      'Guests scan the code on their table, see your live menu with photos and veg marks, and order from their own phone. The order lands in PepperPe next to counter orders and goes to the right kitchen station. Your café also gets its own page on Grabbit for pickup pre-orders and loyalty, and Grabbit takes no commission.',
+    metaTitle: 'QR Code Menu and Table Ordering for Restaurants | PepperPe',
+    metaDescription:
+      'QR menu and table ordering for Indian cafés and restaurants: a QR code per table, live menu with photos, orders straight to the kitchen, call waiter, pay at table, pickup pre-orders and loyalty on Grabbit. No commission.',
+    sections: [
+      {
+        kind: 'prose',
+        heading: 'PepperPe and Grabbit, one menu',
+        body: [
+          'PepperPe runs your counter, kitchen and reports. Grabbit is the guest side: the QR menu at the table and your café\'s ordering page. You manage the menu once in PepperPe, including photos, variations and add-ons, and Grabbit shows the same menu, so a sold-out item or a new price never has to be changed in two places.',
+          'Every Grabbit order, from a table or for pickup, comes into PepperPe like any other order, so billing, GST, stock and reports stay in one system.',
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: 'Do guests need to download an app?',
+        a: 'No. The QR code opens your menu in the phone\'s browser with the table already selected. Guests who order often can use Grabbit for pickup pre-orders, coins and their order history.',
+      },
+      {
+        q: 'Does Grabbit take a commission?',
+        a: 'No. Grabbit takes no commission on orders. Online payments go through the payment gateway, whose own charges apply as with any online payment.',
+      },
+      {
+        q: 'How do I get QR codes for my tables?',
+        a: 'They come from your dashboard, one per table, ready to print. Each code opens your menu for that table, so the order arrives with the table number on it.',
+      },
+      {
+        q: 'Can the ordering page carry my brand?',
+        a: 'Your café has its own page on Grabbit with your menu and photos. For a branded ordering link of your own, talk to us and we will set it up with you.',
+      },
+      {
+        q: 'Do QR orders replace the waiter?',
+        a: 'No. They take the order-taking off the waiter\'s hands. Guests can still order from staff, and call waiter puts a request on the floor screen when they want someone.',
+      },
+    ],
+    related: ['features/kitchen-display', 'features/billing-and-kot', 'for/cafes', 'for/food-courts'],
+  }

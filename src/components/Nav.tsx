@@ -18,6 +18,7 @@ const MENUS: Menu[] = [
       { href: '/features/kitchen-display', t: 'Kitchen display', d: 'One queue for every channel, by station.' },
       { href: '/features/inventory-and-forecasting', t: 'Inventory', d: 'Recipe-level stock, wastage, purchases.' },
       { href: '/features/offline-mode', t: 'Offline mode', d: 'The Android app keeps billing without internet.' },
+      { href: '/qr-menu', t: 'QR menu & table ordering', d: 'Guests order from their table, with Grabbit.' },
     ],
     foot: { href: '/app', t: 'Android app', d: 'Early access' },
   },

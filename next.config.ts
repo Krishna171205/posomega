@@ -49,11 +49,19 @@ const nextConfig: NextConfig = {
   async redirects() {
     // Public pricing was removed (2026-11): prices are quoted after a sales call.
     const removed = [{ source: '/pricing', destination: '/get-started', permanent: true }]
+    // qrmenu.pepperpe.com is a short link for print and WhatsApp; the page itself lives on
+    // the main domain so it keeps pepperpe.com's search standing.
+    const shortLinks = [{
+      source: '/:path*',
+      has: [{ type: 'host' as const, value: 'qrmenu.pepperpe.com' }],
+      destination: 'https://pepperpe.com/qr-menu',
+      permanent: true,
+    }]
     // One canonical host. www and the old brand domains (posomega.com, the 2026-11 rename)
     // and pepperpe.in all 308 to https://pepperpe.com, path kept, so old links, KYC links
     // in sent emails and search rankings carry over. 308 preserves the method and is a
     // permanent redirect for search engines.
-    return [...removed, ...['www.pepperpe.com', 'pepperpe.in', 'www.pepperpe.in', 'posomega.com', 'www.posomega.com'].map(
+    return [...removed, ...shortLinks, ...['www.pepperpe.com', 'pepperpe.in', 'www.pepperpe.in', 'posomega.com', 'www.posomega.com'].map(
       (host) => ({
         source: '/:path*',
         has: [{ type: 'host' as const, value: host }],
