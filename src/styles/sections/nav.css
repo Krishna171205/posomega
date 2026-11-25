@@ -38,7 +38,8 @@
   display: flex; align-items: center; gap: 28px;
 }
 .nav-logo { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-variation-settings: 'opsz' 32; font-weight: 600; font-size: 17px; letter-spacing: -0.02em; }
-.nav-logo .nav-wordmark { height: 25px; width: auto; display: block; }
+/* If the header ever runs short of room the wordmark scales down; it never stretches */
+.nav-logo .nav-wordmark { height: 25px; width: auto; display: block; object-fit: contain; object-position: left center; }
 .nav-links { display: flex; align-items: center; gap: 2px; flex: 1; }
 .nav-item { position: relative; }
 .nav-link {
@@ -84,6 +85,7 @@
   .nav-hide-sm { display: none; }
 }
 @media (max-width: 420px) {
+  .nav-inner { gap: 12px; }
   .nav-cta .btn-primary { display: none; }
 }
 
