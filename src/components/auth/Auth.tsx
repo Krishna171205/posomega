@@ -67,7 +67,7 @@ function Grass() {
 }
 
 function Shell({ backHref, title, sub, decor, waiterFrom, state, children, after }: {
-  backHref: string; title: string; sub: string; decor?: Decor; waiterFrom?: 'left' | 'right'; state: AuthState; children: ReactNode; after: ReactNode
+  backHref: string; title: string; sub?: string; decor?: Decor; waiterFrom?: 'left' | 'right'; state: AuthState; children: ReactNode; after: ReactNode
 }) {
   return (
     <div className="au">
@@ -79,9 +79,9 @@ function Shell({ backHref, title, sub, decor, waiterFrom, state, children, after
           </a>
           <div className="au-col">
             <div className="au-card">
-              <span className="au-mark" aria-hidden="true">Ω</span>
-              <h1 className="au-h">{title}</h1>
-              <p className="au-sub">{sub}</p>
+              <img className="au-logo" src="/pepperpe-wordmark-blue.png" alt="PepperPe" width={136} height={28} />
+              <h1 className="au-h" style={sub ? undefined : { marginBottom: 'clamp(14px, 2.4svh, 22px)' }}>{title}</h1>
+              {sub && <p className="au-sub">{sub}</p>}
               {children}
             </div>
             {after}
@@ -224,7 +224,7 @@ export function SignIn({
 
   return (
     <Shell
-      backHref={backHref} title="Welcome back" sub="Sign in to PepperPe" decor={decor} waiterFrom={waiterFrom} state={{ ...f.state, error: !!error }}
+      backHref={backHref} title="Welcome back" sub="Sign in to view your dashboard" decor={decor} waiterFrom={waiterFrom} state={{ ...f.state, error: !!error }}
       after={<><p className="au-alt">New to PepperPe? <a href={signupHref}>Talk to our team</a></p><Terms termsHref={termsHref} privacyHref={privacyHref} /></>}
     >
       <form className={`au-form ${f.busy ? 'is-busy' : ''}`} onSubmit={submit} noValidate aria-busy={f.busy}>

@@ -168,8 +168,7 @@ export function Nav() {
       <header ref={headerRef} className={`nav ${scrolled ? 'is-scrolled' : ''} ${open ? 'is-open' : ''}`}>
         <div className="nav-inner">
           <a href="/" className="nav-logo" aria-label="PepperPe home">
-            <span className="glyph" aria-hidden="true">Ω</span>
-            <span>PepperPe</span>
+            <img src="/pepperpe-wordmark-blue.png" alt="PepperPe" width={122} height={25} className="nav-wordmark" />
           </a>
 
           <nav className="nav-links" aria-label="Main">
@@ -246,8 +245,7 @@ export function Nav() {
       >
         <div className="mm-top">
           <a href="/" className="nav-logo" aria-label="PepperPe home" onClick={closeMenu}>
-            <span className="glyph" aria-hidden="true">Ω</span>
-            <span>PepperPe</span>
+            <img src="/pepperpe-wordmark-blue.png" alt="PepperPe" width={122} height={25} className="nav-wordmark" />
           </a>
           <button ref={closeRef} className="nav-burger" aria-label="Close menu" onClick={closeMenu}>
             <Burger />
