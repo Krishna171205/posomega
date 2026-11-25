@@ -1,6 +1,7 @@
 import { Peek } from './crew/Peek'
+import { FooterColumns, type FooterCol } from './FooterColumns'
 
-const COLS: { h: string; links: { href: string; t: string; ext?: boolean }[] }[] = [
+const COLS: FooterCol[] = [
   {
     h: 'Platform',
     links: [
@@ -73,18 +74,7 @@ export function Footer({ crew = false }: { crew?: boolean }) {
             <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>PepperPe</span></a>
             <p>Restaurant point of sale, built in India for Indian kitchens.</p>
           </div>
-          {COLS.map(c => (
-            <div key={c.h} className="footer-col">
-              <h2>{c.h}</h2>
-              <ul>
-                {c.links.map(l => (
-                  <li key={l.href}>
-                    <a href={l.href} {...(l.ext ? { target: '_blank', rel: 'noopener' } : {})}>{l.t}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <FooterColumns cols={COLS} />
         </div>
         <div className="footer-bottom">
           <span>© 2026 Unified Nexgrade Pvt. Ltd. · Delhi NCR</span>

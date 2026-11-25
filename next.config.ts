@@ -42,6 +42,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   experimental: {},
   devIndicators: false,
+  // Lets a phone on the same Wi-Fi open the dev server (http://<this computer's local IP>:3010)
+  // to check the mobile layout on a real device. Private network ranges only; only the
+  // dev server reads this, so it changes nothing in production.
+  allowedDevOrigins: ['192.168.*.*', '10.*.*.*', '172.*.*.*'],
   outputFileTracingRoot: __dirname,
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }]

@@ -12,17 +12,17 @@
 .fm-seg button[aria-selected='true'] svg { color: var(--blue-500); }
 .hs-steps li.done .n { background: var(--blue-500); }
 .faq-item.open .faq-plus { background: var(--blue-500); }
-.crew-bar b, .crew-steps::after { background: var(--blue-500); }
-.crew-step.is-past .crew-step-role::before { background: var(--blue-500); box-shadow: inset 0 0 0 1.5px var(--blue-500); }
-.crew-step.on .crew-step-role::before { box-shadow: inset 0 0 0 1.5px var(--blue-500), 0 0 0 4px var(--blue-100); }
+.crew-progress::after { background: var(--blue-500); }
+.crew-dot.is-past i { background: var(--blue-500); box-shadow: inset 0 0 0 1.5px var(--blue-500); }
+.crew-dot.on i { box-shadow: inset 0 0 0 1.5px var(--blue-500), 0 0 0 4px var(--blue-100); }
 
 /* Inline links read as links, the way Notion's "Learn more →" do */
 .text-link { color: var(--blue-500); }
 .text-link:hover { color: var(--blue-600); }
 
 /* Tinted surfaces */
-.crew-blob { fill: var(--blue-100); }
 .proof-ic { color: var(--blue-500); background: var(--blue-100); box-shadow: inset 0 0 0 1px var(--blue-200); }
+.pf-item.is-open .pf-ic { color: var(--blue-500); background: var(--blue-100); box-shadow: inset 0 0 0 1px var(--blue-200); }
 .int-item { transition: box-shadow .2s var(--ease-emph); }
 .int-item:hover .int-mark { color: var(--blue-600); background: var(--blue-100); box-shadow: inset 0 0 0 1px var(--blue-200); }
 .price-offer { background: var(--blue-100); box-shadow: inset 0 0 0 1px var(--blue-200); }

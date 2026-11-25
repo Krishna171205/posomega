@@ -21,6 +21,11 @@ import { AppWindow, FLOW, KitchenWindow, OrderWindow, ReceiptWindow } from './he
  * While a small window waits it can be picked up, dragged and thrown. The story waits
  * while one is held, and docking then flies it in from wherever it was left.
  * A demo cursor does the clicking. `at` is ms from the start of a loop.
+ *
+ * Phones, tablets and short windows (where the stage is not pinned) get the same scene at
+ * a laptop's size, scaled down to fit (hero.css --fit), so the dashboard keeps its
+ * proportions; upright, the small windows wait above and below it, and the window pulls
+ * back as it scrolls into view. Cursor and docking work in the scene's own units.
  */
 type Beat = { at: number; step?: number; cursor?: string; click?: boolean; hide?: boolean; restart?: boolean }
 const TIMELINE: Beat[] = [
@@ -77,6 +82,20 @@ const STEPS = [
 
 const shown = (el: Element | null): el is HTMLElement => !!el && el.getClientRects().length > 0
 
+/** How much smaller than its own size the scene is drawn: 1 on a laptop, about a third on a
+    phone (hero.css --fit). Screen distances divided by it are distances inside the scene. */
+const drawnAt = (el: HTMLElement) => el.getBoundingClientRect().width / el.offsetWidth || 1
+
+/** The small windows come in by themselves (hero.css .is-again), played again from the start */
+function comeIn(els: (HTMLElement | null)[]) {
+  for (const el of els) {
+    if (!el) continue
+    el.classList.remove('is-again')
+    void el.offsetWidth
+    el.classList.add('is-again')
+  }
+}
+
 /** How far the window pulls back as the page scrolls down to it (attio.com settles at scale(0.872275)) */
 const SHRINK = 0.872
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
@@ -92,6 +111,31 @@ const ease = (t: number) => 1 - Math.pow(1 - t, 3)
 function Rotator({ words }: { words: readonly string[] }) {
   const [i, setI] = useState(0)
   const [prev, setPrev] = useState<number | null>(null)
+  /* The slot takes the width of the word showing (and eases between widths), so a
+     centred line stays centred whichever word is in. Where the line with the widest word
+     would not fit, the word goes on a line of its own for good, so the headline never
+     jumps between two and three lines as the words change. */
+  const rotRef = useRef<HTMLSpanElement>(null)
+  const wordRefs = useRef<(HTMLSpanElement | null)[]>([])
+  const [fit, setFit] = useState<{ w: number; own: boolean } | null>(null)
+  useEffect(() => {
+    const measure = () => {
+      const rot = rotRef.current
+      const line = rot?.parentElement
+      const mask = line?.parentElement
+      if (!rot || !line || !mask || !line.firstChild) return
+      const widths = wordRefs.current.map(el => (el ? el.offsetWidth : 0))
+      const range = document.createRange()
+      range.setStartBefore(line.firstChild)
+      range.setEndBefore(rot)
+      const lead = range.getBoundingClientRect().width
+      setFit({ w: widths[i], own: lead + Math.max(...widths) > mask.clientWidth - 2 })
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    document.fonts?.ready.then(measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [i])
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -105,13 +149,13 @@ function Rotator({ words }: { words: readonly string[] }) {
   }, [words.length])
 
   return (
-    <span className="rot" aria-hidden="true">
+    <span ref={rotRef} className={`rot ${fit?.own ? 'is-own-line' : ''}`} aria-hidden="true" style={fit ? { width: fit.w } : undefined}>
       {words.map((w, wi) => {
         const isOn = wi === i
         const isOff = wi === prev
         const stateClass = isOn ? 'on' : isOff ? 'off' : 'idle'
         return (
-          <span key={w} className={`rot-w ${stateClass}`}>
+          <span key={w} className={`rot-w ${stateClass}`} ref={el => { wordRefs.current[wi] = el }}>
             {(() => {
               let n = 0
               return w.split(' ').map((word, k) => (
@@ -179,6 +223,8 @@ export function Hero() {
   const dragRefs = useRef<(HTMLDivElement | null)[]>([])
   const drags = useRef<Drag[]>(FLOATS.map(() => ({ x: 0, y: 0, vx: 0, vy: 0, tilt: 0, lift: 0, held: false })))
   const held = useRef(false)
+  /** Which small windows have flown into the app this loop */
+  const dockedRef = useRef<boolean[]>(FLOATS.map(() => false))
   /** How far each small window has come in (0 to 1), from the scroll */
   const showRef = useRef<number[]>(FLOATS.map(() => 0))
   /** The story may play. From first sight, like attio.com's hero video (no scroll gate) */
@@ -203,7 +249,7 @@ export function Hero() {
     const win = winRef.current
     if (!stage || !sticky || !frame || !win) return
     const steps = stepsRef.current
-    const mqWide = window.matchMedia('(min-width: 900px)')
+    const mqWide = window.matchMedia('(min-width: 900px) and (min-height: 600px)')   // the same as hero.css's pinned stage
     const mqCalm = window.matchMedia('(prefers-reduced-motion: reduce)')
     let size = { w: 0, h: 0 }
     let navH = 68, stickyH = 0, frameTop = 0, stepsH = 0
@@ -244,10 +290,11 @@ export function Hero() {
         frame!.style.transform = `translate3d(0, ${shift.toFixed(1)}px, 0)`
         if (steps) steps.style.transform = `translate3d(0, ${(shift - (size.h - visH) / 2 + 4).toFixed(1)}px, 0)`
       }
-      // The small windows, each over its own slice of the pinned scroll
+      // The small windows: pinned, each over its own slice of the scroll; unpinned (a phone),
+      // out of sight until the story starts, when they come in by themselves
       FLOATS.forEach((f, i) => {
         const el = floatRefs.current[i]
-        const v = !wide || latchRef.current ? 1 : ease(clamp01((pS - f.show[0]) / (f.show[1] - f.show[0])))
+        const v = latchRef.current ? 1 : wide ? ease(clamp01((pS - f.show[0]) / (f.show[1] - f.show[0]))) : 0
         showRef.current[i] = v
         if (!el) return
         el.style.setProperty('--show', v.toFixed(4))
@@ -320,7 +367,8 @@ export function Hero() {
       if (!shown(t)) { c.classList.remove('on'); return }
       const f = frame!.getBoundingClientRect()
       const r = t.getBoundingClientRect()
-      c.style.transform = `translate(${(r.left - f.left + r.width * 0.58).toFixed(1)}px, ${(r.top - f.top + r.height * 0.62).toFixed(1)}px)`
+      const k = drawnAt(frame!)
+      c.style.transform = `translate(${((r.left - f.left + r.width * 0.58) / k).toFixed(1)}px, ${((r.top - f.top + r.height * 0.62) / k).toFixed(1)}px)`
       c.classList.add('on')
     }
     function click() {
@@ -370,6 +418,8 @@ export function Hero() {
         } else {
           latchRef.current = true
           loopsRef.current = 0
+          paintRef.current()                                                 // the small windows: in,
+          comeIn(floatRefs.current)                                          // drifting in by themselves
           begin()
         }
         clock = window.setInterval(tick, 50)
@@ -551,18 +601,19 @@ export function Hero() {
           void n.offsetWidth                                 // settle there before transitions return
           n.style.transition = ''
         }
-        if (el) {
-          el.classList.remove('is-again')
-          void el.offsetWidth; el.classList.add('is-again')        // first start and every loop: they come in by themselves
-        }
       })
+      dockedRef.current = FLOATS.map(() => false)
+      comeIn(floatRefs.current)                              // first start and every loop: they come in by themselves
       return
     }
+    // Each flies once its step is reached, also when a busy page fires two beats at once
+    // and the step jumps past the one it docks at
     FLOATS.forEach((f, i) => {
-      if (step !== f.dock) return
+      if (step < f.dock || dockedRef.current[i]) return
       const el = floatRefs.current[i]
       const inner = dragRefs.current[i]
       if (!el || !inner || !shown(el)) return
+      dockedRef.current[i] = true
       const d = drags.current[i]
       d.vx = 0; d.vy = 0; d.tilt = 0; d.lift = 0
       inner.style.transition = 'transform .35s var(--ease-out-cubic)'
@@ -571,9 +622,11 @@ export function Hero() {
       const o = el.getBoundingClientRect()                  // the resting box, before the drag
       const b = target.getBoundingClientRect()
       const s = Math.min(0.85, Math.max(0.22, b.width / o.width))
-      // scaling about the resting box's centre also scales the drag offset
-      const dx = b.left + b.width / 2 - (o.left + o.width / 2) - s * d.x
-      const dy = b.top + b.height / 2 - (o.top + o.height / 2) - s * d.y
+      // The flight is measured on screen and flown inside the scene, which a phone draws
+      // smaller; scaling about the resting box's centre also scales the drag offset.
+      const k = drawnAt(frame)
+      const dx = (b.left + b.width / 2 - (o.left + o.width / 2)) / k - s * d.x
+      const dy = (b.top + b.height / 2 - (o.top + o.height / 2)) / k - s * d.y
       el.style.transition = 'transform .6s cubic-bezier(.65, 0, .35, 1), opacity .26s linear .36s, filter .26s linear .36s'
       el.style.transform = `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px) scale(${s.toFixed(3)})`
       el.style.opacity = '0'
@@ -682,14 +735,19 @@ export function Hero() {
           </div>
 
           <ol className="hs-steps" ref={stepsRef} aria-label="What just happened">
-            {STEPS.map((s, i) => {
-              const done = step >= s.at && step < FLOW.end
-              return (
-                <li key={s.label} className={done ? 'done' : ''}>
-                  <span className="n ui-num">{done ? <Icon.Check size={11} /> : i + 1}</span>{s.label}
-                </li>
-              )
-            })}
+            {(() => {
+              // the latest step done (or the first, before any): the one a phone labels
+              const current = Math.max(0, STEPS.reduce((k, s, i) => (step >= s.at && step < FLOW.end ? i : k), -1))
+              return STEPS.map((s, i) => {
+                const done = step >= s.at && step < FLOW.end
+                return (
+                  <li key={s.label} className={`${done ? 'done' : ''} ${i === current ? 'is-current' : ''}`}>
+                    <span className="n ui-num">{done ? <Icon.Check size={11} /> : i + 1}</span>
+                    <span className="hs-step-l">{s.label}</span>
+                  </li>
+                )
+              })
+            })()}
           </ol>
         </div>
       </div>

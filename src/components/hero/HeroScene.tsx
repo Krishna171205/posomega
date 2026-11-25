@@ -96,6 +96,8 @@ const NAV: { key: string; label: string; icon: React.ReactNode; view?: View }[] 
 
 function Sidebar({ step, view }: { step: number; view: View }) {
   const at = NAV.findIndex(n => n.view === view)
+  // On a phone the sidebar folds to a rail of the sections the story visits (hero.css)
+  const vi = NAV.filter(n => n.view).findIndex(n => n.view === view)
   const counts: Record<string, number | null> = {
     orders: step >= FLOW.accepted ? 8 : 7,
     kitchen: step >= FLOW.kot && step < FLOW.ready ? 5 : 3,
@@ -117,10 +119,10 @@ function Sidebar({ step, view }: { step: number; view: View }) {
         <Icon.ChevronDown size={11} />
       </div>
       <div className="app-search"><Icon.Search /> Search <span className="kbd">⌘K</span></div>
-      <nav className="app-nav" style={{ ['--i' as string]: at }}>
+      <nav className="app-nav" style={{ ['--i' as string]: at, ['--vi' as string]: vi }}>
         <span className="app-nav-ind" aria-hidden="true" />
         {NAV.map(n => (
-          <span key={n.key} className={`app-nav-item app-nav-${n.key} ${n.view === view ? 'on' : ''}`}>
+          <span key={n.key} className={`app-nav-item app-nav-${n.key} ${n.view ? '' : 'app-nav-extra'} ${n.view === view ? 'on' : ''}`}>
             {n.icon} {n.label}
             {n.key === 'inventory' && <i className="warn-dot" />}
             {counts[n.key] != null && (

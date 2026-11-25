@@ -1,0 +1,80 @@
+/* ══ Touch and small screens ══════════════════════════════════
+   Loaded last (layout.tsx), so it can adjust any section. Three jobs:
+   - room for the notch: in landscape an iPhone's notch and rounded corners sit at
+     the sides, so side padding is at least the safe-area inset (viewport-fit=cover);
+   - hit areas of at least 40px wherever the pointer is a finger (Apple asks for 44,
+     Material 48, WCAG 2.2 AA 24), grown without moving anything where possible;
+   - form fields at 16px, because anything smaller makes iOS Safari zoom the page in
+     on focus, and no text under 12px on small screens. */
+
+.container, .nav-inner {
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px));
+}
+
+@media (pointer: coarse), (max-width: 900px) {
+  input:not([type=checkbox], [type=radio], [type=range], [type=color]), select, textarea { font-size: 16px !important; }
+
+  /* Buttons */
+  .btn { min-height: 44px; }
+  .nav .btn { min-height: 40px; }
+  .cta-chip span { height: 40px; }
+
+  /* The header and the announcement bar */
+  .nav-logo { min-height: 44px; }
+  .nav-burger { width: 44px; height: 44px; margin-right: -4px; }
+  .banner-link { align-self: stretch; }
+  .banner-x { width: 40px; height: 40px; right: 2px; }
+
+  /* Text links, breadcrumbs and small "go to" links: an invisible halo around them, so
+     nothing moves */
+  :is(.text-link, .mk-crumbs a, .legal-back, .qm-textlink, .wt-jump, .au-link-sm) { position: relative; }
+  :is(.text-link, .mk-crumbs a, .legal-back, .qm-textlink, .wt-jump, .au-link-sm)::after { content: ''; position: absolute; inset: -12px -6px; }
+  .ol-switch-a { min-height: 40px; }
+
+  /* Sign-in and sign-up: full-size fields and controls on touch (their window-height
+     squeeze is for laptops; a phone can scroll). Scoped under .au, because auth.css is
+     imported by its component and so comes after this file. */
+  .au .au-input { height: 44px; }
+  .au .au-back { height: 40px; }
+  .au .au-eye { width: 40px; height: 40px; }
+  /* Links inside running text: vertical padding on an inline box grows its hit area
+     without changing the line it sits on */
+  p a:not(.btn, .text-link), .cta-fine a, .au-alt a, .au-terms a { padding-block: 12px; }
+
+  /* The footer: each link a row tall enough to tap, and short words wide enough */
+  .footer-col ul { gap: 0; }
+  .footer-col a, .footer-legal a { display: inline-block; min-width: 40px; padding-block: 12px; }
+  .hero-pill { min-height: 40px; }
+}
+
+/* Phones: groups of cards (integrations, "where we are") become rows you swipe through,
+   one card with the next peeking in, all the same height. The characters that sit on
+   top of some cards live in the row's top padding, so the row does not clip them. */
+@media (max-width: 640px) {
+  .int-grid, .proof-grid {
+    display: flex; gap: 12px;
+    overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); scroll-padding-inline: var(--gutter);
+  }
+  .int-grid::-webkit-scrollbar, .proof-grid::-webkit-scrollbar { display: none; }
+  .int-grid > *, .proof-grid > * { flex: 0 0 84%; scroll-snap-align: start; }
+  .int-grid.peeks, .proof-grid.peeks { margin-top: 16px; padding-top: 84px; padding-bottom: 6px; }
+
+  /* Platform screens: a little less of each, so the open one stays about a screen tall */
+  .pf-inline .bill-menu > .bill-item:nth-child(n+7) { display: none; }
+  .pf-inline .floor-grid > span.floor-zone:nth-of-type(2),
+  .pf-inline .floor-grid > span.floor-zone:nth-of-type(2) ~ * { display: none; }
+  .pf-inline .ui-table tbody tr:nth-child(n+6) { display: none; }
+  .pf-inline .onl-q > li:nth-child(n+6) { display: none; }
+}
+/* The offline simulator: room above it for the character and their line, clear of the link */
+@media (max-width: 860px) { .offline-vis { margin-top: 64px; } }
+
+/* Nothing under 12px on small screens */
+@media (max-width: 900px) {
+  .banner-new { font-size: 12px; }
+  .hs-steps .n { width: 22px; height: 22px; font-size: 12px; }
+  .tk-h .ui-num, .tk-fmt { font-size: 12px; }
+  .qm-band small, .qm-tent-small { font-size: 12px; }
+}

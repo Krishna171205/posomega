@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Icon } from './Icons'
 import { BareMocks, BillingMock, ChannelsMock, DayEndMock, FloorMock, KdsMock, StockMock } from './platform/Mocks'
 import { Peek, type Enter } from './crew/Peek'
@@ -85,13 +85,47 @@ const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
  * on a 5 s timer; here the page scroll drives it. On a wide screen the section
  * pins, the dashboard stays put, and scrolling walks through the six features
  * (the bar under the open one fills as you go). On phones, short windows and with
- * reduced motion it is a plain stacked list, each feature followed by its screen.
+ * reduced motion it is an accordion: all six names, one open at a time with its
+ * screen under it (tap another to open it), so the section stays a screen or two long.
  */
 export function Platform() {
   const [pinned, setPinned] = useState(false)
   const [active, setActive] = useState(0)
+  /** The accordion's open feature (phones, short windows, reduced motion); -1 for none */
+  const [open1, setOpen1] = useState(0)
   const trackRef = useRef<HTMLDivElement>(null)
   const barRefs = useRef<(HTMLElement | null)[]>([])
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([])
+  const anchorRef = useRef<{ i: number; top: number } | null>(null)
+
+  /** Open one feature in the accordion while keeping the tapped row anchored under the finger */
+  function toggle(i: number) {
+    const el = itemRefs.current[i]
+    anchorRef.current = el ? { i, top: el.getBoundingClientRect().top } : null
+    setOpen1(o => (o === i ? -1 : i))
+  }
+
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current
+    if (!anchor || pinned) return
+    anchorRef.current = null
+    const el = itemRefs.current[anchor.i]
+    if (!el) return
+    const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 52
+    const afterTop = el.getBoundingClientRect().top
+    const delta = afterTop - anchor.top
+    if (Math.abs(delta) > 1) {
+      window.scrollBy({ top: delta, behavior: 'instant' })
+    }
+    const settledTop = el.getBoundingClientRect().top
+    if (open1 === anchor.i) {
+      if (settledTop < navH + 8 || settledTop > window.innerHeight * 0.56) {
+        window.scrollTo({ top: Math.max(0, window.scrollY + settledTop - navH - 12), behavior: 'smooth' })
+      }
+    } else if (settledTop < navH + 8) {
+      window.scrollTo({ top: Math.max(0, window.scrollY + settledTop - navH - 12), behavior: 'smooth' })
+    }
+  }, [open1, pinned])
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 900px) and (min-height: 720px) and (prefers-reduced-motion: no-preference)')
@@ -159,19 +193,37 @@ export function Platform() {
 
               <ol className="pf-list">
                 {FEATURES.map((f, i) => {
-                  const open = !pinned || i === active
+                  const open = pinned ? i === active : i === open1
                   return (
-                    <li key={f.id} className={`pf-item ${pinned && i === active ? 'on' : ''}`}>
+                    <li
+                      key={f.id}
+                      ref={el => { itemRefs.current[i] = el }}
+                      className={`pf-item ${pinned && i === active ? 'on' : ''} ${!pinned && open ? 'is-open' : ''}`}
+                    >
                       <h3 className="pf-name">
-                        {pinned
-                          ? <button type="button" aria-expanded={open} aria-controls={`pf-${f.id}`} onClick={() => go(i)}>{f.name}</button>
-                          : <span>{f.name}</span>}
+                        <button
+                          type="button"
+                          aria-expanded={open}
+                          aria-controls={`pf-${f.id}`}
+                          onClick={() => (pinned ? go(i) : toggle(i))}
+                        >
+                          {!pinned && (
+                            <span className="pf-ic" aria-hidden="true">
+                              <f.icon size={16} />
+                            </span>
+                          )}
+                          <span className="pf-name-txt">
+                            <span className="pf-name-t">{f.name}</span>
+                            {!pinned && !open && <span className="pf-name-sub">{f.lead}</span>}
+                          </span>
+                          {!pinned && <span className="pf-chev" aria-hidden="true"><Icon.ChevronDown size={14} /></span>}
+                        </button>
                       </h3>
                       <div className="pf-detail" id={`pf-${f.id}`} inert={!open}>
                         <div className="pf-detail-in">
                           <p className="pf-p"><b>{f.lead}</b> {f.p}</p>
                           <a href={f.link.href} className="text-link pf-link">{f.link.label} <Icon.Arrow size={12} /></a>
-                          {!pinned && (
+                          {!pinned && open && (
                             <div className="pf-inline has-peek">
                               {f.mock}
                               <Peek {...f.peek} />

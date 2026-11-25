@@ -29,10 +29,10 @@ ul, ol { padding: 0; list-style: none; }
 html { scrollbar-width: none; }
 html::-webkit-scrollbar { display: none; width: 0; height: 0; }
 /* Inner scroll areas keep a slim black-on-transparent bar */
-:where(.seg, .app-table-wrap, .drawer-body)::-webkit-scrollbar { width: 6px; height: 6px; }
-:where(.seg, .app-table-wrap, .drawer-body)::-webkit-scrollbar-button { display: none; }
-:where(.seg, .app-table-wrap, .drawer-body)::-webkit-scrollbar-track { background: transparent; }
-:where(.seg, .app-table-wrap, .drawer-body)::-webkit-scrollbar-thumb { background: var(--black-0); border-radius: 999px; border: 1px solid transparent; background-clip: padding-box; }
+:where(.seg, .app-table-wrap, .mm-body)::-webkit-scrollbar { width: 6px; height: 6px; }
+:where(.seg, .app-table-wrap, .mm-body)::-webkit-scrollbar-button { display: none; }
+:where(.seg, .app-table-wrap, .mm-body)::-webkit-scrollbar-track { background: transparent; }
+:where(.seg, .app-table-wrap, .mm-body)::-webkit-scrollbar-thumb { background: var(--black-0); border-radius: 999px; border: 1px solid transparent; background-clip: padding-box; }
 
 .srail {
   position: fixed; top: 6px; bottom: 6px; right: 4px; z-index: 120;

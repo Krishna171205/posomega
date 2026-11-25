@@ -245,8 +245,9 @@
 .demo-send:hover { background: var(--white-500); }
 .demo-err { position: absolute; top: calc(100% + 6px); left: 8px; font-size: 12.5px; color: var(--bad); white-space: nowrap; }
 @media (max-width: 767px) {
-  .hero-ctas { flex-direction: column; width: 100%; max-width: 360px; }
-  .hero-ctas > .btn { width: 100%; height: 40px; }
+  /* the two buttons side by side, so the dashboard comes up on the first screen */
+  .hero-ctas { flex-wrap: nowrap; width: 100%; max-width: 400px; }
+  .hero-ctas > .btn { flex: 1 1 0; min-width: 0; height: 44px; }
   .demo-form { width: 100%; height: 40px; }
   .demo-form input { flex: 1; width: auto; min-width: 0; }
   .demo-send { height: 32px; }
@@ -273,7 +274,7 @@
 
 /* Wide screens that allow motion: the stage is one view tall and pinned for 120svh of
    scroll, which is what the small windows come in over. */
-@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+@media (min-width: 900px) and (min-height: 600px) and (prefers-reduced-motion: no-preference) {
   .hs { height: calc(100svh - var(--nav-h) + 120svh); }
   .hs-sticky {
     position: sticky; top: var(--nav-h);
@@ -307,7 +308,10 @@
    corner, kitchen off the right edge, bill over the bottom-left edge. */
 .hs-float-order { left: -128px; top: -16px; width: 30%; max-width: 268px; --from-x: -90px; --from-y: -40px; --grow: 100% 100%; }
 .hs-float-order .fw-actions .ui-btn { white-space: nowrap; padding-inline: 8px; font-size: 11.5px; }
-.hs-float-order .fw-order-top .ui-num { white-space: nowrap; }
+/* narrow, the card's rows shrink to it (its reference ellipsized) rather than widen it */
+.hs-float-order .fw-order { grid-template-columns: minmax(0, 1fr); }
+.hs-float-order .fw-order-top > div { min-width: 0; }
+.hs-float-order .fw-order-top .ui-num { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hs-float-kds { right: -128px; top: 40px; width: 30%; max-width: 272px; --from-x: 110px; --from-y: 10px; --grow: 0% 50%; }
 .hs-float-kds .fw-kds { grid-template-columns: minmax(0, 1fr); }   /* a portrait stack, like Attio's call window */
 /* Floating windows sit over the app, so their chrome is opaque (the shell's is translucent). */
@@ -319,7 +323,8 @@
   .hs-float-bill { left: -128px; }
 }
 .hs-float-drag { will-change: transform; }
-@media (min-width: 900px) {
+/* Picked up and thrown with a mouse, where the stage is pinned */
+@media (min-width: 900px) and (min-height: 600px) {
   .hs-float.is-free { pointer-events: auto; cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; }
   .hs-float.is-grabbed { cursor: grabbing; }
   .hs-float :is(.win, .pr) { transition: box-shadow .3s var(--ease-emph); }
@@ -327,7 +332,93 @@
     box-shadow: var(--sh-ring), 0 32px 64px -20px rgb(16 16 16 / .34), 0 12px 24px -12px rgb(16 16 16 / .2);
   }
 }
-@media (max-width: 899px) { .hs-floats, .hs-steps { display: none; } }
+
+/* ── Phones, tablets and short windows: the same scene, scaled to fit ──
+   Where the stage is not pinned, the scene is laid out at a laptop's size (an 820px window
+   with the sidebar, the list and the side panel all in) and scaled down as one picture, so
+   the dashboard keeps its proportions and the three small windows keep theirs around it.
+   --fit is that scale: the room across the screen over 820px or, on a screen lying on its
+   side, the room down it over the scene's height, whichever is less (tan(atan2(a, b)) is
+   a / b as a plain number). The frame keeps its laptop-size box, so its margins hand back
+   the space the smaller picture no longer fills. */
+@property --fit { syntax: '<number>'; inherits: true; initial-value: 1; }
+@media (max-width: 899px), (max-height: 599px) {
+  .hs {
+    --dw: 820px; --wh: 484px; --band-t: 16px; --band-b: 0px;
+    --fit: min(1, tan(atan2(100vw - 2 * var(--gutter), var(--dw))), tan(atan2(100svh - var(--nav-h) - 40px, var(--wh) + var(--band-t) + var(--band-b))));
+  }
+  .hs-frame {
+    width: var(--dw); max-width: none;
+    transform: scale(var(--fit)); transform-origin: 50% 0;
+    margin-top: calc(var(--band-t) * var(--fit));
+    margin-bottom: calc((var(--wh) + var(--band-b)) * var(--fit) - var(--wh));
+  }
+  .hs-pane { height: calc(var(--wh) - 38px); }   /* the window: a 32px bar, the pane, 6px of frame */
+  /* Drawn at a third of their size, the demo cursor and the toasts would be specks, so
+     they keep a size you can read */
+  .hs-cursor svg, .hs-cursor.down::before { scale: max(1, calc(.8 / var(--fit))); }
+  .hs .app-toast { transform-origin: 0 100%; scale: max(1, calc(.72 / var(--fit))); }
+}
+/* Upright (a phone, or a tablet held upright) there is no room at the sides, so the order
+   and the kitchen display wait above the window, the printer below it with its "prints
+   when the food is ready" tray showing, each tucked behind the window by half or more.
+   The printer keeps to the left, clear of the toasts along the middle when it prints. */
+@media (max-width: 899px) and (orientation: portrait) {
+  .hs { --band-t: 112px; --band-b: 124px; margin-top: 20px; }
+  .hs-float-order { left: 8px; top: -112px; width: 300px; max-width: none; }
+  .hs-float-kds { right: 8px; top: -100px; width: 284px; max-width: none; }
+  .hs-float-bill { left: -4px; bottom: -124px; width: 244px; max-width: none; }
+}
+/* Phones: the same dashboard, simplified so it reads at a phone's size. Laid out at 520px
+   rather than 820 it is drawn half as large again, and it holds less: the sidebar folds to
+   a rail of the sections the story visits, the list keeps four columns (a channel shown by
+   its badge) and the side panel its essentials. The kitchen display waits under the
+   window beside the printer, and the toasts drop in at the top, so no card covers one. */
+@media (max-width: 599px) and (orientation: portrait) {
+  .hs { --dw: 520px; --wh: 340px; --band-t: 72px; --band-b: 64px; margin-top: 16px; }
+  .hs-sticky { gap: 16px; }
+  .hs-float-order { left: 6px; top: -72px; width: 216px; }
+  .hs-float-kds { right: -4px; top: auto; bottom: -64px; width: 196px; }
+  .hs-float-bill { left: -4px; bottom: -64px; width: 196px; }
+  .hs .pr-tray { align-items: flex-end; padding-bottom: 12px; }   /* its line shows under the window */
+  .hs :is(.pr-ids, .pr-amt .r) { display: none; }                  /* the printed bill: what fits */
+
+  .hs .app { grid-template-columns: 50px minmax(0, 1fr) 176px; }
+  .hs .app-detail { display: flex; }
+  .hs .app-wide { grid-column: span 2; }
+  /* the sidebar as a rail of icons */
+  .hs .app-side { display: flex; align-items: center; gap: 12px; padding: 10px 0; }
+  .hs :is(.app-outlet-name, .app-outlet > svg, .app-search, .app-nav-extra, .app-nav-item em, .app-nav-item .warn-dot) { display: none; }
+  .hs .app-outlet { padding: 0; }
+  .hs .app-nav { width: 36px; }
+  .hs .app-nav-item { justify-content: center; gap: 0; padding: 0; font-size: 0; }
+  .hs .app-nav-ind { transform: translateY(calc(var(--vi, 0) * 29px)); }
+  .hs .app-sync { justify-content: center; padding: 6px 0; font-size: 0; }
+  /* what a laptop's narrower window already drops (the KPI cards' own display beat that) */
+  .hs .app :is(.app-hide-sm, .app-hide-md) { display: none; }
+  /* the lists: tighter cells; inventory shows item and status */
+  .hs .app-table :is(th, td) { padding: 0 9px; }
+  .hs .app-table .app-ch { gap: 0; font-size: 0; }
+  .hs .v-inventory .app-table :is(th, td):nth-child(2) { display: none; }
+  .hs .kd-kot { display: none; }
+  /* the side panel: what matters, a line each */
+  .hs :is(.app-lines em, .inv-lines, .inv-sum > div:first-child, .inv-print, .app-rider em, .app-sum > div:nth-child(2), .app-sum > div:nth-child(3)) { display: none; }
+  .hs .app-pay-methods .ui-chip:nth-child(n+4) { display: none; }
+  .hs .app-meta > span:last-child { flex: none; white-space: nowrap; }
+  .hs .inv { padding: 9px; }
+  .hs .inv-h span { white-space: nowrap; }
+  .hs :is(.app-act, .app-done) { padding-inline: 6px; font-size: 11.5px; white-space: nowrap; overflow: hidden; }
+  .hs :is(.av-stack, .av-rows, .av-list) { grid-template-columns: minmax(0, 1fr); }
+  .hs .av-kv > span, .hs .av-list li > b { flex: none; }
+  .hs .av-kv > b { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* the toasts drop in at the top, at a size you can read */
+  .hs .app-toast { top: 48px; bottom: auto; transform-origin: 0 0; animation-name: toast-drop; scale: max(1, calc(.8 / var(--fit))); }
+}
+@keyframes toast-drop { from { opacity: 0; transform: translate(-50%, -10px) scale(.96); } to { opacity: 1; transform: translate(-50%, 0); } }
+/* With motion reduced there are no small windows, so no room is kept for them */
+@media (max-width: 899px) and (orientation: portrait) and (prefers-reduced-motion: reduce) {
+  .hs { --band-t: 0px; --band-b: 0px; margin-top: clamp(40px, 6svh, 72px); }
+}
 
 /* The demo cursor that does the clicking */
 .hs-cursor {
@@ -364,6 +455,14 @@
   transition: background-color .3s var(--ease-emph), color .3s var(--ease-emph);
 }
 .hs-steps li.done { color: var(--fg); }
+/* A phone: one row, numbers for every step and the label of the current one only */
+@media (max-width: 600px) {
+  .hs-steps { flex-wrap: nowrap; gap: 6px; }
+  .hs-steps li { padding: 0 4px; }
+  .hs-steps li .hs-step-l { display: none; }
+  .hs-steps li.is-current { padding-right: 12px; }
+  .hs-steps li.is-current .hs-step-l { display: inline; animation: blur-in .35s var(--ease-out-cubic); }
+}
 .hs-steps li.done .n { background: var(--black-100); color: var(--white-100); }
 
 /* ── The app inside the shell ───────────────────────────── */
@@ -768,6 +867,8 @@
 }
 .pr-paper { z-index: 1; }
 .pr-float.is-idle .pr-led { background: var(--white-700); box-shadow: none; }
+.pr-tray { transition: opacity .3s var(--ease-emph); }
+.pr-float.is-printing .pr-tray { opacity: 0; }
 .pr-float.is-printing .pr-paper { animation: pr-feed 1s .1s both; }
 .pr-float.is-printing .pr-stamp { animation: pr-stamp .32s cubic-bezier(.3, 1.6, .5, 1) 1.15s both; }
 .pr-float.is-printing .pr-head { animation: pr-buzz .09s linear .1s 11; }
@@ -799,10 +900,14 @@
   perspective: 900px;
   -webkit-perspective: 900px;
   text-align: left;
+  transition: width .6s cubic-bezier(.83, 0, .17, 1);
 }
+/* The word on a line of its own (a narrow screen), centred there */
+.rot.is-own-line { display: grid; margin-inline: auto; }
 
 .rot-w {
   grid-area: 1 / 1;
+  justify-self: start;   /* each word as wide as itself, so Hero.tsx can size the slot to it */
   display: inline-flex;
   align-items: baseline;
   white-space: nowrap;

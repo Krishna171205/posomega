@@ -47,20 +47,65 @@ const MENUS: Menu[] = [
   },
 ]
 
+/** The phone menu shows each link with an icon beside its line of description */
+const ICONS: Record<string, React.ReactNode> = {
+  '/features/billing-and-kot': <Icon.Printer size={17} />,
+  '/features/kitchen-display': <Icon.Flame size={17} />,
+  '/features/inventory-and-forecasting': <Icon.Box size={17} />,
+  '/features/offline-mode': <Icon.WifiOff size={17} />,
+  '/qr-menu': <Icon.Grid size={17} />,
+  '/nfc-table-tags': <Icon.Wifi size={17} />,
+  '/app': <Icon.Phone size={17} />,
+  '/for/cafes': <Icon.Coffee size={17} />,
+  '/for/qsr': <Icon.Lightning size={17} />,
+  '/for/fine-dining': <Icon.Users size={17} />,
+  '/for/cloud-kitchens': <Icon.Truck size={17} />,
+  '/for/bars': <Icon.Clock size={17} />,
+  '/for': <Icon.Store size={17} />,
+  '/integrations/swiggy-zomato': <Icon.Globe size={17} />,
+  '/integrations/upi-and-payments': <Icon.Tag size={17} />,
+  '/gst-billing-software-for-restaurants': <Icon.Receipt size={17} />,
+  '/restaurant-billing-software': <Icon.Search size={17} />,
+}
+
 const BANNER_KEY = 'omega-banner-dismissed'
+
+/** Two lines that turn into a cross when the menu opens (nav.css) */
+const Burger = () => <span className="burger" aria-hidden="true"><i /><i /></span>
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState<string | null>(null)
   const [drawer, setDrawer] = useState(false)
+  /** The group open in the phone menu */
+  const [sect, setSect] = useState<string | null>(null)
+  /** Where the phone menu starts: over the header, wherever the header is */
+  const [top, setTop] = useState(0)
   const [banner, setBanner] = useState(true)
   const closeTimer = useRef<number | null>(null)
+  const headerRef = useRef<HTMLElement>(null)
+  const burgerRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+
+  function openMenu() {
+    setTop(Math.max(0, Math.round(headerRef.current?.getBoundingClientRect().top ?? 0)))
+    setSect(null)
+    setDrawer(true)
+  }
+  function closeMenu() {
+    if (menuRef.current?.contains(document.activeElement)) burgerRef.current?.focus({ preventScroll: true })
+    setDrawer(false)
+  }
 
   useEffect(() => {
     try { if (sessionStorage.getItem(BANNER_KEY)) setBanner(false) } catch { /* storage blocked */ }
     const onScroll = () => setScrolled(window.scrollY > 8)
-    const onResize = () => { if (window.innerWidth >= 960) setDrawer(false) }
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setOpen(null); setDrawer(false) } }
+    const onResize = () => {
+      if (window.innerWidth >= 960) setDrawer(false)
+      else setTop(Math.max(0, Math.round(headerRef.current?.getBoundingClientRect().top ?? 0)))
+    }
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { setOpen(null); closeMenu() } }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)
@@ -72,8 +117,25 @@ export function Nav() {
     }
   }, [])
 
+  /* The phone menu is a dialog: the page stays put underneath, focus starts on its close
+     button and Tab stays inside it until it closes. */
   useEffect(() => {
     document.documentElement.style.overflow = drawer ? 'hidden' : ''
+    if (!drawer) return
+    closeRef.current?.focus({ preventScroll: true })
+    const onTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !menuRef.current) return
+      const nodes = [...menuRef.current.querySelectorAll<HTMLElement>('a[href], button')]
+        .filter(n => !n.closest('[inert]') && n.getClientRects().length > 0)
+      if (!nodes.length) return
+      const at = nodes.indexOf(document.activeElement as HTMLElement)
+      if (e.shiftKey ? at <= 0 : at === -1 || at === nodes.length - 1) {
+        e.preventDefault()
+        nodes[e.shiftKey ? nodes.length - 1 : 0].focus()
+      }
+    }
+    document.addEventListener('keydown', onTab)
+    return () => document.removeEventListener('keydown', onTab)
   }, [drawer])
 
   function dismissBanner() {
@@ -103,7 +165,7 @@ export function Nav() {
         </div>
       )}
 
-      <header className={`nav ${scrolled ? 'is-scrolled' : ''} ${open ? 'is-open' : ''}`}>
+      <header ref={headerRef} className={`nav ${scrolled ? 'is-scrolled' : ''} ${open ? 'is-open' : ''}`}>
         <div className="nav-inner">
           <a href="/" className="nav-logo" aria-label="PepperPe home">
             <span className="glyph" aria-hidden="true">Ω</span>
@@ -155,39 +217,86 @@ export function Nav() {
             <a href={SIGN_IN} className="btn btn-ghost btn-sm nav-hide-sm">Sign in</a>
             <a href={HERO.secondary.href} className="btn btn-outline btn-sm nav-hide-md">{HERO.secondary.label}</a>
             <a href={HERO.primary.href} className="btn btn-blue btn-sm">{HERO.primary.label}</a>
-            <button className="nav-burger" aria-label="Open menu" aria-expanded={drawer} onClick={() => setDrawer(true)}>
-              <Icon.Menu />
+            <button
+              ref={burgerRef}
+              className="nav-burger"
+              aria-label="Open menu"
+              aria-expanded={drawer}
+              aria-controls="phone-menu"
+              onClick={openMenu}
+            >
+              <Burger />
             </button>
           </div>
         </div>
       </header>
 
-      {drawer && (
-        <div className="drawer" role="dialog" aria-modal="true" aria-label="Menu">
-          <div className="drawer-head">
-            <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>PepperPe</span></a>
-            <button className="nav-burger" aria-label="Close menu" onClick={() => setDrawer(false)}><Icon.Close size={18} /></button>
-          </div>
-          <div className="drawer-body">
-            {MENUS.map(m => (
-              <div key={m.id} className="drawer-group">
-                <div className="drawer-label">{m.label}</div>
-                {[...m.items, ...(m.foot ? [m.foot] : [])].map(it => (
-                  <a key={it.href} href={it.href} className="drawer-link" onClick={() => setDrawer(false)}>{it.t}</a>
-                ))}
-              </div>
-            ))}
-            <div className="drawer-group">
-              <a href="/integrations" className="drawer-link" onClick={() => setDrawer(false)}>Integrations</a>
-              <a href={SIGN_IN} className="drawer-link">Sign in</a>
-            </div>
-          </div>
-          <div className="drawer-foot">
-            <a href={HERO.secondary.href} className="btn btn-outline btn-lg">{HERO.secondary.label}</a>
-            <a href={HERO.primary.href} className="btn btn-blue btn-lg">{HERO.primary.label}</a>
-          </div>
+      {/* The phone menu. Always in the page, so it can fade out as well as in; inert while
+          closed. Its own header sits exactly over the page's, where the burger turns into
+          a cross. Each group opens in place, one at a time. */}
+      <div
+        ref={menuRef}
+        id="phone-menu"
+        className={`mm ${drawer ? 'is-open' : ''}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        inert={!drawer}
+        style={{ ['--mm-top' as string]: `${top}px` }}
+      >
+        <div className="mm-top">
+          <a href="/" className="nav-logo" aria-label="PepperPe home" onClick={closeMenu}>
+            <span className="glyph" aria-hidden="true">Ω</span>
+            <span>PepperPe</span>
+          </a>
+          <button ref={closeRef} className="nav-burger" aria-label="Close menu" onClick={closeMenu}>
+            <Burger />
+          </button>
         </div>
-      )}
+
+        <nav className="mm-body" aria-label="Main">
+          {MENUS.map((m, gi) => {
+            const on = sect === m.id
+            return (
+              <div key={m.id} className={`mm-group ${on ? 'is-open' : ''}`} style={{ ['--r' as string]: gi }}>
+                <button className="mm-head" aria-expanded={on} aria-controls={`mm-${m.id}`} onClick={() => setSect(on ? null : m.id)}>
+                  {m.label}
+                  <span className="mm-chev" aria-hidden="true"><Icon.ChevronDown size={14} /></span>
+                </button>
+                <div className="mm-items" id={`mm-${m.id}`} inert={!on}>
+                  <ul>
+                    {[...m.items, ...(m.foot ? [m.foot] : [])].map((it, i) => (
+                      <li key={it.href} style={{ ['--i' as string]: i }}>
+                        <a href={it.href} className="mm-item" onClick={closeMenu}>
+                          <span className="mm-ic" aria-hidden="true">{ICONS[it.href]}</span>
+                          <span className="mm-tx">
+                            <span className="mm-t">
+                              {it.t}
+                              {it === m.foot && <span className="tag tag-info">{it.d}</span>}
+                            </span>
+                            {it !== m.foot && <span className="mm-d">{it.d}</span>}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )
+          })}
+          <a href="/integrations" className="mm-row" style={{ ['--r' as string]: 3 }} onClick={closeMenu}>
+            Integrations <Icon.Arrow size={16} />
+          </a>
+          <a href={SIGN_IN} className="mm-row" style={{ ['--r' as string]: 4 }} onClick={closeMenu}>
+            Sign in <Icon.Arrow size={16} />
+          </a>
+        </nav>
+
+        <div className="mm-foot">
+          <a href={HERO.secondary.href} className="btn btn-outline btn-lg" onClick={closeMenu}>{HERO.secondary.label}</a>
+          <a href={HERO.primary.href} className="btn btn-blue btn-lg" onClick={closeMenu}>{HERO.primary.label}</a>
+        </div>
+      </div>
     </>
   )
 }

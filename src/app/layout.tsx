@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { ScrollRail } from '@/components/ScrollRail'
@@ -25,6 +25,17 @@ import '../styles/sections/outlet.css'
 import '../styles/sections/qrmenu.css'
 import '../styles/sections/nfc.css'
 import '../styles/accent.css'
+import '../styles/mobile.css'
+
+/* The page fills the whole screen, round the notch too (mobile.css keeps content clear of
+   it); pinch-zoom stays on. The browser's own bars take the page's white. */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#ffffff',
+  colorScheme: 'light',
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://pepperpe.com'),

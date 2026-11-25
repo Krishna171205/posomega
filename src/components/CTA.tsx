@@ -1,14 +1,14 @@
 'use client'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from './Icons'
 import { api } from '@/lib/api'
-import { Bl, Head, Hl, Ln, Sh, ShR, Torso } from './crew/parts'
+import { Bl, DET, Head, Hl, Ln, Sh } from './crew/parts'
 
 /*
  * The closing block, laid out like Petpooja's demo section: the form on the left, an
- * illustration on the right. Here that is a big black Omega with the call happening
- * inside it: a restaurant owner picking up in the bowl of the Ω, our agent on a
- * headset in front of it. Kept to those two. The form posts to the same lead endpoint as /get-started
+ * illustration on the right. Kept to one idea: a big black P, for PepperPe, holding a
+ * restaurant owner on the phone in its bowl, while a bubble types out PepperPe's side of
+ * the call (the same promise as the form: a call, with the menu already loaded). The form posts to the same lead endpoint as /get-started
  * (omegaservice stores it); if that fails the form stays filled in and says so, so the visitor can retry.
  */
 
@@ -26,48 +26,6 @@ function validate(f: Lead): Errors {
   if (f.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email.trim())) e.email = 'Enter a valid email, or leave it empty.'
   if (!f.role) e.role = 'Pick your role.'
   return e
-}
-
-/** Fingers hooked over an edge at y=0: the back of the hand behind it, four slim
-    fingertips over it, the middle one longest. */
-function EdgeHand({ x, y, s = 1, flip = false }: { x: number; y: number; s?: number; flip?: boolean }) {
-  return (
-    <g transform={`translate(${x} ${y}) scale(${flip ? -s : s} ${s})`}>
-      <Sh w={1.5} d="M-10 .5 C-10.5 -6 -6 -10.2 0 -10.2 C6 -10.2 10 -6.5 10 .5 Z" />
-      <Ln w={1.1} d="M-5 -6.6 Q-4.3 -5.5 -4.7 -4.3 M0 -7.6 Q.8 -6.4 .4 -5.2 M5 -6.8 Q5.6 -5.7 5.2 -4.5" />
-      <Sh w={1.3} d="M-9.6 -1 H-5 V5 A2.3 2.3 0 0 1 -9.6 5 Z" />
-      <Sh w={1.3} d="M-4.8 -1 H-.2 V6.6 A2.3 2.3 0 0 1 -4.8 6.6 Z" />
-      <Sh w={1.3} d="M0 -1 H4.6 V6.2 A2.3 2.3 0 0 1 0 6.2 Z" />
-      <Sh w={1.3} d="M4.8 -1 H9.2 V4.6 A2.2 2.2 0 0 1 4.8 4.6 Z" />
-    </g>
-  )
-}
-
-/** An open hand, palm out, wrist at the origin and fingers up: four slim fingers fanned
-    a little, the thumb out to the side. The palm is filled over the finger roots, with
-    strokes only down its sides, so the silhouette stays one clean shape. */
-function OpenHand({ x, y, r = 0, s = 1, flip = false }: { x: number; y: number; r?: number; s?: number; flip?: boolean }) {
-  const fingers = [
-    { cx: -5.5, top: -24.6, a: -8 },
-    { cx: -1.8, top: -27, a: -2 },
-    { cx: 1.9, top: -25.6, a: 4 },
-    { cx: 5.5, top: -22, a: 11 },
-  ]
-  return (
-    <g transform={`translate(${x} ${y}) rotate(${r}) scale(${flip ? -s : s} ${s})`}>
-      {fingers.map(f => (
-        <g key={f.cx} transform={`rotate(${f.a} ${f.cx} -12)`}>
-          <Sh w={1.3} d={`M${f.cx - 1.85} -10.5 V${f.top + 1.85} A1.85 1.85 0 0 1 ${f.cx + 1.85} ${f.top + 1.85} V-10.5 Z`} />
-        </g>
-      ))}
-      <g transform="rotate(-42 -6.8 -5.5)">
-        <Sh w={1.3} d="M-8.9 -4 V-14.6 A2.1 2.1 0 0 1 -4.7 -14.6 V-4 Z" />
-      </g>
-      <path d="M-7.4 .6 C-8 -4.6 -8.3 -9 -7.7 -13.4 L7.6 -13.8 C8.1 -9 8 -4.6 7.4 .6 Z" fill="#fff" />
-      <Ln w={1.3} d="M-7.4 .6 C-8 -4.6 -8.3 -9 -7.9 -12.6 M7.4 .6 C8 -4.6 8.1 -9 7.6 -13.2" />
-      <Ln w={1} d="M-3.6 -6.4 Q0 -4.2 3.8 -6.9" />
-    </g>
-  )
 }
 
 /** A fist round an upright phone, seen from the front: fingers wrapped across it from
@@ -93,131 +51,211 @@ function PhoneFist({ x, y, r = 0, s = 1 }: { x: number; y: number; r?: number; s
   )
 }
 
-/** The call, inside a black Ω. Ink characters from crew/parts, so they match the rest of the page. */
+/**
+ * The P: a geometric letter, its bowl a D drawn round a circle (centre 330,248, outer 150,
+ * counter 108, stroke 42) on a straight stem (x 180 to 222) that runs on below the bowl.
+ */
+const P_OUTER = 'M180 98 H330 A150 150 0 0 1 330 398 H222 V518 H180 Z'
+const P_COUNTER = 'M222 140 H330 A108 108 0 0 1 330 356 H222 Z'
+
+/** PepperPe's side of the call, a line at a time: the promise the form makes */
+const CALL = ['Hi! It\u2019s PepperPe calling.', 'Your menu is already loaded.', 'Shall we set up your counter?']
+/** The owner's answer to the last line */
+const REPLY = 'Yes, let\u2019s do it!'
+
+type Phase = 'talk' | 'done'
+
+/**
+ * PepperPe's bubble, styled as a call: an avatar, a voice waveform that moves while it
+ * speaks, and a timer. Three dots, then the line types out and holds; the scene (its
+ * parent) is told when a line starts and when it is done, so the owner can react and
+ * answer. Its own component, so the typing never redraws the illustration.
+ */
+function CallBubble({ live, calm, line, onPhase, onNext }: {
+  live: boolean; calm: boolean; line: number; onPhase: (p: Phase) => void; onNext: () => void
+}) {
+  // characters shown of which line; -1 while the dots show. Tied to the line, so a new
+  // line starts from the dots in the same render it arrives in.
+  const [st, setSt] = useState({ line: 0, n: -1 })
+  const typed = st.line === line ? st.n : -1
+  const [secs, setSecs] = useState(0)
+  const text = CALL[line]
+
+  useEffect(() => {
+    if (!live || calm) return
+    const id = window.setInterval(() => setSecs(s => s + 1), 1000)
+    return () => window.clearInterval(id)
+  }, [live, calm])
+
+  useEffect(() => {
+    if (!live || calm) return
+    let t: number
+    if (typed < 0) { onPhase('talk'); t = window.setTimeout(() => setSt({ line, n: 0 }), 900) }
+    else if (typed < text.length) t = window.setTimeout(() => setSt({ line, n: typed + 1 }), 34)
+    else { onPhase('done'); t = window.setTimeout(onNext, line === CALL.length - 1 ? 3600 : 2400) }
+    return () => window.clearTimeout(t)
+  }, [live, calm, typed, text, line, onPhase, onNext])
+
+  const shown = calm ? text.length : typed
+  const talking = !calm && live && shown < text.length
+  const clock = `${String(Math.floor(secs / 60)).padStart(2, '0')}:${String(secs % 60).padStart(2, '0')}`
+  return (
+    <div className={`cs-bubble ${talking ? 'is-talking' : ''}`}>
+      <div className="cs-bubble-h">
+        <span className="cs-av">P</span>
+        <b>PepperPe</b>
+        <span className="cs-voice" aria-hidden="true"><i /><i /><i /><i /><i /></span>
+        <span className="ui-num">{calm ? 'On call' : clock}</span>
+      </div>
+      <p className="cs-bubble-t">
+        <span className="cs-ghost">{text}</span>
+        {shown < 0
+          ? <span className="cs-dots"><i /><i /><i /></span>
+          : <span>{text.slice(0, shown)}{talking && <i className="cs-caret" />}</span>}
+      </p>
+    </div>
+  )
+}
+
+/**
+ * The owner's clothes, in head space (neck at y 42), drawn like the crew's: a white shirt
+ * under a black apron, its straps over the shoulders, a pocket with a pen and a small P
+ * stitched on the bib. A café owner, ready for service.
+ */
+function OwnerTorso() {
+  return (
+    <g>
+      <Sh d="M-50 112 C-48 64 -30 42 0 42 C30 42 48 64 50 112Z" />
+      <Ln w={DET} d="M-35 76 C-36 88 -37 100 -38 112 M35 76 C36 88 37 100 38 112" />
+      <Bl d="M-25 64 L-15 43.5 L-9.5 44.5 L-19 64 Z" />
+      <Bl d="M25 64 L15 43.5 L9.5 44.5 L19 64 Z" />
+      <Bl d="M-26 63 Q0 59 26 63 L29 112 L-29 112 Z" />
+      <Hl w={1.2} d="M5 79 H19 V91 Q12 93.5 5 91 Z" />
+      <path className="fill" d="M14.2 70.5 h2.4 v9 h-2.4 Z" fill="#fff" />
+      <Hl w={1.4} d="M-15 90 V77 H-10.5 A3.6 3.6 0 0 1 -10.5 84.2 H-15" />
+    </g>
+  )
+}
+/** The open collar, over the neck */
+function OwnerCollar() {
+  return (
+    <g>
+      <Sh w={DET} d="M-9 41 L-1 49.5 L-4 56.5 L-14 47 Z" />
+      <Sh w={DET} d="M9 41 L1 49.5 L4 56.5 L14 47 Z" />
+    </g>
+  )
+}
+
+/** A thumbs-up, seen from the side: the thumb up, four fingers curled under it, a white
+    sleeve below. Origin at the middle of the fist. */
+function ThumbsUp() {
+  return (
+    <g>
+      <Sh w={1.5} d="M-5 21 L-6.5 52 L14 52 L13 21 Z" />
+      <Ln w={1.1} d="M-5.6 31 L13.4 31" />
+      <Sh w={1.5} d="M-.5 -8 C-2.6 -16 -1.8 -25.5 3.2 -27.6 C7.4 -29.2 9.4 -25.8 8.4 -20.6 L7 -8 Z" />
+      <Sh w={1.5} d="M-4 -9.5 H11 C15 -9.5 16.4 -5.6 15.6 -1.4 L14.4 18 C14.2 22 11.4 24.4 7.4 24.4 H-2.6 C-6.8 24.4 -9 21.4 -9 17.4 V-3.4 C-9 -7.2 -7 -9.5 -4 -9.5 Z" />
+      {[-4.2, 2.6, 9.4, 16.2].map(y => (
+        <Sh key={y} w={1.3} d={`M-13 ${y - 3.2} H1.6 A3.3 3.3 0 0 1 1.6 ${y + 3.4} H-13 A3.3 3.3 0 0 1 -13 ${y - 3.2} Z`} />
+      ))}
+    </g>
+  )
+}
+
+/**
+ * The call, inside a black P. Ink characters from crew/parts, so they match the rest of
+ * the page. The owner sits in the P's bowl under a pendant lamp, listens, looks impressed
+ * when the menu is already loaded, and answers the last line.
+ */
 function CallScene() {
   const ref = useRef<HTMLDivElement>(null)
+  const [live, setLive] = useState(false)
+  const [calm, setCalm] = useState(false)
+  const [line, setLine] = useState(0)
+  const [phase, setPhase] = useState<Phase>('talk')
   useEffect(() => {
     const el = ref.current
-    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const io = new IntersectionObserver(([e]) => el.classList.toggle('is-live', e.isIntersecting))
+    if (!el) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setCalm(true); return }
+    const io = new IntersectionObserver(([e]) => setLive(e.isIntersecting), { threshold: 0.25 })
     io.observe(el)
     return () => io.disconnect()
   }, [])
+  const onPhase = useCallback((p: Phase) => setPhase(p), [])
+  const onNext = useCallback(() => setLine(l => (l + 1) % CALL.length), [])
 
+  const done = phase === 'done'
+  const mood = line === 1 && done ? 'wow' : 'happy'
+  const replying = !calm && line === CALL.length - 1 && done
   return (
-    <div className="cta-art" ref={ref} aria-hidden="true">
-      <svg className="cs-art" viewBox="136 56 540 425" role="presentation">
-        <defs>
-          <linearGradient id="cs-om" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#383e47" />
-            <stop offset=".55" stopColor="#1c1d1f" />
-            <stop offset="1" stopColor="#101010" />
-          </linearGradient>
-          <clipPath id="cs-bubble"><circle cx="330" cy="248" r="108" /></clipPath>
-        </defs>
+    <div className={`cta-art ${live ? 'is-live' : ''} ${phase === 'talk' && live ? 'is-talking' : ''} ${replying ? 'is-replying' : ''}`} ref={ref} aria-hidden="true">
+      <div className="cs-stage">
+        <svg className="cs-art" viewBox="170 90 320 436" role="presentation">
+          <defs>
+            <linearGradient id="cs-om" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#383e47" />
+              <stop offset=".55" stopColor="#1c1d1f" />
+              <stop offset="1" stopColor="#101010" />
+            </linearGradient>
+            <radialGradient id="cs-glow">
+              <stop offset="0" stopColor="#ffd666" stopOpacity=".55" />
+              <stop offset="1" stopColor="#ffd666" stopOpacity="0" />
+            </radialGradient>
+            <pattern id="cs-paper" width="12" height="12" patternUnits="userSpaceOnUse">
+              <circle cx="1.5" cy="1.5" r="1" fill="#d3d8df" />
+            </pattern>
+            <clipPath id="cs-bubble"><path d={P_COUNTER} /></clipPath>
+          </defs>
 
-        {/* A soft disc behind the scene, as Petpooja's demo art has, in our blue */}
-        <circle className="cs-backdrop" cx="352" cy="262" r="214" />
+          <path className="cs-mark" fill="url(#cs-om)" fillRule="evenodd" d={`${P_OUTER} ${P_COUNTER}`} />
 
-        {/* Small things around the call, drawn like the crew: the demo going in the calendar,
-            the confirmation mail, and a printed bill (what PepperPe does once it is set up) */}
-        <g transform="translate(184 110) rotate(-10) scale(1.6)">
-          <g className="cs-float">
-            <rect x="-24" y="-20" width="48" height="44" rx="7" className="cs-obj" />
-            <path d="M-24 -13 a7 7 0 0 1 7 -7 h34 a7 7 0 0 1 7 7 v6 h-48 z" fill="currentColor" />
-            <rect x="-13" y="-25" width="4.5" height="10" rx="2.2" className="cs-obj" />
-            <rect x="8.5" y="-25" width="4.5" height="10" rx="2.2" className="cs-obj" />
-            {[-14, -2, 10].flatMap(x => [5, 15].map(y => <rect key={`${x}${y}`} x={x} y={y - 3} width="6" height="5" rx="1.5" fill="currentColor" opacity=".18" />))}
-            <circle cx="13" cy="14" r="7" className="cs-tick" />
-            <path d="M9.6 14 l2.4 2.4 l4.4 -4.6" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </g>
-        </g>
-        <g transform="translate(606 410) rotate(9) scale(1.5)">
-          <g className="cs-float" style={{ animationDelay: '-1.3s' }}>
-            <rect x="-26" y="-17" width="52" height="34" rx="5" className="cs-obj" />
-            <path d="M-24 -14 L0 4 L24 -14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-            <circle cx="24" cy="-16" r="6" className="cs-tick" />
-          </g>
-        </g>
-        <g transform="translate(636 300) rotate(-7) scale(1.5)">
-          <g className="cs-float" style={{ animationDelay: '-2.6s' }}>
-            <path d="M-16 -26 H16 V22 l-4 4 l-4 -4 l-4 4 l-4 -4 l-4 4 l-4 -4 l-4 4 l-4 -4 Z" className="cs-obj" />
-            {[-17, -10, -3].map(y => <path key={y} d={`M-9 ${y} H${y === -10 ? 4 : 9}`} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />)}
-            <path d="M-9 8 H9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="2 3" />
-            <path d="M-9 15 H1" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-          </g>
-        </g>
-
-        {/* The PepperPe: an even ring (outer 172, inner 130, centre 330,248). At the base the
-            ring is cut straight down at x 275 and 385 and its outer circle runs into flat
-            feet as thick as the ring, like the plain geometric glyph */}
-        <path
-          className="cs-omega"
-          fill="url(#cs-om)"
-          d="M140 411 H275 V366 A130 130 0 1 1 385 366 V411 H520 V366 H455.1 A172 172 0 1 0 204.9 366 H140 Z"
-        />
-
-        {/* The bowl: a restaurant owner picking up */}
-        <circle cx="330" cy="248" r="108" fill="#fff" />
-        <g clipPath="url(#cs-bubble)">
-          <g className="cs-caller">
-            <g transform="translate(318 252) rotate(4) scale(1.2)">
-              <Torso who="owner" bottom={112} w={50} />
-              <Head who="owner" mood="happy" />
+          {/* The bowl: dot paper, a soft disc, a pendant lamp, and the owner picking up */}
+          <g clipPath="url(#cs-bubble)">
+            <path d={P_COUNTER} fill="#fff" />
+            <path d={P_COUNTER} fill="url(#cs-paper)" opacity=".7" />
+            <circle className="cs-disc" cx="316" cy="282" r="78" />
+            <g className="cs-lamp">
+              <ellipse className="cs-lamp-glow" cx="258" cy="196" rx="34" ry="26" fill="url(#cs-glow)" />
+              <path d="M258 140 V170" stroke="currentColor" strokeWidth="1.4" />
+              <path d="M244 184 Q244 170 258 170 Q272 170 272 184 Z" fill="currentColor" />
+              <path d="M253 184 a5 4 0 0 0 10 0" fill="#ffd666" />
             </g>
-            {/* the phone against the ear */}
-            <g className="cs-phone">
-              <rect x="345" y="212" width="10.5" height="66" rx="3.6" fill="currentColor" transform="rotate(6 350 245)" />
-              <rect x="347.3" y="217" width="2" height="15" rx="1" fill="#fff" opacity=".45" transform="rotate(6 350 245)" />
+            <g className="cs-caller">
+              {/* lifted a little, so the apron's pocket and stitched P show above the bowl's edge */}
+              <g transform="translate(0 -12)">
+              <g transform="translate(318 252) rotate(4) scale(1.2)">
+                <OwnerTorso />
+                <Head who="owner" mood={mood} />
+                <OwnerCollar />
+              </g>
+              {/* the phone against the ear */}
+              <g className="cs-phone">
+                <rect x="345" y="212" width="10.5" height="66" rx="3.6" fill="currentColor" transform="rotate(6 350 245)" />
+                <rect x="347.3" y="217" width="2" height="15" rx="1" fill="#fff" opacity=".45" transform="rotate(6 350 245)" />
+              </g>
+              {/* forearm up from in front of the chest, the white sleeve rolled to the elbow */}
+              <Sh w={1.5} d="M357 266 L375 262 C379 281 382 300 384 322 L362 324 C362 304 360 285 357 266 Z" />
+              <Sh w={1.5} d="M361 342 L388 339 C389 348 389.5 357 389.5 368 L362.5 368 C362.5 359 362 350 361 342 Z" />
+              <Sh w={1.5} d="M359.5 320 L386.5 317 L388.5 341 L361 344 Z" />
+              <Ln w={1.1} d="M360.4 331.6 L387.6 328.6" />
+              {/* the hand: a fist round the phone, thumb up its side */}
+              <PhoneFist x={356} y={254} r={6} s={1.02} />
+              </g>
             </g>
-            {/* forearm up from in front of the chest, in the same black shirt */}
-            <Bl d="M356 268 L375 264 C381 288 385 322 387 362 L361 364 C363 330 361 296 356 268 Z" />
-            <Hl w={1.3} d="M359.5 286 C362 310 363 336 362 360" />
-            <Hl w={1.3} d="M357 273.5 L375.5 269.5" />
-            {/* the hand: a fist round the phone, thumb up its side */}
-            <PhoneFist x={356} y={254} r={6} s={1.02} />
-          </g>
-        </g>
-        <circle cx="330" cy="248" r="108" fill="none" stroke="currentColor" strokeWidth="1.4" />
-        <g className="cs-waves" fill="none" stroke="var(--blue-500)" strokeWidth="2" strokeLinecap="round">
-          <path d="M381 220 Q387 228 382 237" />
-          <path d="M389 213 Q398 227 391 242" />
-        </g>
-
-        {/* The call: dots flowing from the caller's phone, over the ring, to her headset */}
-        <path className="cs-link" d="M402 214 Q446 126 540 124" />
-        <circle className="cs-link-ping" cx="543" cy="123" r="7" />
-
-        {/* Our agent, on a headset, at a laptop with an Ω on the lid. Drawn around
-            x 396-566, y 305-506; the wrapper puts her at the PepperPe's top right, clear of
-            the ring (its right edge is x 502). */}
-        <g transform="translate(203.2 -170) scale(.8)">
-        <g className="cs-agent">
-          <g transform="translate(474 356) scale(1.16)">
-            <Torso who="captain" bottom={100} w={52} />
-            <g className="cs-agent-head">
-              <Head who="captain" mood="happy" />
-              {/* headset: a white band so it reads over the hair, cups, a boom mic */}
-              <Sh w={1.5} d="M-31.5 1 C-36 -47 36 -47 31.5 1 L27.5 1 C31.5 -41 -31.5 -41 -27.5 1 Z" />
-              <ShR x={-35.5} y={-5.5} width={9.5} height={16} rx={4.5} w={1.6} />
-              <ShR x={26} y={-5.5} width={9.5} height={16} rx={4.5} w={1.6} />
-              <Ln w={1.5} d="M-31 9.5 C-31 21 -24 27.5 -15 27" />
-              <rect className="cs-mic" x="-17" y="24" width="8" height="6" rx="3" fill="currentColor" />
+            {/* the free hand comes up for "yes" */}
+            <g className="cs-thumb">
+              <g transform="translate(268 318) rotate(-8) scale(1.1)"><ThumbsUp /></g>
             </g>
           </g>
-          {/* her right hand up in a wave, the sleeve down behind the laptop */}
-          <g className="cs-wave-hand"><OpenHand x={525} y={392} r={13} s={1.32} /></g>
-          <Sh w={1.5} d="M510.5 396.5 L530.5 393.5 C533 404 534.5 413 535 424 L514.5 424 C514 414 512.5 405 510.5 396.5 Z" />
-          <Ln w={1.1} d="M511.6 401 L531.4 398" />
-
-          <rect x="410" y="422" width="128" height="78" rx="9" className="cs-lidbox" />
-          <text x="474" y="470" textAnchor="middle" className="cs-lid">Ω</text>
-          <ShR x={396} y={498} width={156} height={8} rx={4} w={1.6} />
-          {/* her left hand on the keys, fingertips over the top of the lid */}
-          <g className="cs-type-a"><EdgeHand x={446} y={422} s={1.3} /></g>
-        </g>
-        </g>
-      </svg>
+          {/* sound from the phone while PepperPe speaks */}
+          <g className="cs-waves" fill="none" stroke="var(--blue-500)" strokeWidth="2" strokeLinecap="round">
+            <path d="M381 220 Q387 228 382 237" />
+            <path d="M389 213 Q398 227 391 242" />
+          </g>
+        </svg>
+        <CallBubble live={live} calm={calm} line={line} onPhase={onPhase} onNext={onNext} />
+        {replying && <div className="cs-reply">{REPLY}</div>}
+      </div>
     </div>
   )
 }

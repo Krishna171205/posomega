@@ -3,13 +3,17 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { CHARACTERS } from './crew/Characters'
 
 /**
- * "Meet the crew": a scroll story in the spirit of petpooja.com. The stage on the
- * left is sticky. A thin rail runs down the steps on the right and fills with the
- * scroll; as it reaches each step's node that step's title rises in and its person
- * takes the stage: the last one slides out the way the page is going, the next one
- * draws itself in from the other side. The stage's bar fills through each step, the
- * count rolls, and the figure leans a little with the speed of the scroll.
- * Click a character for another tip.
+ * "Meet the crew", sideways. On wide screens the section pins, and scrolling down moves
+ * a row of five people from right to left in one smooth, continuous motion. The row
+ * never stops, but it slows right down as each person reaches the middle and speeds up
+ * in between, so each one gets a long, calm stretch of scroll to draw in, speak and play
+ * their little animation, with a clear gap of travel before the next one starts. Whoever
+ * has had their turn stays complete as they slide away to the left. The row trails the
+ * scroll a little, so a wheel notch becomes a glide rather than a jump.
+ * Phones, short windows and reduced motion get the five as a swipeable row instead: one
+ * person per card, the next peeking in, each drawing in the first time it is swiped to
+ * the middle, with dots under it (reduced motion: all drawn, nothing moving).
+ * Click a person for another line.
  */
 const STEPS = [
   {
@@ -48,15 +52,28 @@ const STEPS = [
     lines: ['Cash, UPI, card. It all adds up.', 'GST, ready for my accountant.', 'Offline at 9pm? Synced by close.'],
   },
 ]
+const N = STEPS.length
 
-/** Where on screen the story reads from: a step is "reached" once its node passes this line */
-const READ_LINE = 0.58
-/** The hand-off on the stage, in ms: how long a person takes to draw in, how long they
-    then stay complete before the next may take over, and how long leaving takes */
-const DRAW = 950
-const HOLD = 1100
-const LEAVE = 340
-const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
+/** Scroll given to each person, in svh, and how much the row lingers on them (LINGER 0
+    moves at an even pace, 1 would stop dead on each one). EDGE is extra scroll, in
+    people, before the first and after the last, where the row rests. */
+const PER = 120
+const LINGER = 0.82
+const EDGE = 0.35
+const RUN = (N - 1 + 2 * EDGE) * PER
+
+/**
+ * Where the row is, as a fractional person index, `d` svh of scroll into the pin.
+ * A sine bump on an even pace: slow (18% speed) at each person, quick (182%) between
+ * two, smooth all the way, so the motion is continuous and each person gets their gap.
+ */
+function rowAt(d: number) {
+  const u = d / PER - EDGE
+  const f = u - (LINGER * Math.sin(2 * Math.PI * u)) / (2 * Math.PI)
+  return Math.min(N - 1, Math.max(0, f))
+}
+/** How far into the pin (svh) the row sits on person k */
+const restAt = (k: number) => (k + EDGE) * PER
 
 /** A line split into words that stagger in (CSS uses --w); spaces stay between them */
 function Words({ text }: { text: string }) {
@@ -73,306 +90,204 @@ function Words({ text }: { text: string }) {
   )
 }
 
+type View = { arrived: number; active: number; hold: boolean; flat: boolean }
+
 export function Crew() {
-  const [active, setActive] = useState(0)
-  /** Who is on the stage. It follows `active`, but one person at a time: whoever is on
-      finishes drawing and stays complete for a moment, leaves whole, and only then does
-      the next one draw in. A fast scroll past several skips straight to the latest. */
-  const [shown, setShown] = useState(0)
-  const [leaving, setLeaving] = useState(false)
+  /* arrived: the last person the row has reached (they and everyone before are drawn);
+     active: the one nearest the middle; hold: the row is resting on them;
+     flat: the swipeable row (phones, short windows, reduced motion). */
+  const [view, setView] = useState<View>({ arrived: -1, active: 0, hold: false, flat: false })
   const [tip, setTip] = useState(0)
-  const [seen, setSeen] = useState(false)
-  const activeRef = useRef(0)
-  activeRef.current = active
-  const seenRef = useRef(false)
-  seenRef.current = seen
-  const pumpRef = useRef<() => void>(() => {})
-  const rootRef = useRef<HTMLElement>(null)
-  const stageRef = useRef<HTMLDivElement>(null)
-  const listRef = useRef<HTMLOListElement>(null)
-  const nodeRefs = useRef<(HTMLElement | null)[]>([])
-  const segRefs = useRef<(HTMLElement | null)[]>([])
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const pinRef = useRef<HTMLDivElement>(null)
+  const rowRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLOListElement>(null)
+  const panelRefs = useRef<(HTMLLIElement | null)[]>([])
+  const geo = useRef({ on: false, pinStart: 0, u: 9 })
 
-  /* Everything here follows the scroll directly, so it runs backwards too. The values
-     go out as CSS variables (no re-render per frame); only the active step is state. */
-  /* One scroll, one step. Inside the steps a wheel or trackpad gesture is taken over and
-     the page eases to the next step (in the gesture's direction) in one motion, so a step
-     is never left half in and the motion never stops and restarts. The trackpad's momentum
-     tail is swallowed until it dies down, so one flick moves one step. At the first and
-     last step the gesture goes through, so the page scrolls on out of the section.
-     Desktop stage only (phones have none), never with reduced motion. */
+  /* The scroll drives the row. The row's place is read from the page and followed with a
+     short lag (so wheel notches glide), and runs backwards too. Its position and each
+     panel's distance from the middle go out as a transform and CSS variables; only the
+     few things that change at a person's boundary are state. */
   useEffect(() => {
-    const list = listRef.current
-    const stage = stageRef.current
-    if (!list || !stage) return
-    const calm = window.matchMedia('(prefers-reduced-motion: reduce)')
-    let raf = 0, busy = false, quietAt = 0, lastAbs = 0, pending = 0
-    let speeds: number[] = []                    // |deltaY| of the gesture so far, newest last
-    const mean = (a: number[]) => a.reduce((t, v) => t + v, 0) / (a.length || 1)
-    const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2)
-
-    /** Where the middle of the screen is among the steps, as a fractional step index */
-    function where() {
-      const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 68
-      const mid = navH + (window.innerHeight - navH) / 2
-      const c = ([...list!.children] as HTMLElement[]).map(el => { const r = el.getBoundingClientRect(); return r.top + r.height / 2 })
-      const last = c.length - 1
-      const gap = (c[last] - c[0]) / last
-      let f: number
-      if (mid <= c[0]) f = (mid - c[0]) / gap                          // a little below 0 above the first
-      else if (mid >= c[last]) f = last + (mid - c[last]) / gap        // a little above last below the last
-      else { const k = c.findIndex(v => v > mid); f = k - 1 + (mid - c[k - 1]) / (c[k] - c[k - 1]) }
-      const near = Math.round(f)
-      return { mid, c, last, f, near, resting: Math.abs(f - near) < 0.03 }
-    }
-    function glide(by: number) {
-      const from = window.scrollY, t0 = performance.now(), ms = 650
-      busy = true
-      const step = (now: number) => {
-        const k = Math.min(1, (now - t0) / ms)
-        // instant: html has scroll-behavior: smooth, which would turn every frame into its own animation
-        window.scrollTo({ top: from + by * ease(k), behavior: 'instant' })
-        if (k < 1) raf = requestAnimationFrame(step)
-        else {
-          raf = 0; busy = false
-          // a new flick that came in mid-glide: carry on to the next step
-          if (pending) { const d = pending; pending = 0; move(d) }
-        }
-      }
-      raf = requestAnimationFrame(step)
-    }
-    function onWheel(e: WheelEvent) {
-      if (calm.matches || stage!.getBoundingClientRect().width === 0 || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return
-      const dir = Math.sign(e.deltaY)
-      if (!dir) return
-      const { last, f, near, resting } = where()
-      if (f < -0.3 || f > last + 0.3) return                             // not in the steps
-      // Heading out past either end: let the page scroll on
-      if ((dir < 0 && (f < 0 || (resting && near === 0))) || (dir > 0 && (f > last || (resting && near === last)))) return
-      e.preventDefault()
-      // A new flick, or the rest of the last one? (The approach full-page scrollers use.)
-      // A trackpad flick speeds up, then trails off in a long momentum tail that wobbles
-      // (2, 3, 2, 4...), so single deltas say little. A new flick is: the first event
-      // after a pause; a mouse-wheel notch (the same big delta again, a little apart); or,
-      // once the current flick's tail has begun, the last three deltas clearly faster than
-      // the six before them. After each step the history starts again, so the
-      // rest of that flick (its speed-up, its tail) can never start a second one. A new
-      // flick during a glide waits for it and then moves on, at most one queued.
-      const now = performance.now(), abs = Math.abs(e.deltaY), gapMs = now - quietAt
-      if (gapMs > 200) speeds = []
-      speeds.push(abs)
-      if (speeds.length > 60) speeds.shift()
-      const notch = abs >= 50 && gapMs > 40 && Math.abs(abs - lastAbs) < 1
-      quietAt = now
-      lastAbs = abs
-      const n = speeds.length
-      const peak = Math.max(...speeds), at = speeds.indexOf(peak)
-      const tail = speeds.slice(at).some(v => v < peak * 0.75)
-      const recent = mean(speeds.slice(-3)), before = mean(speeds.slice(-9, -3))
-      const fresh = gapMs > 200 || notch || (n > 9 && tail && recent > before * 1.6 && recent > 10)
-      if (!fresh) return
-      speeds = []
-      if (busy) pending = dir
-      else move(dir)
-    }
-    function move(dir: number) {
-      const { mid, c, last, f, near, resting } = where()
-      // Resting: one step on. Caught between: the step ahead, unless barely past the one behind
-      const target = resting ? near + dir : dir > 0 ? Math.ceil(f - 0.25) : Math.floor(f + 0.25)
-      const i = Math.max(0, Math.min(last, target))
-      if (Math.abs(c[i] - mid) < 2) return              // already there (an end step)
-      glide(c[i] - mid)
-    }
-    window.addEventListener('wheel', onWheel, { passive: false })
-    return () => { window.removeEventListener('wheel', onWheel); if (raf) cancelAnimationFrame(raf) }
-  }, [])
-
-  useEffect(() => {
-    const root = rootRef.current
-    const list = listRef.current
-    if (!root || !list) return
-    const calm = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const wrap = wrapRef.current
+    const pin = pinRef.current
+    const track = trackRef.current
+    const row = rowRef.current
+    if (!wrap || !pin || !track || !row) return
+    const mqWide = window.matchMedia('(min-width: 861px) and (min-height: 560px)')   // the same as characters.css's pinned run
+    const mqCalm = window.matchMedia('(prefers-reduced-motion: reduce)')
     let raf = 0
-    let cur = -1
-    let lastY = window.scrollY
-    let lastT = performance.now()
-    let settle = 0
+    let centres: number[] = []
+    let last = ''
+    let shown = 0                                  // the row's drawn place, following the target
+    let lastT = 0
+    let fresh = true
+    let seenMax = -1                               // the swipeable row: the furthest person reached
 
-    const paint = () => {
-      raf = 0
-      const vh = window.innerHeight
-      const now = performance.now()
-      const y = window.scrollY
-      const v = (y - lastY) / Math.max(16, now - lastT)    // px per ms
-      lastY = y
-      lastT = now
-
-      const rr = root.getBoundingClientRect()
-      if (rr.bottom < -200 || rr.top > vh + 200) return
-
-      // The first person draws in once the stage is well on screen (phones have no stage)
-      const stage = stageRef.current
-      const sr = stage?.getBoundingClientRect()
-      const hasStage = !!sr && sr.width > 0
-      if (hasStage ? sr.top < vh * 0.85 : rr.top < vh * 0.7) setSeen(true)
-
-      const line = vh * READ_LINE
-      const tops = nodeRefs.current.map(n => (n ? n.getBoundingClientRect().top + n.offsetHeight / 2 : 0))
-      const n = tops.length
-      let a = 0
-      tops.forEach((t, i) => { if (t < line) a = i })
-      if (a !== cur) { cur = a; setActive(a) }
-
-      // The rail runs from the first node to the last, filled down to the reading line
-      const lt = list.getBoundingClientRect().top
-      list.style.setProperty('--r0', `${(tops[0] - lt).toFixed(1)}px`)
-      list.style.setProperty('--r1', `${(tops[n - 1] - lt).toFixed(1)}px`)
-      root.style.setProperty('--rp', clamp01((line - tops[0]) / (tops[n - 1] - tops[0] || 1)).toFixed(4))
-
-      // The stage's bar: each segment fills while its step is being read
-      const gap = (tops[n - 1] - tops[0]) / (n - 1)
-      segRefs.current.forEach((el, i) => {
-        if (!el) return
-        const a0 = tops[i]
-        const a1 = i < n - 1 ? tops[i + 1] : tops[i] + gap
-        el.style.setProperty('--f', clamp01((line - a0) / (a1 - a0 || 1)).toFixed(4))
-      })
-
-      // The figure leans into a fast scroll and settles once it stops
-      if (stage && !calm.matches) {
-        const lean = Math.max(-4, Math.min(4, -v * 1.6))
-        stage.style.setProperty('--lean', `${lean.toFixed(2)}deg`)
-        window.clearTimeout(settle)
-        settle = window.setTimeout(() => stage.style.setProperty('--lean', '0deg'), 140)
-      }
+    function measure() {
+      const g = geo.current
+      g.on = mqWide.matches && !mqCalm.matches
+      const navH = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 68
+      g.u = window.innerHeight / 100
+      g.pinStart = wrap!.getBoundingClientRect().top + window.scrollY - navH
+      centres = panelRefs.current.map(p => (p ? p.offsetLeft + p.offsetWidth / 2 : 0))
     }
-    const schedule = () => { if (!raf) raf = requestAnimationFrame(paint) }
+    function frame(now: number) {
+      raf = 0
+      const g = geo.current
+      let next: View
+      if (!g.on) {
+        // The swipeable row: whoever is nearest the middle of the row is active; each
+        // person draws in the first time they reach it, once the row is on screen
+        track!.style.transform = ''
+        panelRefs.current.forEach(p => p?.style.removeProperty('--dist'))
+        const rr = row!.getBoundingClientRect()
+        const mid = rr.left + rr.width / 2
+        let best = 0, bd = Infinity
+        panelRefs.current.forEach((p, i) => {
+          if (!p) return
+          const r = p.getBoundingClientRect()
+          const dd = Math.abs(r.left + r.width / 2 - mid)
+          if (dd < bd) { bd = dd; best = i }
+        })
+        const onScreen = rr.top < window.innerHeight * 0.8 && rr.bottom > 0
+        if (onScreen) seenMax = Math.max(seenMax, best)
+        if (mqCalm.matches) seenMax = N - 1
+        next = { arrived: seenMax, active: best, hold: onScreen && bd < 24, flat: true }
+        fresh = true
+      } else {
+        const d = (window.scrollY - g.pinStart) / g.u
+        const target = rowAt(d)
+        const dt = Math.min(0.1, (now - lastT) / 1000)
+        lastT = now
+        if (fresh) { shown = target; fresh = false }
+        else shown += (target - shown) * (1 - Math.exp(-dt * 7))
+        if (Math.abs(target - shown) < 0.0005) shown = target
+        const f = shown
+        const k = Math.min(N - 2, Math.floor(f))
+        const cx = centres[k] + (centres[k + 1] - centres[k]) * (f - k)
+        track!.style.transform = `translate3d(${(pin!.clientWidth / 2 - cx).toFixed(1)}px, 0, 0)`
+        wrap!.style.setProperty('--cf', (f / (N - 1)).toFixed(4))
+        panelRefs.current.forEach((p, i) => p?.style.setProperty('--dist', Math.min(1, Math.abs(f - i)).toFixed(3)))
+        // A person draws in as they come into the middle (the first as the pinned view comes up)
+        const near = Math.round(f)
+        const arrived = d < -40 ? -1 : Math.min(N - 1, Math.floor(f + 0.12))
+        next = { arrived, active: near, hold: d > -10 && arrived === near && Math.abs(f - near) < 0.12, flat: false }
+        if (shown !== target) raf = requestAnimationFrame(frame)
+      }
+      const key = JSON.stringify(next)
+      if (key !== last) { last = key; setView(next) }
+    }
+    const schedule = () => { if (!raf) { lastT = performance.now(); raf = requestAnimationFrame(frame) } }
+    const refresh = () => { measure(); schedule() }
 
-    paint()
+    refresh()
+    const ro = new ResizeObserver(refresh)
+    ro.observe(track)
+    ro.observe(document.body)
     window.addEventListener('scroll', schedule, { passive: true })
-    window.addEventListener('resize', schedule)
-    const ro = new ResizeObserver(schedule)
-    ro.observe(list)
+    row.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', refresh)
+    mqWide.addEventListener('change', refresh)
+    mqCalm.addEventListener('change', refresh)
     return () => {
-      window.removeEventListener('scroll', schedule)
-      window.removeEventListener('resize', schedule)
       ro.disconnect()
-      window.clearTimeout(settle)
+      window.removeEventListener('scroll', schedule)
+      row.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', refresh)
+      mqWide.removeEventListener('change', refresh)
+      mqCalm.removeEventListener('change', refresh)
       if (raf) cancelAnimationFrame(raf)
     }
   }, [])
 
-  /* The stage's hand-off, one person at a time (see `shown`) */
-  useEffect(() => {
-    const calm = window.matchMedia('(prefers-reduced-motion: reduce)')
-    let timer = 0
-    let on = 0
-    let out = false
-    let first = true
-    let readyAt = 0                                       // when the one on stage is complete
-    function pump() {
-      timer = 0
-      if (!seenRef.current) return
-      const want = activeRef.current
-      const now = performance.now()
-      if (first) {                                        // the first one simply draws in
-        first = false
-        on = want
-        readyAt = now + DRAW
-        setShown(want)
-        return
-      }
-      if (want === on && !out) return
-      if (calm.matches) { on = want; setShown(want); return }
-      if (!out) {
-        const wait = readyAt + HOLD - now                 // let them finish, then hold
-        if (wait > 0) { timer = window.setTimeout(pump, wait); return }
-        out = true
-        setLeaving(true)
-        timer = window.setTimeout(pump, LEAVE)
-        return
-      }
-      out = false                                         // gone: bring in whoever is wanted now
-      on = want
-      readyAt = now + DRAW
-      setLeaving(false)
-      setShown(want)
+  useEffect(() => { setTip(0) }, [view.arrived])
+
+  /** The progress labels jump to a person's turn */
+  function go(k: number) {
+    const g = geo.current
+    if (!g.on) {
+      // the swipeable row: bring that person to its middle
+      const row = rowRef.current, p = panelRefs.current[k]
+      if (!row || !p) return
+      const rr = row.getBoundingClientRect(), pr = p.getBoundingClientRect()
+      row.scrollTo({ left: row.scrollLeft + (pr.left + pr.width / 2) - (rr.left + rr.width / 2), behavior: 'smooth' })
+      return
     }
-    pumpRef.current = () => { if (!timer) pump() }
-    return () => { window.clearTimeout(timer); pumpRef.current = () => {} }
-  }, [])
-  useEffect(() => { pumpRef.current() }, [active, seen])
+    window.scrollTo({ top: g.pinStart + restAt(k) * g.u, behavior: 'smooth' })
+  }
 
-  useEffect(() => { setTip(0) }, [shown])
-
-  const step = STEPS[shown]
+  const { arrived, active, hold, flat } = view
   return (
-    <section ref={rootRef} className={`section crew ${seen ? 'is-seen' : ''}`} aria-labelledby="crew-title">
-      <div className="container">
-        <div className="sec-head center" data-rv>
-          <span className="eyebrow"><span className="dot" />How it works</span>
-          <h2 id="crew-title" className="h-section">Your whole team, <span className="h-muted">on one system.</span></h2>
-          <p className="lede">Five people, one service. Here is what each of them does differently with PepperPe.</p>
-        </div>
-
-        <div className="crew-grid">
-          <div className="crew-stage-wrap">
-            <div className="crew-stage" ref={stageRef} style={{ ['--step' as string]: shown }}>
-              {/* Soft backdrop that turns with the scroll */}
-              <svg className="crew-blob" viewBox="0 0 200 200" aria-hidden="true">
-                <path d="M156 52 C178 76 182 118 162 148 C142 178 98 188 66 170 C34 152 18 112 30 78 C42 44 76 24 108 26 C130 28 144 38 156 52Z" />
-              </svg>
-              <button
-                type="button"
-                className="crew-figure"
-                onClick={() => setTip(t => (t + 1) % step.lines.length)}
-                aria-label={`${step.role}: another tip`}
-              >
-                {STEPS.map((s, i) => {
-                  const C = CHARACTERS[s.who]
-                  // On stage, or waiting off to one side: those already passed on the left, the
-                  // rest on the right. The one leaving goes the way the page is going.
-                  const at = i === shown && seen && !leaving ? 'on'
-                    : i === shown ? (active > shown ? 'is-before' : 'is-after')
-                    : i < shown ? 'is-before' : 'is-after'
-                  return <span key={s.who} className={`crew-char ${at}`}><C /></span>
-                })}
-              </button>
-              {seen && !leaving && (
-                <div className={`crew-bubble ${tip ? 'is-tap' : ''}`} key={`${shown}-${tip}`} aria-live="polite">
-                  <Words text={step.lines[tip]} />
-                </div>
-              )}
-              <div className="crew-role">
-                <span className="crew-count ui-num" aria-hidden="true">
-                  <span className="crew-count-col">
-                    {STEPS.map((s, i) => <span key={s.who}>{String(i + 1).padStart(2, '0')}</span>)}
-                  </span>
-                </span>
-                <span className="crew-role-name" key={shown}>{step.role}</span>
-              </div>
-              <div className="crew-bar" aria-hidden="true">
-                {STEPS.map((s, i) => (
-                  <i key={s.who} ref={el => { segRefs.current[i] = el }} className={i === active ? 'on' : ''}><b /></i>
-                ))}
-              </div>
-              <span className="crew-hint" aria-hidden="true">Tap me</span>
+    <section className={`section crew ${flat ? 'is-flat' : ''}`} aria-labelledby="crew-title">
+      <div className="crew-wrap" ref={wrapRef} style={{ ['--crew-run' as string]: `${RUN}svh` }}>
+        <div className="crew-pin" ref={pinRef}>
+          <div className="container">
+            <div className="sec-head center" data-rv>
+              <span className="eyebrow"><span className="dot" />How it works</span>
+              <h2 id="crew-title" className="h-section">Your whole team, <span className="h-muted">on one system.</span></h2>
+              <p className="lede">Five people, one service. Here is what each of them does differently with PepperPe.</p>
             </div>
           </div>
 
-          <ol className="crew-steps" ref={listRef}>
-            {STEPS.map((s, i) => {
-              const C = CHARACTERS[s.who]
-              return (
-                <li key={s.who} className={`crew-step ${i === active ? 'on' : ''} ${i <= active ? 'is-past' : ''}`}>
-                  <span className="crew-step-fig crew-char on" aria-hidden="true"><C /></span>
-                  <span className="crew-step-role" ref={el => { nodeRefs.current[i] = el }}>{s.role}</span>
-                  <h3 className="h3"><Words text={s.title} /></h3>
-                  <p>{s.body}</p>
-                </li>
-              )
-            })}
-          </ol>
+          <div className="crew-row" ref={rowRef}>
+            <ol className="crew-track" ref={trackRef}>
+              {STEPS.map((s, i) => {
+                const C = CHARACTERS[s.who]
+                const drawn = i <= arrived
+                const isOn = i === active
+                const speaking = hold && (flat ? i === active && i <= arrived : i === arrived)
+                return (
+                  <li
+                    key={s.who}
+                    ref={el => { panelRefs.current[i] = el }}
+                    className={`crew-panel ${isOn ? 'is-on' : ''} ${drawn ? 'is-drawn' : ''}`}
+                    aria-current={!flat && i === active ? 'step' : undefined}
+                  >
+                    <div className="crew-card">
+                      <span className="crew-disc" aria-hidden="true" />
+                      <button
+                        type="button"
+                        className="crew-figure"
+                        onClick={() => { if (speaking) setTip(t => (t + 1) % s.lines.length) }}
+                        tabIndex={isOn ? 0 : -1}
+                        aria-label={`${s.role}: another line`}
+                      >
+                        <span className={`crew-char ${drawn ? 'on' : ''}`}><C /></span>
+                      </button>
+                      {speaking && (
+                        <div className={`crew-bubble ${tip ? 'is-tap' : ''}`} key={`${i}-${tip}`} aria-live="polite">
+                          <Words text={s.lines[tip]} />
+                        </div>
+                      )}
+                      <span className="crew-num ui-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                    </div>
+                    <div className="crew-copy">
+                      <span className="crew-role">{s.role}</span>
+                      <h3 className="h3"><Words text={s.title} /></h3>
+                      <p>{s.body}</p>
+                    </div>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
+
+          <nav className="crew-progress" aria-label="The five people">
+            {STEPS.map((s, i) => (
+              <button
+                key={s.who}
+                type="button"
+                className={`crew-dot ${i === active ? 'on' : ''} ${i <= arrived ? 'is-past' : ''}`}
+                onClick={() => go(i)}
+                aria-current={i === active ? 'step' : undefined}
+              >
+                <i aria-hidden="true" />
+                <span>{s.role}</span>
+              </button>
+            ))}
+          </nav>
         </div>
       </div>
     </section>
