@@ -106,8 +106,7 @@ export function Nav() {
       <header className={`nav ${scrolled ? 'is-scrolled' : ''} ${open ? 'is-open' : ''}`}>
         <div className="nav-inner">
           <a href="/" className="nav-logo" aria-label="PepperPe home">
-            <span className="glyph" aria-hidden="true">Ω</span>
-            <span>PepperPe</span>
+            <img src="/pepperpe-wordmark-blue.png" alt="PepperPe" width={122} height={25} className="nav-wordmark" />
           </a>
 
           <nav className="nav-links" aria-label="Main">
@@ -165,7 +164,7 @@ export function Nav() {
       {drawer && (
         <div className="drawer" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="drawer-head">
-            <a href="/" className="nav-logo"><span className="glyph" aria-hidden="true">Ω</span><span>PepperPe</span></a>
+            <a href="/" className="nav-logo"><img src="/pepperpe-wordmark-blue.png" alt="PepperPe" width={122} height={25} className="nav-wordmark" /></a>
             <button className="nav-burger" aria-label="Close menu" onClick={() => setDrawer(false)}><Icon.Close size={18} /></button>
           </div>
           <div className="drawer-body">
